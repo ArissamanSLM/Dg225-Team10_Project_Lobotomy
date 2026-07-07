@@ -2,7 +2,7 @@
 type: gdd-concept
 version: 0.1
 date: [วันที่]
-team: [1. 682110138 ภูรินทร์ ใจเที่ยง]
+team: [1. 682110138 ภูรินทร์ ใจเที่ยง] [2. 682110154 อริสมันต์ นานาใจ]
 ---
 
 # [Hunter of Dream?] — Game Concept
