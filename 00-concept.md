@@ -2,10 +2,10 @@
 type: gdd-concept
 version: 0.1
 date: [วันที่]
-team: [รายชื่อสมาชิก]
+team: [1. 682110138 ภูรินทร์ ใจเที่ยง]
 ---
 
-# [ชื่อเกม] — Game Concept
+# [Hunter of Dream?] — Game Concept
 
 ## Elevator Pitch
 [อธิบายเกมใน 2-3 ประโยค: เกมอะไร, ผู้เล่นทำอะไร, ทำไมถึงสนุก]
