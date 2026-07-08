@@ -22,4 +22,6 @@ team:
 ## Inspiration & References
 | เกม/สื่อ | แรงบันดาลใจที่นำมาใช้ |
 |---|---|
-| [Dead cells] | [ด้านไหน เช่น visual style, mechanic] |
+| [Dead cells] | [มุมมองของตัวเกม แนวภาพ2.5มิติ จากด้านข้าง] |
+| [Blood Born] | [ระบบInsight ที่ทำให้เห็นรายละเอียดมากขึ้น] |
+| [Cthulhu Mythos] | [เนื้อเรื่องLore เบื้องหลังตัวเกม] |
