@@ -36,7 +36,7 @@ flowchart LR
 | [C] | [Counch] |
 | [1-9] | [Slot 1-9] |
 | [Esc] | Menu |
-| [V] | | tools Sense |
+| [V] | tools Sense |
 | [R] | Reload Gun |
 
 ## Win / Lose Condition
