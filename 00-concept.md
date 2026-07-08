@@ -11,13 +11,13 @@ team:
 # [Hunter of Dream?] — Game Concept
 
 ## Elevator Pitch
-[อธิบายเกมใน 2-3 ประโยค: เกมอะไร, ผู้เล่นทำอะไร, ทำไมถึงสนุก] - เกมแนวRoguelike-Horror, ผู้เล่นศู้มอนกับบรรยากาศหลอนๆ, การจัดการทรัพายากรและทักษะในการต่อสู้กับศัตรูของผู้เล่น(แนวบรรยากาศหลอนๆ) 
+เกมแนวRoguelike-Horror, ผู้เล่นศู้มอนกับบรรยากาศหลอนๆ, การจัดการทรัพายากรและทักษะในการต่อสู้กับศัตรูของผู้เล่น(แนวบรรยากาศหลอนๆ) 
 
 ## Genre & Platform
-- **Genre:** [Roguelike 2D Platformer, side scrolling Shooter, survial/explortion] - 
-- **Platform:** PC (Windows) - 
-- **Engine:** MonoGame (C#) - 
-- **Target Audience:** [กลุ่มเป้าหมาย] - 
+- **Genre:** [Roguelike 2D Platformer, side scrolling Shooter, survial/explortion] 
+- **Platform:** PC (Windows) 
+- **Engine:** MonoGame (C#) 
+- **Target Audience:** [ผู้ชื่นชอบเกมยาก, คนชอบCthulhu Mythos, วัยรุ่น?] 
 
 ## Inspiration & References
 | เกม/สื่อ | แรงบันดาลใจที่นำมาใช้ |
