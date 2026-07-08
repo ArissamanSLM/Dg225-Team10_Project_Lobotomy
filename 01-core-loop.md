@@ -26,6 +26,9 @@ flowchart LR
 8. [Mechanic ----- 8 - Vision/Sense]
 9. [Mechanic ----- 9 - Weapons]
 10. [Mechanic ----- 10 - Monster Vision]
+11. [Mechanic ----- 11 - Inventory Bar slot]
+12. [Mechanic ----- 12 - Rescores bar slot] // (from fortnite ref)
+
 ## Controls
 | Key | Action |
 |---|---|
