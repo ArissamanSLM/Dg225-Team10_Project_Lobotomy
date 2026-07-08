@@ -43,5 +43,5 @@ flowchart LR
 | [R] | Reload Gun |
 
 ## Win / Lose Condition
-- **ชนะเมื่อ:** [เงื่อนไข]
-- **แพ้เมื่อ:** [เงื่อนไข]
+- **ชนะเมื่อ:** [Endless]
+- **แพ้เมื่อ:** [Hp/sanity = 0 or Quit game during in game]
