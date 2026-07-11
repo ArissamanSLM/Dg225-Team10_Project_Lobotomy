@@ -27,4 +27,4 @@ team:
 | [Blood Born] | [ระบบInsight ที่ทำให้เห็นรายละเอียดมากขึ้น] |
 | [Cthulhu Mythos] | [เนื้อเรื่องLore เบื้องหลังตัวเกม] |
 | [Soul Knight] | [ระบบห้อง?] |
-| [backrooms] | [liminal space type room] |
+| [Don't scream] | [] |
