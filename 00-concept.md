@@ -1,6 +1,6 @@
 ---
 type: gdd-concept
-version: 0.1
+version: 0.17
 date: [วันที่]
 team: 
     -id 1. Name:682110138 ภูรินทร์ ใจเที่ยง
@@ -15,10 +15,10 @@ team:
 เกมแนวRoguelike-Horror, ผู้เล่นสู้มอนกับบรรยากาศหลอนๆ, การจัดการทรัพายากรและทักษะในการต่อสู้กับศัตรูของผู้เล่น(แนวบรรยากาศหลอนๆ) 
 
 ## Genre & Platform
-- **Genre:** [Roguelike 2D Platformer, side scrolling Card , survial/explortion] 
+- **Genre:** [Roguelike 2D Platformer, side scrolling view , survial/explortion] 
 - **Platform:** PC (Windows) 
 - **Engine:** MonoGame (C#) 
-- **Target Audience:** [ผู้ชื่นชอบเกมยาก, คนชอบCthulhu Mythos, วัยรุ่น?] 
+- **Target Audience:** [ผู้ชื่นชอบเกมยาก, คนชอบCthulhu Mythos, วัยรุ่น?,ชื่นชอบเกมบรรยากาศหลอนๆ] 
 
 ## Inspiration & References
 | เกม/สื่อ | แรงบันดาลใจที่นำมาใช้ |
