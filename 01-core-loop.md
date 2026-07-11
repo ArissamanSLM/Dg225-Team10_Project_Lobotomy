@@ -35,12 +35,12 @@ flowchart LR
 | ← → | Move |
 | Space | Jump |
 | [E] | [Intraction] |
-| [H] | [Hide] |
+| [F] | [block] |
 | [C] | [Counch] |
 | [1-9] | [Slot 1-9] |
 | [Esc] | Menu |
 | [V] | tools Sense |
-| [R] | Reload Gun |
+| [B] | Toggle build |
 
 ## Win / Lose Condition
 - **ชนะเมื่อ:** [Endless]
