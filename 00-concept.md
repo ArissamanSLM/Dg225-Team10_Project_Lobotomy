@@ -15,7 +15,7 @@ team:
 เกมแนวRoguelike-Horror, ผู้เล่นสู้มอนกับบรรยากาศหลอนๆ, การจัดการทรัพายากรและทักษะในการต่อสู้กับศัตรูของผู้เล่น(แนวบรรยากาศหลอนๆ) 
 
 ## Genre & Platform
-- **Genre:** [Roguelike 2D Platformer, side scrolling Shooter, survial/explortion] 
+- **Genre:** [Roguelike 2D Platformer, side scrolling Card , survial/explortion] 
 - **Platform:** PC (Windows) 
 - **Engine:** MonoGame (C#) 
 - **Target Audience:** [ผู้ชื่นชอบเกมยาก, คนชอบCthulhu Mythos, วัยรุ่น?] 
@@ -27,3 +27,4 @@ team:
 | [Blood Born] | [ระบบInsight ที่ทำให้เห็นรายละเอียดมากขึ้น] |
 | [Cthulhu Mythos] | [เนื้อเรื่องLore เบื้องหลังตัวเกม] |
 | [Soul Knight] | [ระบบห้อง?] |
+| [backrooms] | [liminal space type room] |
