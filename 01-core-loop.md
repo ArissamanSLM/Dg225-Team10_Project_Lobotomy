@@ -12,7 +12,7 @@ flowchart LR
     A[เริ่มต้น] -- Monster --> B[Battle state]
     B --> C{Won battle?}
     C -- Yes --> D[Reward / Consequence]
-    C -- No --> E[End]
+    C -- No --> E[game over/Clear]
     D --> F{Is all monster clear?}
     F -- Yes --> E
     F -- No --> A
