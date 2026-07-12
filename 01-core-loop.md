@@ -9,14 +9,14 @@ date: [วันที่]
 ## Core Loop
 ```mermaid
 flowchart LR
-    A[เริ่มต้น] -'Monster'-> B[Battle state]
+    A[เริ่มต้น] -- Monster --> B[Battle state]
     B --> C{Won battle}
-    C -Yes-> D[Reward / Consequence]
-    C -No ->E
-    D --> F {is All monster clear}
-    F -yes-> E
-    F -no->A
-    E --> [End]
+    C -- Yes --> D[Reward / Consequence]
+    C -- No --> E[End]
+    D --> F{Is all monster clear?}
+    F -- Yes --> E
+    F -- No --> A
+    E --> G[End]
 
 ```
 
