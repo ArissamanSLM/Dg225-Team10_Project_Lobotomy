@@ -1,6 +1,6 @@
 ---
 type: gdd-core-loop
-version: 0.1
+version: 0.17
 date: [วันที่]
 ---
 
@@ -9,10 +9,15 @@ date: [วันที่]
 ## Core Loop
 ```mermaid
 flowchart LR
-    A[เริ่มต้น] --> B[Action หลัก]
-    B --> C[ผลลัพธ์]
-    C --> D[Reward / Consequence]
-    D --> B
+    A[เริ่มต้น] -Monster-> B[Battle state]
+    B --> C{Won battle}
+    C -Yes-> D[Reward / Consequence]
+    C -No ->E
+    D --> F {is All monster clear}
+    F -yes-> E
+    F -no->A
+    E --> [End]
+
 ```
 
 ## Core Mechanics
@@ -24,7 +29,7 @@ flowchart LR
 6. [Mechanic ----- 6 - Upgrade/Tier up]
 7. [Mechanic ----- 7 - Perk/Level]
 8. [Mechanic ----- 8 - Vision/Sense]
-9. [Mechanic ----- 9 - Weapons]
+9. [Mechanic ----- 9 - Weapons/cards]
 10. [Mechanic ----- 10 - Monster Vision]
 11. [Mechanic ----- 11 - Inventory Bar slot]
 12. [Mechanic ----- 12 - Rescores bar slot] // (from fortnite ref)
@@ -35,12 +40,12 @@ flowchart LR
 | ← → | Move |
 | Space | Jump |
 | [E] | [Intraction] |
-| [F] | [block] |
+| [H] | [Hide] |
 | [C] | [Counch] |
 | [1-9] | [Slot 1-9] |
 | [Esc] | Menu |
 | [V] | tools Sense |
-| [B] | Toggle build |
+| [R] | Reload Gun |
 
 ## Win / Lose Condition
 - **ชนะเมื่อ:** [Endless]
