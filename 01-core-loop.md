@@ -10,13 +10,13 @@ date: [วันที่]
 ```mermaid
 flowchart LR
     A[เริ่มต้น] -- Monster --> B[Battle state]
-    B --> C{Won battle}
+    B --> C{Won battle?}
     C -- Yes --> D[Reward / Consequence]
     C -- No --> E[End]
     D --> F{Is all monster clear?}
     F -- Yes --> E
     F -- No --> A
-    E --> G[End]
+    
 
 ```
 
