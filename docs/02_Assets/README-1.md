@@ -45,4 +45,4 @@ date: [วันที่]
 | 1                                   | Sprites / Textures  | `docs/02_Assets/_candidates/sprites/` |
 | 2                                   | Sound Effects (SFX) | `docs/02_Assets/_candidates/sfx/`     |
 | 3 ภูรินทร์ ใจเที่ยง | Music / BGM         | `docs/02_Assets/_candidates/music/`   |
-| 4                                   | Fonts + Data        | `docs/02_Assets/_candidates/fonts/`   |
+| 4อริสมันต์ นานาใจ    | Fonts + Data        | `docs/02_Assets/_candidates/fonts/`   |
