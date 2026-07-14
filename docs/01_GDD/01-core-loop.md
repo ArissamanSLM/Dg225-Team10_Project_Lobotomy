@@ -37,7 +37,7 @@ flowchart LR
 5. [Mechanic ----- 5 - Currency/shop]
 6. [Mechanic ----- 6 - Upgrade/Tier up]?
 7. [Mechanic ----- 7 - Perk/Level]?
-8. [Mechanic ----- 9 - Weapons/cards]
+8. [Mechanic ----- 8 - Weapons/cards]
 
 ## Controls
 
