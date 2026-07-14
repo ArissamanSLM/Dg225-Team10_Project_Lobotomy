@@ -1,0 +1,31 @@
+---
+type: gdd-concept
+version: 0.17
+date: [วันที่]
+team: 
+    -id 1.682110138 Name:ภูรินทร์ ใจเที่ยง
+    -id 2.682110154 Name:อริสมันต์ นานาใจ
+    -id 3.682110140 Name:วรเมธ วงค์กิติ 
+    -id 4.682110142 Name:วินทกร ชุ่มทอง
+---
+
+# [Hunter of Dream?] — Game Concept
+
+## Elevator Pitch
+เกมแนวRoguelike-Horror, ผู้เล่นสู้มอนกับบรรยากาศหลอนๆ, การจัดการทรัพายากรและทักษะในการต่อสู้กับศัตรูของผู้เล่น(แนวบรรยากาศหลอนๆ), เกมการ์ด?
+
+## Genre & Platform
+- **Genre:** [Roguelike 2D Platformer, side scrolling view , survial/explortion] 
+- **Platform:** PC (Windows) 
+- **Engine:** MonoGame (C#) 
+- **Target Audience:** [ผู้ชื่นชอบเกมยาก, คนชอบCthulhu Mythos, วัยรุ่น?,ชื่นชอบเกมบรรยากาศหลอนๆ] 
+
+## Inspiration & References
+| เกม/สื่อ | แรงบันดาลใจที่นำมาใช้ |
+|---|---|
+| [Dead cells] | [มุมมองของตัวเกม แนวภาพ2.5มิติ จากด้านข้าง] |
+| [Blood Born] | [ระบบInsight ที่ทำให้เห็นรายละเอียดมากขึ้น] |
+| [Cthulhu Mythos] | [เนื้อเรื่องLore เบื้องหลังตัวเกม] |
+| [Soul Knight] | [ระบบห้อง?] |
+| [Don't scream] | [บรรยากาศสถานที่ร้าง ไร้ผู้คน ความกดดันจากสภาพแวดล้อม] |
+| blacksouls 1 | [ระบบ Ap%] |
