@@ -4,7 +4,7 @@ version: 0.1
 date: [วันที่]
 ---
 
-# Asset List — [ชื่อเกม]
+# Asset List — [DreamSlayer]
 
 ## Sprites / Textures
 
@@ -17,7 +17,7 @@ date: [วันที่]
 | Asset Name | คำอธิบาย | แหล่งที่มา | License | สถานะ | รับผิดชอบ |
 |---|---|---|---|---|---|
 | `sfx_jump.wav` | เสียงกระโดด | [ลิงก์] | [license] | 🔲 Not Started | [ชื่อ] |
-| `sfx_dead.wav` | เสียงตอนตาย | [https://freesound.org/people/SilverIllusionist/sounds/861264/] | [SilverIllusionist] | 🔲 Not Started | [ชื่อ] |
+| `sfx_dead.wav` | เสียงตอนตาย | [[[ลิงก์](https://freesound.org/people/SilverIllusionist/sounds/861264/)] | [SilverIllusionist] | 🔲 Not Started | [ชื่อ] |
 
 ## Audio — Music
 
