@@ -3,7 +3,7 @@ type: gdd-core-loop
 version: 0.17
 date: [วันที่]
 ---
-# [ชื่อเกม] — Core Loop & Gameplay
+# [Dream slayer] — Core Loop & Gameplay
 
 ## Core Loop
 
