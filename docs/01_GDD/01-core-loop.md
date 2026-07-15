@@ -10,12 +10,13 @@ date: [วันที่]
 ```mermaid
 flowchart LR
 	A[Start]
-	B[Map]
+	B[Map Select]
 	C{Encounter/Battle?}
 	D[Event/Decision]
 	E{Won battle?}
 	F[Reward/Consequence]
 	G[Game over]
+	H{Exit game?}
 
 	A --> B
 	B --> C
@@ -25,30 +26,28 @@ flowchart LR
 	E -- Yes --> F
 	E -- No --> G
 	G --> A
-	F --> B
+	F --> H
+	H --Yes-->G
+	H --No -->B
 ```
 
 ## Core Mechanics
 
-1. [Mechanic หลักที่ 1 — Rng Search Rescoues]
-2. [Mechanic หลักที่ 2 - Map generation]
-3. [Mechanic ----- 3 - Health system]
-4. [Mechanic ----- 4 = Sanity system]
-5. [Mechanic ----- 5 - Currency/shop]
-6. [Mechanic ----- 6 - Upgrade/Tier up]?
-7. [Mechanic ----- 7 - Perk/Level]?
-8. [Mechanic ----- 8 - Weapons/cards]
+1. [Mechanic หลักที่ 1 — Rng Card draw]
+2. [Mechanic หลักที่ 2 - Rng room]
+3. [Mechanic หลักที่ 3 - Health system]
+4. [Mechanic หลักที่ 4 = Sanity system]
+5. [Mechanic หลักที่ 5 - Currency/shop]
+6. [Mechanic หลักที่ 6 - cards]
 
 ## Controls
 
-| Key        | Action           |
-| ---------- | ---------------- |
-| Mouse/Drag | Use card         |
-| E          | Use weapon skill |
-| R          | Use Item         |
-| [Esc]      | Menu             |
+| Key        | Action   |
+| ---------- | -------- |
+| Mouse/Drag | Use card |
+| [Esc]      | Menu     |
 
 ## Win / Lose Condition
 
-- **ชนะเมื่อ:** [Endless until Die]
+- **ชนะเมื่อ:** [ชนะบอส ]
 - **แพ้เมื่อ:** [Hp/sanity = 0 or Quit game during in game]
