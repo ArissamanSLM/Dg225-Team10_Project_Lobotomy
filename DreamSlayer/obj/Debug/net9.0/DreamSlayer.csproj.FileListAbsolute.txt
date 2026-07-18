@@ -32,3 +32,6 @@ c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayer\
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayer\obj\Debug\net9.0\DreamSlayer.pdb
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayer\obj\Debug\net9.0\DreamSlayer.genruntimeconfig.cache
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayer\obj\Debug\net9.0\ref\DreamSlayer.dll
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayer\bin\Debug\net9.0\runtimes\win-arm64\native\openal.dll
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayer\bin\Debug\net9.0\runtimes\linux-arm64\native\libSDL2-2.0.so.0
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayer\bin\Debug\net9.0\runtimes\win-arm64\native\SDL2.dll
