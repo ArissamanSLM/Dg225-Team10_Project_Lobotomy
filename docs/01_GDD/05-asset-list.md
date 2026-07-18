@@ -4,7 +4,7 @@ version: 0.1
 date: [วันที่]
 ---
 
-# Asset List — [ชื่อเกม]
+# Asset List — [DreamSlayer]
 
 ## Sprites / Textures
 
@@ -17,12 +17,15 @@ date: [วันที่]
 | Asset Name | คำอธิบาย | แหล่งที่มา | License | สถานะ | รับผิดชอบ |
 |---|---|---|---|---|---|
 | `sfx_jump.wav` | เสียงกระโดด | [ลิงก์] | [license] | 🔲 Not Started | [ชื่อ] |
+| `sfx_dead.wav` | เสียงตอนตาย | [[[ลิงก์](https://freesound.org/people/SilverIllusionist/sounds/861264/)] | [SilverIllusionist] | 🔲 Not Started | [ชื่อ] |
 
 ## Audio — Music
 
 | Asset Name | คำอธิบาย | แหล่งที่มา | License | สถานะ | รับผิดชอบ |
 |---|---|---|---|---|---|
 | `bgm_stage_01.mp3` | เพลงด่านแรก | [ลิงก์] | [license] | 🔲 Not Started | [ชื่อ] |
+| `Battle_music_01.mp3` | เพลงสู้ศัตรูปกติ | [ลิงก์] | [license] | 🔲 Not Started | [ชื่อ] |
+| `Boss_music_01.mp3` | เพลงสู้ศัตรูบอส | [[ลิงก์](https://www.youtube.com/watch?v=MXqrfGfRRvo&list=PL733HyN92klZ5MWQnYJrM8Mi6qAu4KCmM&index=23)] | [M-ART / Blacksouls 1] | 🔲 Not Started | [ชื่อ] |
 
 ## Fonts
 

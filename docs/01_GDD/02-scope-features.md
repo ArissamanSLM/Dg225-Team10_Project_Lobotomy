@@ -16,18 +16,22 @@ date: [วันที่]
 | - | ------------------------ | -------- | ---------------- |
 | 1 | [card]                   | Must     |                  |
 | 2 | [map branch]             | must     |                  |
-| 3 | boss                     | must     |                  |
-| 4 | action                   | must     |                  |
-| 5 | title screen menu        | must     |                  |
-| 6 | pause/stop game          | should   |                  |
-| 7 | perk /level              | maybe    |                  |
-| 8 | shop/rest/Event          | maybe    |                  |
-| 9 | Win screen / Lose screen | maybe?   |                  |
-|   |                          |          |                  |
+| 3 | [boss]                     | must     |                  |
+| 4 | [action]                   | must     |                  |
+| 5 | [title screen menu]        | must     |                  |
+| 6 | [pause / stop game]          | should   |                  |
+| 7 | [perk /level]              | maybe    |                  |
+| 8 | [shop / rest/Event]          | maybe    |                  |
+| 9 | [Win screen / Lose screen] | maybe?   |                  |
+| 10  | [Peak / Level / Upgrade system] |          |                  |
 
 ## Out of Scope — สิ่งที่ "จะไม่ทำ"
 
-- [สิ่งที่ตัดออก + เหตุผล]
+- ระบบ insight ตัดออกเพราะซับซ้อนเกินไปและไม่เหมาะสมกับเวลาที่มี
+- มุมมองภาพแบบ 2 มิติจากด้านข้าง คัดออกเพราะ ทำยากและเปลี่ยนแนวเกม
+- ระบบต่อสู้แบบDead cells ตัดออกเพราะมีความซับซ้อนใช้เวลาปละทักษะมากเกินไป
+- ระบบอาวุธ ถูกลบออกเพราะ มันต้องใช้เวลานานในการทำ
+- ส่วนที่ให้อัปเกรดก่อนเริ่มการต่อสู้(Peark&Upgrade) ถูกตัดชั่วคราวเพราะจำเป็นต้องทำระบบหลักให้เสร็จก่อน จึงถูกตัดออกก่อนแล้วถ้ามีเวลามากพอจะนำกลับมา
 
 ## Risks & Assumptions
 
