@@ -25,6 +25,7 @@ date: [วันที่]
 | `bgm_stage_01.mp3`    | เพลงด่านแรก           | [ลิงก์]                                                                                              | [license]              | 🔲 Not Started | [ชื่อ]         |
 | `Battle_music_01.mp3` | เพลงสู้ศัตรูปกติ | [ลิงก์]                                                                                              | [license]              | 🔲 Not Started | [ชื่อ]         |
 | `Boss_music_01.mp3`   | เพลงสู้ศัตรูบอส   | [[ลิงก์](https://www.youtube.com/watch?v=MXqrfGfRRvo&list=PL733HyN92klZ5MWQnYJrM8Mi6qAu4KCmM&index=23)] | [M-ART / Blacksouls 1] | 🔲 Not Started | [ชื่อ]         |
+| `Start_music.mp3` | เพลงหย้าเปิดเกม | [ลิงก์](https://youtu.be/0Nsb-RmFoKA?si=K5wHwKE9Kk-eZR0v)                                                                                              | [M-ART / Blacksouls 1]              | 🔲 Not Started | [ชื่อ]         |
 
 ## Fonts
 
