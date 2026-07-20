@@ -13,10 +13,25 @@ date: [วันที่]
 
 ## Audio — SFX
 
-| Asset Name       | คำอธิบาย       | แหล่งที่มา                                                       | License             | สถานะ     | รับผิดชอบ |
-| ---------------- | ---------------------- | -------------------------------------------------------------------------- | ------------------- | -------------- | ------------------ |
-|                  |                        |                                                                            | [license]           | 🔲 Not Started | [ชื่อ]         |
-| `sfx_dead.wav` | เสียงตอนตาย | [[ลิงก์](https://freesound.org/people/SilverIllusionist/sounds/861264/)] | [SilverIllusionist] | 🔲 Not Started | [ชื่อ]         |
+| Asset Name       | คำอธิบาย                                    | แหล่งที่มา                                                       | License             | สถานะ     | รับผิดชอบ |
+| ---------------- | --------------------------------------------------- | -------------------------------------------------------------------------- | ------------------- | -------------- | ------------------ |
+|                  | เสียงเลือกเมนู                        |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+| `sfx_dead.wav` | เสียงตอนตาย                              | [[ลิงก์](https://freesound.org/people/SilverIllusionist/sounds/861264/)] | [SilverIllusionist] | 🔲 Not Started | [ชื่อ]         |
+|                  | เสียงใช้การ์ด                          |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงsuffer card                               |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงโจมตี                                |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงป้องกัน                            |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงโจมตีสวน                          |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงฮิล                                    |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงบัฟพลัง                            |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงบัฟป้องกัน                      |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงผู้เล่นโดนตี                  |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงตอนhp ผู้เล่นเหลือน้อย |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงศัตรูโดนตี                      |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงเดิน                                  |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงเจอบอส                              |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงชนะ                                    |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงแพ้                                    |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
 
 ## Audio — Music
 
