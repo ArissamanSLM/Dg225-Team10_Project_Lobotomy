@@ -23,7 +23,7 @@ date: [วันที่]
 | 7  | [perk /level]                   | maybe    |                  |
 | 8  | [shop / rest/Event]             | maybe    |                  |
 | 9  | [Win screen / Lose screen]      | maybe?   |                  |
-| 10 | [Peak / Level / Upgrade system] |          |                  |
+| 10 | [Peak / Level / Upgrade system] | maybe?   |                  |
 
 ## Out of Scope — สิ่งที่ "จะไม่ทำ"
 
