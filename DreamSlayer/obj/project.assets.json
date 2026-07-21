@@ -9,6 +9,100 @@
           "build/MonoGame.Content.Builder.Task.targets": {}
         }
       },
+      "MonoGame.Extended/6.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/MonoGame.Extended.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/MonoGame.Extended.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "MonoGame.Extended.Collisions/3.9.0-prerelease.7": {
+        "type": "package",
+        "dependencies": {
+          "MonoGame.Extended": "3.9.0-prerelease.7"
+        },
+        "compile": {
+          "lib/net6.0/MonoGame.Extended.Collisions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/MonoGame.Extended.Collisions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "MonoGame.Extended.Graphics/3.9.0-prerelease.7": {
+        "type": "package",
+        "dependencies": {
+          "MonoGame.Extended": "3.9.0-prerelease.7"
+        },
+        "compile": {
+          "lib/net6.0/MonoGame.Extended.Graphics.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/MonoGame.Extended.Graphics.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "MonoGame.Extended.Input/3.9.0-prerelease.7": {
+        "type": "package",
+        "dependencies": {
+          "MonoGame.Extended": "3.9.0-prerelease.7"
+        },
+        "compile": {
+          "lib/net6.0/MonoGame.Extended.Input.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/MonoGame.Extended.Input.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "MonoGame.Extended.Tiled/3.9.0-prerelease.7": {
+        "type": "package",
+        "dependencies": {
+          "MonoGame.Extended": "3.9.0-prerelease.7",
+          "MonoGame.Extended.Graphics": "3.9.0-prerelease.7"
+        },
+        "compile": {
+          "lib/net6.0/MonoGame.Extended.Tiled.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/MonoGame.Extended.Tiled.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "MonoGame.Extended.Tweening/3.9.0-prerelease.7": {
+        "type": "package",
+        "dependencies": {
+          "MonoGame.Extended": "3.9.0-prerelease.7"
+        },
+        "compile": {
+          "lib/net6.0/MonoGame.Extended.Tweening.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/MonoGame.Extended.Tweening.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "MonoGame.Framework.DesktopGL/3.8.5": {
         "type": "package",
         "dependencies": {
@@ -160,6 +254,96 @@
         "monogame.content.builder.task.nuspec"
       ]
     },
+    "MonoGame.Extended/6.0.1": {
+      "sha512": "L7arWZQ4xgi/wWpad7irjZohTM3oexXsJVujAvy67H/w2oxpLxG82ZTlSRFmhe8LKzN5FE+RyoPMOoxG1i9YDw==",
+      "type": "package",
+      "path": "monogame.extended/6.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net8.0/MonoGame.Extended.dll",
+        "lib/net8.0/MonoGame.Extended.xml",
+        "logo-nuget-128.png",
+        "monogame.extended.6.0.1.nupkg.sha512",
+        "monogame.extended.nuspec"
+      ]
+    },
+    "MonoGame.Extended.Collisions/3.9.0-prerelease.7": {
+      "sha512": "WQ7EiXM7+32eTfeDK0Q56TVrq7uy6QgBDRKuGKkQzosiWHKs1HYEY7uBIm6t93CSoOCxMqb26aOL6TKjsUQS0g==",
+      "type": "package",
+      "path": "monogame.extended.collisions/3.9.0-prerelease.7",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net6.0/MonoGame.Extended.Collisions.dll",
+        "lib/net6.0/MonoGame.Extended.Collisions.xml",
+        "logo-nuget-128.png",
+        "monogame.extended.collisions.3.9.0-prerelease.7.nupkg.sha512",
+        "monogame.extended.collisions.nuspec"
+      ]
+    },
+    "MonoGame.Extended.Graphics/3.9.0-prerelease.7": {
+      "sha512": "2xLO/k4Hng0BGcwIvYloyaHk0UIS3HF80YnK1w3Ep63O3MGVMLQCp5tDIB/lqJCgRl9pCc1oAgeV2mT3FOdbTg==",
+      "type": "package",
+      "path": "monogame.extended.graphics/3.9.0-prerelease.7",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net6.0/MonoGame.Extended.Graphics.dll",
+        "lib/net6.0/MonoGame.Extended.Graphics.xml",
+        "logo-nuget-128.png",
+        "monogame.extended.graphics.3.9.0-prerelease.7.nupkg.sha512",
+        "monogame.extended.graphics.nuspec"
+      ]
+    },
+    "MonoGame.Extended.Input/3.9.0-prerelease.7": {
+      "sha512": "mRMJBUV9Z5mNkhxbvGFCEC3Ad1g+0jrr91O/AenumUu4QPXF+rfVaJqaFwWc73U5jkgS964VVvfFG9Vxh2YWiQ==",
+      "type": "package",
+      "path": "monogame.extended.input/3.9.0-prerelease.7",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net6.0/MonoGame.Extended.Input.dll",
+        "lib/net6.0/MonoGame.Extended.Input.xml",
+        "logo-nuget-128.png",
+        "monogame.extended.input.3.9.0-prerelease.7.nupkg.sha512",
+        "monogame.extended.input.nuspec"
+      ]
+    },
+    "MonoGame.Extended.Tiled/3.9.0-prerelease.7": {
+      "sha512": "/L5DnKhvdLbfCFYpf0qFFOgruktxIhV65JzoAahZizki8fs31FWQjNRoQRXgt0e2l/4midUp5Q1PEiQ5yt+Y0A==",
+      "type": "package",
+      "path": "monogame.extended.tiled/3.9.0-prerelease.7",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net6.0/MonoGame.Extended.Tiled.dll",
+        "lib/net6.0/MonoGame.Extended.Tiled.xml",
+        "logo-nuget-128.png",
+        "monogame.extended.tiled.3.9.0-prerelease.7.nupkg.sha512",
+        "monogame.extended.tiled.nuspec"
+      ]
+    },
+    "MonoGame.Extended.Tweening/3.9.0-prerelease.7": {
+      "sha512": "TfGOiwhdNpHTK5pM+nK0T7zmSEFXtjyLq5B3zp9JJahugjtKDszkY0V68H/28Tkdedwrcdm9CNBbi4isQrV8iA==",
+      "type": "package",
+      "path": "monogame.extended.tweening/3.9.0-prerelease.7",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net6.0/MonoGame.Extended.Tweening.dll",
+        "lib/net6.0/MonoGame.Extended.Tweening.xml",
+        "logo-nuget-128.png",
+        "monogame.extended.tweening.3.9.0-prerelease.7.nupkg.sha512",
+        "monogame.extended.tweening.nuspec"
+      ]
+    },
     "MonoGame.Framework.DesktopGL/3.8.5": {
       "sha512": "oG5Thkic4i/6kX3OWtq2p6DEATflP71yM0p/1ymIoFaIp1xNFOqAd4jW2D9GIQLIMT6mn5RmJknYPqJnOQbi5w==",
       "type": "package",
@@ -306,6 +490,12 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "MonoGame.Content.Builder.Task >= 3.8.*",
+      "MonoGame.Extended >= 6.0.1",
+      "MonoGame.Extended.Collisions >= 3.9.0-prerelease.7",
+      "MonoGame.Extended.Graphics >= 3.9.0-prerelease.7",
+      "MonoGame.Extended.Input >= 3.9.0-prerelease.7",
+      "MonoGame.Extended.Tiled >= 3.9.0-prerelease.7",
+      "MonoGame.Extended.Tweening >= 3.9.0-prerelease.7",
       "MonoGame.Framework.DesktopGL >= 3.8.*"
     ]
   },
@@ -365,6 +555,30 @@
           "MonoGame.Content.Builder.Task": {
             "target": "Package",
             "version": "[3.8.*, )"
+          },
+          "MonoGame.Extended": {
+            "target": "Package",
+            "version": "[6.0.1, )"
+          },
+          "MonoGame.Extended.Collisions": {
+            "target": "Package",
+            "version": "[3.9.0-prerelease.7, )"
+          },
+          "MonoGame.Extended.Graphics": {
+            "target": "Package",
+            "version": "[3.9.0-prerelease.7, )"
+          },
+          "MonoGame.Extended.Input": {
+            "target": "Package",
+            "version": "[3.9.0-prerelease.7, )"
+          },
+          "MonoGame.Extended.Tiled": {
+            "target": "Package",
+            "version": "[3.9.0-prerelease.7, )"
+          },
+          "MonoGame.Extended.Tweening": {
+            "target": "Package",
+            "version": "[3.9.0-prerelease.7, )"
           },
           "MonoGame.Framework.DesktopGL": {
             "target": "Package",

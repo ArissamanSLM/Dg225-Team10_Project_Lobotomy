@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DreamSlayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3d346b9ae491e5e8cc8f4c0054b9834307e7e9e1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+82016bbd6b98528a2bb984af1708d172c4261007")]
 [assembly: System.Reflection.AssemblyProductAttribute("DreamSlayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DreamSlayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

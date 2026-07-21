@@ -56,6 +56,30 @@
               "target": "Package",
               "version": "[3.8.*, )"
             },
+            "MonoGame.Extended": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "MonoGame.Extended.Collisions": {
+              "target": "Package",
+              "version": "[3.9.0-prerelease.7, )"
+            },
+            "MonoGame.Extended.Graphics": {
+              "target": "Package",
+              "version": "[3.9.0-prerelease.7, )"
+            },
+            "MonoGame.Extended.Input": {
+              "target": "Package",
+              "version": "[3.9.0-prerelease.7, )"
+            },
+            "MonoGame.Extended.Tiled": {
+              "target": "Package",
+              "version": "[3.9.0-prerelease.7, )"
+            },
+            "MonoGame.Extended.Tweening": {
+              "target": "Package",
+              "version": "[3.9.0-prerelease.7, )"
+            },
             "MonoGame.Framework.DesktopGL": {
               "target": "Package",
               "version": "[3.8.*, )"

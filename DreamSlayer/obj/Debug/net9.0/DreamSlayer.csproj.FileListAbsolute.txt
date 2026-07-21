@@ -72,3 +72,9 @@ c:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\Dream
 c:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayer\obj\Debug\net9.0\DreamSlayer.pdb
 c:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayer\obj\Debug\net9.0\DreamSlayer.genruntimeconfig.cache
 c:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayer\obj\Debug\net9.0\ref\DreamSlayer.dll
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayer\bin\Debug\net9.0\MonoGame.Extended.dll
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayer\bin\Debug\net9.0\MonoGame.Extended.Collisions.dll
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayer\bin\Debug\net9.0\MonoGame.Extended.Graphics.dll
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayer\bin\Debug\net9.0\MonoGame.Extended.Input.dll
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayer\bin\Debug\net9.0\MonoGame.Extended.Tiled.dll
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayer\bin\Debug\net9.0\MonoGame.Extended.Tweening.dll
