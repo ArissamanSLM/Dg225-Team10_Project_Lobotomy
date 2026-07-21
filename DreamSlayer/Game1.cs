@@ -45,6 +45,7 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
+        
         _spriteBatch.End();
 
         base.Draw(gameTime);
