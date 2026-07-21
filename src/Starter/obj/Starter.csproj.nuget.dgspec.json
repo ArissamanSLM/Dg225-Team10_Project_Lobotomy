@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj": {}
+    "C:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\src\\Starter\\Starter.csproj": {}
   },
   "projects": {
-    "c:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj": {
+    "C:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\src\\Starter\\Starter.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
-        "projectName": "DreamSlayer",
-        "projectPath": "c:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
+        "projectUniqueName": "C:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\src\\Starter\\Starter.csproj",
+        "projectName": "Starter",
+        "projectPath": "C:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\src\\Starter\\Starter.csproj",
         "packagesPath": "C:\\Users\\worametw\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\obj\\",
+        "outputPath": "C:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\src\\Starter\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
