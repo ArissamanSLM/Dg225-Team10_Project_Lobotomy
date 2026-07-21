@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+
 namespace DreamSlayer;
 
 public class Game1 : Game
@@ -45,7 +46,7 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin();
-        
+
         _spriteBatch.End();
 
         base.Draw(gameTime);

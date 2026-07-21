@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "ka8ocbFz1Ls=",
   "success": true,
   "projectFilePath": "C:\\Users\\arissamann\\Downloads\\Group_Lobotomy\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
+=======
+  "dgSpecHash": "boxJtj/Y9m0=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
+>>>>>>> fe13e8f6d5ec75aa6658c8cb81917e8fe155156d
   "expectedPackageFiles": [
     "C:\\Users\\arissamann\\.nuget\\packages\\monogame.content.builder.task\\3.8.5\\monogame.content.builder.task.3.8.5.nupkg.sha512",
     "C:\\Users\\arissamann\\.nuget\\packages\\monogame.extended\\6.0.1\\monogame.extended.6.0.1.nupkg.sha512",
