@@ -13,19 +13,17 @@ date: [วันที่]
 
 ## Audio — SFX
 
-| Asset Name       | คำอธิบาย               | แหล่งที่มา                                                       | License             | สถานะ     | รับผิดชอบ |
-| ---------------- | ------------------------------ | -------------------------------------------------------------------------- | ------------------- | -------------- | ------------------ |
-|                  | เสียงเลือกเมนู   |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
-| `sfx_dead.wav` | เสียงตอนตาย         | [[ลิงก์](https://freesound.org/people/SilverIllusionist/sounds/861264/)] | [SilverIllusionist] | 🔲 Not Started | [ภูรินทร์] |
-|                  | เสียงใช้การ์ด     |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
-|                  | เสียงsuffer card          |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
-|                  | เสียงโจมตี           |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
-|                  | เสียงป้องกัน       |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
-|                  | เสียงฮิล               |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
-|                  | เสียงบัฟพลัง       |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
-|                  | เสียงบัฟป้องกัน |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
-|                  | เสียงชนะ               |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
-|                  | เสียงแพ้               |                                                                            | [license]           | 🔲 Not Started | วินทกร       |
+| Asset Name       | คำอธิบาย             | แหล่งที่มา                                                                                | License             | สถานะ     | รับผิดชอบ |
+| ---------------- | ---------------------------- | --------------------------------------------------------------------------------------------------- | ------------------- | -------------- | ------------------ |
+|                  | เสียงเลือกเมนู |                                                                                                     | [license]           | 🔲 Not Started | วินทกร       |
+| `sfx_dead.wav` | เสียงตอนตาย       | [[ลิงก์](https://freesound.org/people/SilverIllusionist/sounds/861264/)]                          | [SilverIllusionist] | 🔲 Not Started | [ภูรินทร์] |
+|                  | เสียงใช้การ์ด   | [card - Google ไดรฟ์](https://drive.google.com/drive/folders/1-EaP6NRYP5ddUBo6QYEK885k0zAUSM2R)   | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงsuffer card        | [card - Google ไดรฟ์](https://drive.google.com/drive/folders/1-EaP6NRYP5ddUBo6QYEK885k0zAUSM2R)   | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงโจมตี         | [action - Google ไดรฟ์](https://drive.google.com/drive/folders/1_oqFmdySXg1uj-0ag9pozgBZR5lxZP0b) | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงป้องกัน     | [action - Google ไดรฟ์](https://drive.google.com/drive/folders/1_oqFmdySXg1uj-0ag9pozgBZR5lxZP0b) | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงฮิล             | [action - Google ไดรฟ์](https://drive.google.com/drive/folders/1_oqFmdySXg1uj-0ag9pozgBZR5lxZP0b) | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงชนะ             |                                                                                                     | [license]           | 🔲 Not Started | วินทกร       |
+|                  | เสียงแพ้             |                                                                                                     | [license]           | 🔲 Not Started | วินทกร       |
 
 ## Audio — Music
 
