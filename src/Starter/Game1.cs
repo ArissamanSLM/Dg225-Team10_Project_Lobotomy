@@ -32,9 +32,9 @@ public class Game1 : Game
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
-        IsMouseVisible = false;
-        _graphics.PreferredBackBufferWidth = 900;
-        _graphics.PreferredBackBufferHeight = 900;
+        IsMouseVisible = true;
+        _graphics.PreferredBackBufferWidth = 1280;
+        _graphics.PreferredBackBufferHeight = 768;
         _graphics.ApplyChanges();
     }
 
@@ -77,7 +77,11 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
         // Draw a single pixel at (100, 100).
-        _spriteBatch.Draw(_whitePixel, new Rectangle(100, 100, 1, 1), Color.White);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(0, 0, 1280, 768), Color.Pink);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(600, 300, 128, 128), Color.Red);
+
+
+
         _spriteBatch.End();
 
         base.Draw(gameTime);
