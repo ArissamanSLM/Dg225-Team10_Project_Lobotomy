@@ -108,14 +108,13 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private Texture2D _whitePixel;
     
-    int hp = 30;
-    int mp = 100;
+    int hp =15;
     int sanity = 100;
     int holdCard = 6;
     int CardMax = 12;
     int Enermyhp = 30;
     int Bosshp = 120;
-    int ClickLimit = 0;
+    int ClickLimit = 10;
     
     bool isEnermyDead = false;
     bool isBossActive = false; // Tracks if we are fighting the boss
@@ -162,11 +161,12 @@ public class Game1 : Game
             Point mousePos = new Point(currentMouse.X, currentMouse.Y);
 
             // 1. If enemy/boss is alive, click to damage them
-            if (!isEnermyDead)
+            if (!isEnermyDead && !isBossActive && ClickLimit > 0)
             {
                 if (isBossActive)
                 {
-                    Bosshp -= 10; // Deal damage to boss
+                    Bosshp -= 6; // Deal damage to boss
+                    ClickLimit--; // Decrease click limit for boss fight
                     if (Bosshp <= 0)
                     {
                         isEnermyDead = true; // Win condition reached
@@ -174,7 +174,8 @@ public class Game1 : Game
                 }
                 else
                 {
-                    Enermyhp -= 10; // Deal damage to standard enemy
+                    Enermyhp -= 6; // Deal damage to standard enemy
+                    ClickLimit--; // Decrease click limit for normal fight
                     if (Enermyhp <= 0)
                     {
                         isEnermyDead = true;
@@ -240,7 +241,7 @@ public class Game1 : Game
             for (int i = 0; i < 3; i++)
             {
                 int xPos = 300 + (i * 200);
-                _spriteBatch.Draw(_whitePixel, new Rectangle(xPos, 230, 128, 128), Color.Brown);
+                _spriteBatch.Draw(_whitePixel, new Rectangle(xPos, 230, 128, 128), Color.Black);
             }
         }
 
