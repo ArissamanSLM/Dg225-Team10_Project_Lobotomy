@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Content.Pipeline;
+using System;
 
 namespace Starter;
 
@@ -11,6 +12,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Texture2D _whitePixel;
     int hp = 30;
     int mp = 100;
     int snaity = 100;
@@ -23,7 +25,9 @@ public class Game1 : Game
     private MouseState previousMouse;
     private MouseState currentMouse;
     private Texture2DAtlas _textureAtlas;
-
+    private String[] RoomBAsed = new string[3] { "Event", "Enemy", "Boss"};
+    Vector2 Enermy1 = new Vector2(250, 250);
+    Vector2 Enermy2 = new Vector2(500 , 250);
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -45,7 +49,9 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        // TODO: use this.Content to load your game content here
+        // Create a 1x1 white pixel texture at runtime.
+        _whitePixel = new Texture2D(GraphicsDevice, 1, 1);
+        _whitePixel.SetData(new[] { Color.White });
     }
 
     protected override void Update(GameTime gameTime)
@@ -69,7 +75,10 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
+        _spriteBatch.Begin();
+        // Draw a single pixel at (100, 100).
+        _spriteBatch.Draw(_whitePixel, new Rectangle(100, 100, 1, 1), Color.White);
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }
