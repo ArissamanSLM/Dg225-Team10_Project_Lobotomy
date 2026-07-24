@@ -4,16 +4,16 @@ version: 0.1
 date: [วันที่]
 team: [ชื่อทีม]
 ---
-# Team Roles & Pipeline Ownership — [ชื่อทีม]
+# Team Roles & Pipeline Ownership — [DreamSlayer]
 
 ## แบ่งความรับผิดชอบตาม Pipeline (4 คน)
 
 | คน | ชื่อ   | Module ที่รับผิดชอบ         | Phase ที่ต้องเสร็จ |
 | ---- | ---------- | --------------------------------------- | ------------------------------ |
-| 1    | [ชื่อ] | `GameStateManager` + `InputManager` | Phase 2 (Hour 6–14)           |
-| 2    | [ชื่อ] | Core mechanic `Update()` logic        | Phase 2–3 (Hour 6–24)        |
-| 3    | [ชื่อ] | Render/`SpriteBatch`                 | Phase 2–3 (Hour 6–24)        |
-| 4    | [ชื่อ] | Content pipeline (MGCB) + Audio/UI      | Phase 3–4 (Hour 14–34)       |
+| 1    | [อริสมันต์ นานาใจ] | `GameStateManager` + `InputManager` | Phase 2 (Hour 6–14)           |
+| 2    | [ภูรินทร์ ใจเที่ยง] | Core mechanic `Update()` logic        | Phase 2–3 (Hour 6–24)        |
+| 3    | [วรเมธ วงค์กิติ] | Render/`SpriteBatch`                 | Phase 2–3 (Hour 6–24)        |
+| 4    | [วินทกร ชุ่มทอง] | Content pipeline (MGCB) + Audio/UI      | Phase 3–4 (Hour 14–34)       |
 
 > คนละไฟล์/module = ชนกันน้อยที่สุด ปรับ module ตามตาราง [01-pipeline-checklist.md](01-pipeline-checklist.md) ให้ตรงกับเกมจริงของทีม
 
