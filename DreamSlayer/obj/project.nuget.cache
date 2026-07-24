@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vfIqpZ2VMWg=",
+  "dgSpecHash": "XYfsGq0Iu8A=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
+  "projectFilePath": "c:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ASUS\\.nuget\\packages\\monogame.content.builder.task\\3.8.5\\monogame.content.builder.task.3.8.5.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\monogame.extended\\6.0.1\\monogame.extended.6.0.1.nupkg.sha512",
@@ -22,15 +22,5 @@
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.17\\microsoft.aspnetcore.app.ref.9.0.17.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\9.0.17\\microsoft.netcore.app.host.win-x64.9.0.17.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "message": "Problem reading the cache file C:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
-      "projectPath": "C:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }

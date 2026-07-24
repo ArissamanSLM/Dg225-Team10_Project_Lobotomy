@@ -42,10 +42,10 @@ flowchart LR
 
 ## Controls
 
-| Key        | Action   |
-| ---------- | -------- |
-| Mouse/Drag | Use card |
-| [Esc]      | Menu     |
+| Key        | Action                |
+| ---------- | --------------------- |
+| Mouse/Drag | Use card/Interraction |
+| [Esc]      | Menu                  |
 
 ## Win / Lose Condition
 

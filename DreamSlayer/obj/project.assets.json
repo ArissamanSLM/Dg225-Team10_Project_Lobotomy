@@ -506,11 +506,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
+      "projectUniqueName": "c:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
       "projectName": "DreamSlayer",
-      "projectPath": "C:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
+      "projectPath": "c:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\DreamSlayer.csproj",
       "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\obj\\",
+      "outputPath": "c:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -622,13 +622,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400-preview.0.26322.102/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayer\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
-    }
-  ]
+  }
 }
