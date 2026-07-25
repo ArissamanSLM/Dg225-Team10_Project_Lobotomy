@@ -33,8 +33,8 @@ date: [วันที่]
 | `Battle_music_01.mp3` | เพลงสู้ศัตรูปกติ | [[ลิงก์](https://youtu.be/Rhz0BoK_zv4?si=IO7LXzdlobXq9NEH)]                                             | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
 | `Boss_music_01.mp3`   | เพลงสู้ศัตรูบอส   | [[ลิงก์](https://www.youtube.com/watch?v=MXqrfGfRRvo&list=PL733HyN92klZ5MWQnYJrM8Mi6qAu4KCmM&index=23)] | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
 | `Start_music.mp3`     | เพลงหน้าเปิดเกม   | [[ลิงก์](https://youtu.be/0Nsb-RmFoKA?si=K5wHwKE9Kk-eZR0v)]                                             | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
-| `Event_shop.mp3`      | เพลงร้านค้า           |  [[ลิงก์]([https://youtu.be/0Nsb-RmFoKA?si=K5wHwKE9Kk-eZR0v](https://youtu.be/8hSoJ3-m_U8?si=8Zflr5BUGHl6RtUt))] | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
-| `.mp3`      |            |  [[ลิงก์]()] | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
+| `Event_shop.mp3`      | เพลงร้านค้า           |  [[ลิงก์](https://youtu.be/8hSoJ3-m_U8?si=8Zflr5BUGHl6RtUt)] | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
+| `.mp3`      |            |  [ลิงก์] | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
 
 ## Fonts
 
