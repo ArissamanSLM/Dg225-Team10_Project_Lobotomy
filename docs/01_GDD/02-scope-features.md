@@ -15,14 +15,14 @@ date: [วันที่]
 | #  | Feature                         | Priority | หมายเหตุ |
 | -- | ------------------------------- | -------- | ---------------- |
 | 1  | [card]                          | Must     |                  |
-| 2  | [map branch]                    | must     |                  |
+| 2  | [map branch]                    | maybe?   |                  |
 | 3  | [boss]                          | must     |                  |
 | 4  | [action]                        | must     |                  |
 | 5  | [title screen menu]             | must     |                  |
-| 6  | [pause / stop game]             | should   |                  |
-| 7  | [perk /level]                   | maybe    |                  |
-| 8  | [shop / rest/Event]             | maybe    |                  |
-| 9  | [Win screen / Lose screen]      | maybe?   |                  |
+| 6  | [pause / stop game]             | should?  |                  |
+| 7  | [perk /level]                   | maybe?   |                  |
+| 8  | [shop / rest/Event]             | should?  |                  |
+| 9  | [Win screen / Lose screen]      | should?  |                  |
 | 10 | [Peak / Level / Upgrade system] | maybe?   |                  |
 
 ## Out of Scope — สิ่งที่ "จะไม่ทำ"
