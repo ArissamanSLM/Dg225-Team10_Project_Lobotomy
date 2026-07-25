@@ -47,12 +47,12 @@ public class CardData
     public static List<CardData> MakeStartingDeck()
     {
         List<CardData> deck = new List<CardData>();
-        deck.Add(new CardData("Strike", 10, 6, "Attack"));
-        deck.Add(new CardData("Strike", 10, 6, "Attack"));
+        deck.Add(new CardData("Strike", 10, 5, "Attack"));
+        deck.Add(new CardData("Strike", 10, 5, "Attack"));
         deck.Add(new CardData("Defend", 5, 4, "Defense"));
         deck.Add(new CardData("Defend", 5, 4, "Defense"));
-        deck.Add(new CardData("Heal", 8, 5, "Heal"));
-        deck.Add(new CardData("Heal", 8, 5, "Heal"));
+        deck.Add(new CardData("Heal", 8, 2, "Heal"));
+        deck.Add(new CardData("Heal", 8, 2, "Heal"));
         return deck;
     }
 }

@@ -171,6 +171,20 @@ public class Game1 : Game
         // Render Active Enemy or Boss
         if (!isEnermyDead)
         {
+            int enemyHpBarMaxWidth = 256;
+            int enemyHpWidth = Math.Max(0, (int)(enemyHpBarMaxWidth * (enemyManager.EnemyHp / 30f)));
+            int bossHpWidth = Math.Max(0, (int)(enemyHpBarMaxWidth * (enemyManager.BossHp / 120f)));
+
+            _spriteBatch.Draw(_whitePixel, new Rectangle(512, 100, enemyHpBarMaxWidth, 32), Color.DarkGray);
+            if (isBossActive)
+            {
+                _spriteBatch.Draw(_whitePixel, new Rectangle(512, 100, bossHpWidth, 32), Color.DarkRed);
+            }
+            else
+            {
+                _spriteBatch.Draw(_whitePixel, new Rectangle(512, 100, enemyHpWidth, 32), Color.Red);
+            }
+
             Color enemyColor = isBossActive ? Color.DarkRed : Color.Red;
             Rectangle enemyRect = isBossActive ? new Rectangle(512, 200, 150, 150) : new Rectangle(512, 230, 128, 128);
             _spriteBatch.Draw(_whitePixel, enemyRect, enemyColor);
@@ -248,8 +262,8 @@ public class Game1 : Game
         }
         else if (card.Type == "Defense")
         {
-            playerManager.Hp += card.Value;
-            playerManager.Sanity += 2;
+            playerManager.Hp += card.Value/4;
+            playerManager.Sanity += 4;
         }
         else if (card.Type == "Heal")
         {

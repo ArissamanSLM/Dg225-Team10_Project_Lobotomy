@@ -4,7 +4,7 @@ public class EnemyManager
 {
     public int EnemyHp { get; set; } = 30;
     public int BossHp { get; set; } = 120;
-    public int EnemyActionCount { get; set; } = 4;
+    public int EnemyActionCount { get; set; } = 2;
     public int BossActionCount { get; set; } = 3;
 
     public void MonsterAction(ref int playerHp)
@@ -13,7 +13,7 @@ public class EnemyManager
         if (EnemyActionCount == 0)
         {
             playerHp -= enemyDamage;
-            EnemyActionCount = 4;
+            EnemyActionCount = 2;
         }
         else
         {
