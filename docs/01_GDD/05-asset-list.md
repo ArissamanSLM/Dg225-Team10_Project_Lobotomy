@@ -31,10 +31,10 @@ date: [วันที่]
 | ----------------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------- | -------------- | ------------------ |
 | `bgm_stage_01.mp3`    | เพลงด่านแรก           | [ลิงก์]                                                                                              | [license]              | 🔲 Not Started | [ชื่อ]         |
 | `Battle_music_01.mp3` | เพลงสู้ศัตรูปกติ | [[ลิงก์](https://youtu.be/Rhz0BoK_zv4?si=IO7LXzdlobXq9NEH)]                                             | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
-| `Boss_music_01.mp3`   | เพลงสู้ศัตรูบอส   | [[ลิงก์](https://www.youtube.com/watch?v=MXqrfGfRRvo&list=PL733HyN92klZ5MWQnYJrM8Mi6qAu4KCmM&index=23)] | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
+| `Boss_music_01.mp3`   | เพลงสู้ศัตรูบอส   | [[ลิงก์](https://youtu.be/-Y6pZ8kXCP0?si=nnAyh7rms1wvdEhu)] | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
 | `Start_music.mp3`     | เพลงหน้าเปิดเกม   | [[ลิงก์](https://youtu.be/0Nsb-RmFoKA?si=K5wHwKE9Kk-eZR0v)]                                             | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
-| `Event_shop.mp3`      | เพลงร้านค้า           | [[ลิงก์](https://youtu.be/8hSoJ3-m_U8?si=8Zflr5BUGHl6RtUt)]                                             | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
-| `.mp3`                |                                  | [ลิงก์]                                                                                              | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
+| `Event_shop.mp3`      | เพลงร้านค้า1           | [[ลิงก์](https://youtu.be/8hSoJ3-m_U8?si=8Zflr5BUGHl6RtUt)]                                             | [M-ART / Blacksouls 1] | 🔲 Not Started | [ภูรินทร์] |
+| `Bad_effect_gain.mp3`                | เพลงต้องได้ดีบัพ | [[ลิงก์(https://youtu.be/9YE_YxJ7K7M?si=W8T-9UqGuuxs4aGL)]] | [Silent Hill 2] | 🔲 Not Started | [ภูรินทร์] |
 | `.mp3`                |                                  | [ลิงก์]                                                                                              | []                     | 🔲 Not Started | [ภูรินทร์] |
 | `.mp3`                |                                  | [ลิงก์]                                                                                              | []                     | 🔲 Not Started | [ภูรินทร์] |
 | `.mp3`                |                                  | [ลิงก์]                                                                                              | []                     | 🔲 Not Started | [ภูรินทร์] |
