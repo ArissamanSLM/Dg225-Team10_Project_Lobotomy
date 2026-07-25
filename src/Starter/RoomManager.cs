@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Starter;
 
@@ -65,9 +66,13 @@ public class RoomManager
         }
     }
 
-    public void Shoproom(ref int coinSoul, ref int hp, ref int sanity)
+    public void Shoproom(ref int coinSoul, ref int hp, ref int sanity, List<CardData> deck)
     {
-        if (coinSoul >= 20)
+        if (coinSoul >= 50)
+        {
+            deck.Add(new CardData("<NAME>", 10, 6, "Attack"));
+        }
+        else if (coinSoul >= 20)
         {
             coinSoul -= 20;
             hp += 10;
@@ -80,4 +85,5 @@ public class RoomManager
             sanity += 10;
         }
     }
+    
 }

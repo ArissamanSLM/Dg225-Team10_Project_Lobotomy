@@ -23,7 +23,8 @@ public class RoomData
 public enum EventType
 {
     Cursed,
-    Blessed
+    Blessed,
+    Shop
 }
 
 public class CardRectangle
@@ -45,6 +46,12 @@ public class CardRectangle
         if (Data.Type == "Attack") cardColor = Color.LightCoral;
         else if (Data.Type == "Defense") cardColor = Color.LightBlue;
         else if (Data.Type == "Heal") cardColor = Color.LightGreen;
+        else if (Data.Type == "Counter") cardColor = Color.Goldenrod;
+        else if (Data.Type == "PowerUp") cardColor = Color.Orange;
+        else if (Data.Type == "Protection") cardColor = Color.MediumPurple;
+        else if (Data.Type == "duplicate") cardColor = Color.LightGray;
+        else if (Data.Type == "inpection") cardColor = Color.LightYellow;
+        else if (Data.Type == "Forcefield") cardColor = Color.LightCyan;
 
         spriteBatch.Draw(whitePixel, Bounds, cardColor);
     }
@@ -142,7 +149,7 @@ public class Game1 : Game
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    int xPos = 300 + (i * 200);
+                    int xPos = 300 + (i * 300);
                     Rectangle doorRect = new Rectangle(xPos, 230, 128, 128);
 
                     if (doorRect.Contains(mousePos))
@@ -195,8 +202,8 @@ public class Game1 : Game
         {
             for (int i = 0; i < 3; i++)
             {
-                int xPos = 300 + (i * 200); 
-                _spriteBatch.Draw(_whitePixel, new Rectangle(xPos, 230, 128, 128), Color.Black);
+                int xPos = 300 + (i * 300); 
+                _spriteBatch.Draw(_whitePixel, new Rectangle(xPos, 230, 128, 128), Color.LightSkyBlue);
             }
         }
 
@@ -205,7 +212,7 @@ public class Game1 : Game
         {
             int xPos = 100 + (i * 100);
             CardData card = playerManager.HandCards[i];
-            Color cardColor = card.Type == "Attack" ? Color.LightCoral : card.Type == "Defense" ? Color.LightBlue : Color.LightGreen;
+            Color cardColor = card.Type == "Attack" ? Color.LightCoral : card.Type == "Defense" ? Color.LightBlue : card.Type == "Counter" ? Color.Goldenrod : card.Type == "PowerUp" ? Color.Orange : card.Type == "Protection" ? Color.MediumPurple : card.Type == "duplicate" ? Color.LightGray : card.Type == "inpection" ? Color.LightYellow : card.Type == "Forcefield" ? Color.LightCyan : Color.LightGreen;
             _spriteBatch.Draw(_whitePixel, new Rectangle(xPos, 600, 80, 120), cardColor);
         }
         // SkipButton Display
@@ -215,7 +222,7 @@ public class Game1 : Game
         // Player UI Status Bars
         int hpBarMaxWidth = 256;
         int sanityBarMaxWidth = 192;
-        int hpBarWidth = Math.Min(hpBarMaxWidth, (int)(hpBarMaxWidth * (playerManager.Hp / 15f)));
+        int hpBarWidth = Math.Min(hpBarMaxWidth, (int)(hpBarMaxWidth * (playerManager.Hp / 25f)));
         int sanityBarWidth = Math.Min(sanityBarMaxWidth, (int)(sanityBarMaxWidth * (playerManager.Sanity / 100f)));
 
         _spriteBatch.Draw(_whitePixel, new Rectangle(64, 64, hpBarMaxWidth, 32), Color.DarkGray);
@@ -224,6 +231,10 @@ public class Game1 : Game
         _spriteBatch.Draw(_whitePixel, new Rectangle(64, 104, sanityBarMaxWidth, 24), Color.DarkGray);
         _spriteBatch.Draw(_whitePixel, new Rectangle(64, 104, sanityBarWidth, 24), Color.LightBlue);
 
+        int defenseBarMaxWidth = 160;
+        int defenseBarWidth = Math.Min(defenseBarMaxWidth, playerManager.Defense * 10);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 144, defenseBarMaxWidth, 20), Color.DarkGray);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 144, defenseBarWidth, 20), Color.CornflowerBlue);
 
         _spriteBatch.End();
 
@@ -241,9 +252,10 @@ public class Game1 : Game
 
         if (card.Type == "Attack")
         {
+            int damage = card.Value + playerManager.PowerBoost;
             if (isBossActive)
             {
-                enemyManager.BossHp -= card.Value;
+                enemyManager.BossHp -= damage;
                 if (enemyManager.BossHp <= 0)
                 {
                     isEnermyDead = true;
@@ -252,7 +264,7 @@ public class Game1 : Game
             }
             else
             {
-                enemyManager.EnemyHp -= card.Value;
+                enemyManager.EnemyHp -= damage;
                 if (enemyManager.EnemyHp <= 0)
                 {
                     isEnermyDead = true;
@@ -262,13 +274,38 @@ public class Game1 : Game
         }
         else if (card.Type == "Defense")
         {
-            playerManager.Hp += card.Value/4;
+            playerManager.GainDefense(card.Value);
             playerManager.Sanity += 4;
         }
         else if (card.Type == "Heal")
         {
-            playerManager.Hp += card.Value;
+            playerManager.Heal(card.Value);
             playerManager.Sanity += 5;
+        }
+        else if (card.Type == "Counter")
+        {
+            playerManager.GainDefense(4);
+            playerManager.Sanity += 2;
+            int damage = card.Value + playerManager.PowerBoost;
+            if (isBossActive)
+            {
+                enemyManager.BossHp -= damage;
+            }
+            else
+            {
+                enemyManager.EnemyHp -= damage;
+            }
+        }
+        else if (card.Type == "PowerUp")
+        {
+            playerManager.PowerBoost += card.Value;
+            playerManager.Sanity += 2;
+        }
+        else if (card.Type == "Protection")
+        {
+            playerManager.DefenseBoostTurns = 1;
+            playerManager.GainDefense(card.Value);
+            playerManager.Sanity += 2;
         }
 
         if (playerManager.ClickLimit <= 0 || playerManager.HandCards.Count == 0)
@@ -281,11 +318,11 @@ public class Game1 : Game
     {
         if (isBossActive)
         {
-            enemyManager.BossAction(ref playerManager.Hp);
+            enemyManager.BossAction(playerManager);
         }
         else
         {
-            enemyManager.MonsterAction(ref playerManager.Hp);
+            enemyManager.MonsterAction(playerManager);
         }
         playerManager.Sanity += 10; //Regain some sanity each turn
         playerManager.LimitPlayerStats();
@@ -300,7 +337,7 @@ public class Game1 : Game
         {
             currentRoomType = "Boss";
             isBossActive = true;
-            enemyManager.BossHp = 120;
+            enemyManager.BossHp = 200;
             isEnermyDead = false;
         }
         else if (chosenType == "Event")
@@ -310,7 +347,7 @@ public class Game1 : Game
 
             if (Shopevent)
             {
-                roomManager.Shoproom(ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity);
+                roomManager.Shoproom(ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity, playerManager.HandCards);
                 Shopevent = false;
             }
 
