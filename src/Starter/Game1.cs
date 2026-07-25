@@ -8,41 +8,7 @@ using System;
 
 namespace Starter;
 
-public class CardData 
-{
-    public string Name { get; set; }
-    public int SanityCost { get; set; }
-    public int Value { get; set; } 
-    public string Type { get; set; } 
 
-    public CardData(string name, int cost, int value, string type) 
-    {
-        Name = name;
-        SanityCost = cost;
-        Value = value;
-        Type = type;
-    }
-
-    public enum CardType
-    {
-        Attack,
-        Defense,
-        Heal
-    }
-
-    // Fixed: Returns a list of cards instead of multiple unreachable returns
-    public static List<CardData> MakeStartingDeck()
-    {
-        List<CardData> deck = new List<CardData>();
-        deck.Add(new CardData("Strike", 10, 6, "Attack"));
-        deck.Add(new CardData("Strike", 10, 6, "Attack"));
-        deck.Add(new CardData("Defend", 5, 4, "Defense"));
-        deck.Add(new CardData("Defend", 5, 4, "Defense"));
-        deck.Add(new CardData("Heal", 8, 5, "Heal"));
-        deck.Add(new CardData("Heal", 8, 5, "Heal"));
-        return deck;
-    }
-}
 
 public class RoomData 
 {
@@ -84,148 +50,26 @@ public class CardRectangle
     }
 }
 
-public class RoomManager
-{
-    private int roomCount = 0;
-    private int recentEncounters = 0;
-    private int recentEvents = 0;
-
-    private int encounterChance = 50;
-    private int eventChance = 50;
-
-    private static Random rand = new Random();
-
-    public string GetNextBrownDoorType()
-    {
-        if (recentEncounters == recentEvents)
-        {
-            encounterChance = 50;
-            eventChance = 50;
-        }
-        else if (recentEncounters > recentEvents)
-        {
-            encounterChance = 30;
-            eventChance = 70;
-        }
-        else
-        {
-            encounterChance = 70;
-            eventChance = 30;
-        }
-
-        int roll = rand.Next(0, 100);
-
-        if (roll < encounterChance)
-        {
-            return "Encounter"; 
-        }
-        else
-        {
-            return "Event"; 
-        }
-    }
-
-    public void RegisterRoomCompletion(string chosenType)
-    {
-        roomCount++;
-
-        if (chosenType == "Encounter")
-        {
-            recentEncounters++;
-        }
-        else if (chosenType == "Event")
-        {
-            recentEvents++;
-        }
-    }
-
-    public bool IsBossRoomReady()
-    {
-        return roomCount >= 5;
-    }
-
-    public void ResetRun()
-    {
-        roomCount = 0;
-        recentEncounters = 0;
-        recentEvents = 0;
-    }
-
-    public void EventRoom(ref int hp, ref int sanity, EventType eventType)
-    {
-        int roll = rand.Next(0, 100);
-        if (roll < 50)
-        {
-            hp -= 5;
-            sanity -= 10;
-        }
-        else
-        {
-            // Implement the effects of a blessed event here
-            hp += 10;
-            sanity += 20;
-        }
-    }
-}
-
-// Fixed: Methods are now properly separated outside of each other
-public class MonsterHandler
-{
-    public int EnemyHp = 30;
-    public int BossHp = 120;
-    public int EnemyActionCount = 4;
-    public int BossActionCount = 3;
-
-    public void MonsterAction(ref int playerHp)
-    {
-        int enemyDamage = 3;
-        if (EnemyActionCount == 0)
-        {
-            playerHp -= enemyDamage;
-            EnemyActionCount = 4;
-        }
-        else
-        {
-            EnemyActionCount--;
-        }
-    }
-
-    public void BossAction(ref int playerHp)
-    {
-        int bossDamage = 5;
-        if (BossActionCount == 0)
-        {
-            playerHp -= bossDamage;
-            BossActionCount = 3;
-        }
-        else
-        {
-            BossActionCount--;
-        }
-    }
-}
-
 public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Texture2D _whitePixel;
     
-    int hp = 15;
-    int sanity = 100;
-    int holdCard = 6;
-    int ClickLimit = 6;
+    bool Shopevent = false;
     
     bool isEnermyDead = false;
     bool isBossActive = false; 
     bool Skipturn = false; // skip turn when player has no Sanity left to play
+    private string currentRoomType = "Encounter";
 
     private MouseState previousMouse;
     private MouseState currentMouse;
     
     private RoomManager roomManager = new RoomManager();
-    private MonsterHandler monsterHandler = new MonsterHandler();
-    private List<CardData> handCards = new List<CardData>();
+    private EnemyManager enemyManager = new EnemyManager();
+    private PlayerManager playerManager = new PlayerManager();
+    private CoinManager coinManager = new CoinManager();
 
     public Game1()
     {
@@ -239,8 +83,7 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        handCards = CardData.MakeStartingDeck();
-        ClickLimit = 6;
+        playerManager.ResetHand();
         base.Initialize();
     }
 
@@ -276,9 +119,9 @@ public class Game1 : Game
                 {
                     Skipturn = true;
                 }
-                else if (handCards.Count > 0 && ClickLimit > 0)
+                else if (playerManager.HandCards.Count > 0 && playerManager.ClickLimit > 0)
                 {
-                    for (int i = 0; i < handCards.Count && i < holdCard; i++)
+                    for (int i = 0; i < playerManager.HandCards.Count && i < playerManager.HoldCard; i++)
                     {
                         int xPos = 100 + (i * 100);
                         Rectangle cardRect = new Rectangle(xPos, 600, 80, 120);
@@ -304,23 +147,9 @@ public class Game1 : Game
 
                     if (doorRect.Contains(mousePos))
                     {
-                        string chosenType = roomManager.GetNextBrownDoorType();
+                        string chosenType = i == 1 ? roomManager.GetNextYellowDoorType() : roomManager.GetNextBrownDoorType();
                         roomManager.RegisterRoomCompletion(chosenType);
-
-                        if (roomManager.IsBossRoomReady())
-                        {
-                            isBossActive = true;
-                            monsterHandler.BossHp = 120; 
-                        }
-                        else
-                        {
-                            monsterHandler.EnemyHp = 30; 
-                            isBossActive = false;
-                        }
-
-                        isEnermyDead = false;
-                        ClickLimit = 6;
-                        handCards = CardData.MakeStartingDeck();
+                        EnterRoom(chosenType);
                         break;
                     }
                 }
@@ -358,19 +187,29 @@ public class Game1 : Game
         }
 
         // Card Display
-        for (int i = 0; i < handCards.Count && i < holdCard; i++)
+        for (int i = 0; i < playerManager.HandCards.Count && i < playerManager.HoldCard; i++)
         {
             int xPos = 100 + (i * 100);
-            CardData card = handCards[i];
+            CardData card = playerManager.HandCards[i];
             Color cardColor = card.Type == "Attack" ? Color.LightCoral : card.Type == "Defense" ? Color.LightBlue : Color.LightGreen;
             _spriteBatch.Draw(_whitePixel, new Rectangle(xPos, 600, 80, 120), cardColor);
         }
         // SkipButton Display
         Color skipButtonColor = Skipturn ? Color.Goldenrod : Color.Gray;
         _spriteBatch.Draw(_whitePixel, new Rectangle(1000, 600, 80, 40), skipButtonColor);
+
         // Player UI Status Bars
-        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 64, 256, 32), Color.Green);
-        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 96, 192, 24), Color.LightBlue);
+        int hpBarMaxWidth = 256;
+        int sanityBarMaxWidth = 192;
+        int hpBarWidth = Math.Min(hpBarMaxWidth, (int)(hpBarMaxWidth * (playerManager.Hp / 15f)));
+        int sanityBarWidth = Math.Min(sanityBarMaxWidth, (int)(sanityBarMaxWidth * (playerManager.Sanity / 100f)));
+
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 64, hpBarMaxWidth, 32), Color.DarkGray);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 64, hpBarWidth, 32), Color.Green);
+
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 104, sanityBarMaxWidth, 24), Color.DarkGray);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 104, sanityBarWidth, 24), Color.LightBlue);
+
 
         _spriteBatch.End();
 
@@ -379,40 +218,46 @@ public class Game1 : Game
 
     private void UseCard(int cardIndex)
     {
-        if (cardIndex < 0 || cardIndex >= handCards.Count)
+        if (cardIndex < 0 || cardIndex >= playerManager.HandCards.Count)
             return;
 
-        CardData card = handCards[cardIndex];
-        handCards.RemoveAt(cardIndex);
-        ClickLimit--;
+        CardData card = playerManager.HandCards[cardIndex];
+        playerManager.HandCards.RemoveAt(cardIndex);
+        playerManager.ClickLimit--;
 
         if (card.Type == "Attack")
         {
             if (isBossActive)
             {
-                monsterHandler.BossHp -= card.Value;
-                if (monsterHandler.BossHp <= 0)
+                enemyManager.BossHp -= card.Value;
+                if (enemyManager.BossHp <= 0)
+                {
                     isEnermyDead = true;
+                    coinManager.Coins += 15;
+                }
             }
             else
             {
-                monsterHandler.EnemyHp -= card.Value;
-                if (monsterHandler.EnemyHp <= 0)
+                enemyManager.EnemyHp -= card.Value;
+                if (enemyManager.EnemyHp <= 0)
+                {
                     isEnermyDead = true;
+                    coinManager.Coins += 15;
+                }
             }
         }
         else if (card.Type == "Defense")
         {
-            hp += card.Value;
-            sanity += 2;
+            playerManager.Hp += card.Value;
+            playerManager.Sanity += 2;
         }
         else if (card.Type == "Heal")
         {
-            hp += card.Value;
-            sanity += 5;
+            playerManager.Hp += card.Value;
+            playerManager.Sanity += 5;
         }
 
-        if (ClickLimit <= 0 || handCards.Count == 0)
+        if (playerManager.ClickLimit <= 0 || playerManager.HandCards.Count == 0)
         {
             Skipturn = true;
         }
@@ -422,14 +267,48 @@ public class Game1 : Game
     {
         if (isBossActive)
         {
-            monsterHandler.BossAction(ref hp);
+            enemyManager.BossAction(ref playerManager.Hp);
         }
         else
         {
-            monsterHandler.MonsterAction(ref hp);
+            enemyManager.MonsterAction(ref playerManager.Hp);
         }
-        sanity += 10; //Regain some sanity each turn
-        ClickLimit = 6;
-        handCards = CardData.MakeStartingDeck();
+        playerManager.Sanity += 10; //Regain some sanity each turn
+        playerManager.LimitPlayerStats();
+        playerManager.ResetHand();
+    }
+
+    private void EnterRoom(string chosenType)
+    {
+        currentRoomType = chosenType;
+
+        if (roomManager.IsBossRoomReady())
+        {
+            currentRoomType = "Boss";
+            isBossActive = true;
+            enemyManager.BossHp = 120;
+            isEnermyDead = false;
+        }
+        else if (chosenType == "Event")
+        {
+            isBossActive = false;
+            roomManager.EventRoom(ref playerManager.Hp, ref playerManager.Sanity, ref Shopevent, EventType.Cursed);
+
+            if (Shopevent)
+            {
+                roomManager.Shoproom(ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity);
+                Shopevent = false;
+            }
+
+            isEnermyDead = true;
+        }
+        else
+        {
+            isBossActive = false;
+            enemyManager.EnemyHp = 30;
+            isEnermyDead = false;
+        }
+
+        playerManager.ResetHand();
     }
 }
