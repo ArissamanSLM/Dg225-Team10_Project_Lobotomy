@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Starter;
 
@@ -67,6 +69,9 @@ public class Game1 : Game
     Texture2D _cardTextureDuplicate;
     Texture2D _cardTextureInspection;
     Texture2D _cardTextureForcefield;
+    private Song _battleMusic;
+private Song _bossMusic1;
+private SoundEffect _badEffectGain;
 
     bool Shopevent = false;
     bool isShopActive = false;

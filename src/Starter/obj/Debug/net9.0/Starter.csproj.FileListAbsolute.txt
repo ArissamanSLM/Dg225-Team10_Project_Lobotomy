@@ -1,4 +1,3 @@
-c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Starter.exe
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Starter.deps.json
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Starter.runtimeconfig.json
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Starter.dll
@@ -38,10 +37,34 @@ c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\obj\Debug\net9.0\Starter.pdb
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\obj\Debug\net9.0\Starter.genruntimeconfig.cache
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\obj\Debug\net9.0\ref\Starter.dll
-c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Counter.xnb
-c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\defend.xnb
-c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\heal.xnb
-c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Inspection.xnb
-c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Power up.xnb
-c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Protection.xnb
-c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\strike.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Counter.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\defend.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\heal.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Inspection.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Power up.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Protection.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\strike.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Bad_effect_gain.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Bad_effect_gain.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Battle_music_01.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Battle_music_01.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Boss_music_01.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Boss_music_01.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Boss_music_02.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Boss_music_02.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Event_bad_choice.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Event_bad_choice.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Event_shop.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Event_shop.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Event_shop2.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Event_shop2.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Idea_Snow.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Idea_Snow.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Idel_forest.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Idel_forest.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Idle_sea.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Idle_sea.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Menu_start_pause.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Menu_start_pause.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Start_music.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Start_music.xnb

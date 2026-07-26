@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/strike.png</SourceFile>
+  <SourceFile>C:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/strike.png</SourceFile>
   <SourceTime>2026-07-26T08:32:44.1331247+07:00</SourceTime>
-  <DestFile>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/bin/DesktopGL/Content/strike.xnb</DestFile>
-  <DestTime>2026-07-26T08:43:30.2994234+07:00</DestTime>
+  <DestFile>C:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/bin/DesktopGL/Content/strike.xnb</DestFile>
+  <DestTime>2026-07-26T11:28:27.607435+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

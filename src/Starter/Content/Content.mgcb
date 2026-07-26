@@ -13,6 +13,30 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Bad_effect_gain.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Bad_effect_gain.mp3
+
+#begin Battle_music_01.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Battle_music_01.mp3
+
+#begin Boss_music_01.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Boss_music_01.mp3
+
+#begin Boss_music_02.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Boss_music_02.mp3
+
 #begin Counter.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -23,7 +47,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Counter.png
+/build:counter.png
 
 #begin defend.png
 /importer:TextureImporter
@@ -37,6 +61,24 @@
 /processorParam:TextureFormat=Color
 /build:defend.png
 
+#begin Event_bad_choice.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Event_bad_choice.mp3
+
+#begin Event_shop.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Event_shop.mp3
+
+#begin Event_shop2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Event_shop2.mp3
+
 #begin heal.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -49,6 +91,24 @@
 /processorParam:TextureFormat=Color
 /build:heal.png
 
+#begin Idea_Snow.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Idea_Snow.mp3
+
+#begin Idel_forest.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Idel_forest.mp3
+
+#begin Idle_sea.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Idle_sea.mp3
+
 #begin Inspection.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,6 +120,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Inspection.png
+
+#begin Menu_start_pause.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Menu_start_pause.mp3
 
 #begin Power up.png
 /importer:TextureImporter
@@ -84,6 +150,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Protection.png
+
+#begin Start_music.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Start_music.mp3
 
 #begin strike.png
 /importer:TextureImporter

@@ -499,10 +499,6 @@
             "version": "[9.0.17, 9.0.17]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[9.0.17, 9.0.17]"
-          },
-          {
             "name": "Microsoft.NETCore.App.Ref",
             "version": "[9.0.17, 9.0.17]"
           },

@@ -1,9 +1,9 @@
 
 #----------------------------- Global Properties ----------------------------#
 
-/outputDir:bin/$(Platform)
-/intermediateDir:obj/$(Platform)
-/platform:DesktopGL
+/outputDir:bin
+/intermediateDir:obj
+/platform:Windows
 /config:
 /profile:Reach
 /compress:False
@@ -36,6 +36,11 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Boss_music_02.mp3
+
+#begin Content.mgcb
+/importer:
+/processor:
+/build:Content.mgcb
 
 #begin Counter.png
 /importer:TextureImporter
@@ -90,6 +95,11 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:heal.png
+
+#begin Hellvore Font.ttf
+/importer:
+/processor:
+/build:Hellvore Font.ttf
 
 #begin Idea_Snow.mp3
 /importer:Mp3Importer
