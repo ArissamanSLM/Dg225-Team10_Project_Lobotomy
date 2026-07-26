@@ -2,13 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using MonoGame.Extended.Graphics;
-using MonoGame.Extended.Content.Pipeline;
 using System;
 
 namespace Starter;
-
-
 
 public class RoomData 
 {
@@ -62,9 +58,18 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Texture2D _whitePixel;
-    
+    Texture2D _cardTextureAttack;
+    Texture2D _cardTextureDefense;
+    Texture2D _cardTextureHeal;
+    Texture2D _cardTextureCounter;
+    Texture2D _cardTexturePowerUp;
+    Texture2D _cardTextureProtection;
+    Texture2D _cardTextureDuplicate;
+    Texture2D _cardTextureInspection;
+    Texture2D _cardTextureForcefield;
+
     bool Shopevent = false;
-    
+    bool isShopActive = false;
     bool isEnermyDead = false;
     bool isBossActive = false; 
     bool Skipturn = false; // skip turn when player has no Sanity left to play
@@ -100,6 +105,13 @@ public class Game1 : Game
 
         _whitePixel = new Texture2D(GraphicsDevice, 1, 1);
         _whitePixel.SetData(new[] { Color.White });
+        _cardTextureAttack = Content.Load<Texture2D>("strike");
+        _cardTextureDefense = Content.Load<Texture2D>("defend");
+        _cardTextureHeal = Content.Load<Texture2D>("heal");
+        _cardTextureCounter = Content.Load<Texture2D>("counter");
+        _cardTexturePowerUp = Content.Load<Texture2D>("Power up");
+        _cardTextureProtection = Content.Load<Texture2D>("Protection");
+        _cardTextureInspection = Content.Load<Texture2D>("Inspection");
     }
 
     protected override void Update(GameTime gameTime)
@@ -114,6 +126,32 @@ public class Game1 : Game
         {
             Point mousePos = new Point(currentMouse.X, currentMouse.Y);
             Rectangle skipRect = new Rectangle(1000, 600, 80, 40);
+            if (isShopActive)
+            {
+                // Shop Item Rectangles (3 items)
+                Rectangle item1Rect = new Rectangle(300, 230, 150, 150); // Buy Card (50 coins)
+                Rectangle item2Rect = new Rectangle(500, 230, 150, 150); // Big Heal (20 coins)
+                Rectangle item3Rect = new Rectangle(700, 230, 150, 150); // Small Heal (10 coins)
+                Rectangle exitShopRect = new Rectangle(500, 430, 150, 50); // Exit Shop button
+
+                if (item1Rect.Contains(mousePos))
+                {
+                    roomManager.TryBuyItem(1, ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity, playerManager.HandCards);
+                }
+                else if (item2Rect.Contains(mousePos))
+                {
+                    roomManager.TryBuyItem(2, ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity, playerManager.HandCards);
+                }
+                else if (item3Rect.Contains(mousePos))
+                {
+                    roomManager.TryBuyItem(3, ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity, playerManager.HandCards);
+                }
+                else if (exitShopRect.Contains(mousePos))
+                {
+                    isShopActive = false;
+                    // Go back to normal room selection doors after leaving shop
+                }
+            }
 
             if (!isEnermyDead)
             {
@@ -206,14 +244,71 @@ public class Game1 : Game
                 _spriteBatch.Draw(_whitePixel, new Rectangle(xPos, 230, 128, 128), Color.LightSkyBlue);
             }
         }
+        if (isShopActive)
+        {
+            // Draw 3 shop item boxes
+            _spriteBatch.Draw(_whitePixel, new Rectangle(300, 230, 150, 150), Color.Gold);      // Item 1: Card
+            _spriteBatch.Draw(_whitePixel, new Rectangle(500, 230, 150, 150), Color.LightGreen); // Item 2: Big Heal
+            _spriteBatch.Draw(_whitePixel, new Rectangle(700, 230, 150, 150), Color.DarkSeaGreen); // Item 3: Small Heal
 
-        // Card Display
-        for (int i = 0; i < playerManager.HandCards.Count && i < playerManager.HoldCard; i++)
+            // Exit Shop Button
+            _spriteBatch.Draw(_whitePixel, new Rectangle(500, 430, 150, 50), Color.Gray);        // Exit Button
+        }
+
+       for (int i = 0; i < playerManager.HandCards.Count && i < playerManager.HoldCard; i++)
         {
             int xPos = 100 + (i * 100);
             CardData card = playerManager.HandCards[i];
-            Color cardColor = card.Type == "Attack" ? Color.LightCoral : card.Type == "Defense" ? Color.LightBlue : card.Type == "Counter" ? Color.Goldenrod : card.Type == "PowerUp" ? Color.Orange : card.Type == "Protection" ? Color.MediumPurple : card.Type == "duplicate" ? Color.LightGray : card.Type == "inpection" ? Color.LightYellow : card.Type == "Forcefield" ? Color.LightCyan : Color.LightGreen;
-            _spriteBatch.Draw(_whitePixel, new Rectangle(xPos, 600, 80, 120), cardColor);
+            
+            // Default to white pixel if texture isn't found
+            Texture2D cardTexture = _whitePixel; 
+            Color tintColor = Color.White;
+
+            // Match card type to the texture you loaded in LoadContent
+            if (card.Type == "Attack") 
+            {
+                cardTexture = _cardTextureAttack;
+            }
+            else if (card.Type == "Defense") 
+            {
+                cardTexture = _cardTextureDefense;
+            }
+            else if (card.Type == "Heal") 
+            {
+                cardTexture = _cardTextureHeal;
+            }
+            else if (card.Type == "Counter") 
+            {
+                cardTexture = _cardTextureCounter;
+            }
+            else if (card.Type == "PowerUp") 
+            {
+                cardTexture = _cardTexturePowerUp;
+            }
+            else if (card.Type == "Protection") 
+            {
+                cardTexture = _cardTextureProtection;
+            }
+            else if (card.Type == "duplicate") 
+            {
+                cardTexture = _cardTextureDuplicate;
+            }
+            else if (card.Type == "inpection") 
+            {
+                cardTexture = _cardTextureInspection;
+            }
+            else if (card.Type == "Forcefield") 
+            {
+                cardTexture = _cardTextureForcefield;
+            }
+
+            // Draw the actual loaded texture instead of just the white pixel rectangle
+            if (cardTexture == null)
+            {
+                cardTexture = _whitePixel;
+            }
+
+            _spriteBatch.Draw(cardTexture, new Rectangle(xPos, 600, 80, 120), tintColor);       
         }
         // SkipButton Display
         Color skipButtonColor = Skipturn ? Color.Goldenrod : Color.Gray;
@@ -253,6 +348,7 @@ public class Game1 : Game
         if (card.Type == "Attack")
         {
             int damage = card.Value + playerManager.PowerBoost;
+            playerManager.Sanity -= 5;
             if (isBossActive)
             {
                 enemyManager.BossHp -= damage;
@@ -260,6 +356,7 @@ public class Game1 : Game
                 {
                     isEnermyDead = true;
                     coinManager.Coins += 15;
+                    playerManager.PowerBoost = 0; // Reset power boost after defeating the boss
                 }
             }
             else
@@ -269,23 +366,24 @@ public class Game1 : Game
                 {
                     isEnermyDead = true;
                     coinManager.Coins += 15;
+                    playerManager.PowerBoost = 0; // Reset power boost after defeating the enemy
                 }
             }
         }
         else if (card.Type == "Defense")
         {
             playerManager.GainDefense(card.Value);
-            playerManager.Sanity += 4;
+            playerManager.Sanity -= 7;
         }
         else if (card.Type == "Heal")
         {
             playerManager.Heal(card.Value);
-            playerManager.Sanity += 5;
+            playerManager.Sanity -= 5;
         }
         else if (card.Type == "Counter")
         {
             playerManager.GainDefense(4);
-            playerManager.Sanity += 2;
+            playerManager.Sanity -= 5;
             int damage = card.Value + playerManager.PowerBoost;
             if (isBossActive)
             {
@@ -299,14 +397,41 @@ public class Game1 : Game
         else if (card.Type == "PowerUp")
         {
             playerManager.PowerBoost += card.Value;
-            playerManager.Sanity += 2;
+            playerManager.Sanity -= 8;
         }
         else if (card.Type == "Protection")
         {
             playerManager.DefenseBoostTurns = 1;
             playerManager.GainDefense(card.Value);
-            playerManager.Sanity += 2;
+            playerManager.Sanity -= 4;
         }
+        else if (card.Type == "inpection")
+        {
+            // Draw 3 extra cards (or however many cards you want to pull)
+            for (int k = 0; k < 3; k++)
+            {
+                // Pull a random card from your starting/current deck pool
+                List<CardData> availableCards = CardData.MakeStartingDeck(); 
+                if (availableCards.Count > 0)
+                {
+                    int randomIndex = new Random().Next(availableCards.Count);
+                    playerManager.HandCards.Add(availableCards[randomIndex]);
+                }
+            }
+            playerManager.Sanity += 20; // Optional sanity regain
+        }
+        else if (card.Type == "duplicate")
+        {
+            // Duplicate a random card from your hand (if any)
+            if (playerManager.HandCards.Count > 0)
+            {
+                int randomIndex = new Random().Next(playerManager.HandCards.Count);
+                CardData cardToDuplicate = playerManager.HandCards[randomIndex];
+                playerManager.HandCards.Add(new CardData(cardToDuplicate.Name, cardToDuplicate.SanityCost, cardToDuplicate.Value, cardToDuplicate.Type));
+            }
+            playerManager.Sanity -= 20; // Optional sanity regain
+        }
+        
 
         if (playerManager.ClickLimit <= 0 || playerManager.HandCards.Count == 0)
         {
@@ -324,7 +449,7 @@ public class Game1 : Game
         {
             enemyManager.MonsterAction(playerManager);
         }
-        playerManager.Sanity += 10; //Regain some sanity each turn
+        playerManager.Sanity += 25; //Regain some sanity each turn
         playerManager.LimitPlayerStats();
         playerManager.ResetHand();
     }
@@ -347,11 +472,14 @@ public class Game1 : Game
 
             if (Shopevent)
             {
-                roomManager.Shoproom(ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity, playerManager.HandCards);
+                isShopActive = true;    // Open shop UI state
+                isEnermyDead = true;    // Keeps combat inactive while shopping
                 Shopevent = false;
             }
-
-            isEnermyDead = true;
+            else
+            {
+                isEnermyDead = true;    // Normal event resolution back to doors
+            }
         }
         else
         {

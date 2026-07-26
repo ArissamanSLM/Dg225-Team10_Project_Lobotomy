@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/Counter.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/defend.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/heal.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/Inspection.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/Power up.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/Protection.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/src/Starter/Content/strike.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>

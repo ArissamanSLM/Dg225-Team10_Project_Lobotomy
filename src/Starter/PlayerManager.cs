@@ -10,7 +10,7 @@ public class PlayerManager
     public int Defense = 0;
     public int PowerBoost = 0;
     public int DefenseBoostTurns = 0;
-    public int ClickLimit = 6;
+    public int ClickLimit = 3;
     public int HoldCard = 6;
 
     private readonly CardManager cardManager = new CardManager();
@@ -24,7 +24,7 @@ public class PlayerManager
     public void ResetHand()
     {
         HandCards = cardManager.DrawInitialHand(HoldCard);
-        ClickLimit = 6;
+        ClickLimit = 3;
     }
 
     public void ApplyCardEffect(CardData card)

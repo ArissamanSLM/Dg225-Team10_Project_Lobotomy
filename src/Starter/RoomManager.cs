@@ -66,24 +66,32 @@ public class RoomManager
         }
     }
 
-    public void Shoproom(ref int coinSoul, ref int hp, ref int sanity, List<CardData> deck)
+    public bool TryBuyItem(int choice, ref int coinSoul, ref int hp, ref int sanity, List<CardData> deck)
     {
-        if (coinSoul >= 50)
+        // Choice 1: Buy Card (Cost: 50 coins)
+        if (choice == 1 && coinSoul >= 50)
         {
-            deck.Add(new CardData("<NAME>", 10, 6, "Attack"));
+            coinSoul -= 50;
+            deck.Add(new CardData("ShopCard", 12, 5, "Attack"));
+            return true;
         }
-        else if (coinSoul >= 20)
+        // Choice 2: Big Heal & Sanity (Cost: 20 coins)
+        else if (choice == 2 && coinSoul >= 20)
         {
             coinSoul -= 20;
             hp += 10;
             sanity += 20;
+            return true;
         }
-        else if (coinSoul >= 10)
+        // Choice 3: Small Heal & Sanity (Cost: 10 coins)
+        else if (choice == 3 && coinSoul >= 10)
         {
             coinSoul -= 10;
             hp += 5;
             sanity += 10;
+            return true;
         }
+        return false;
     }
     
 }

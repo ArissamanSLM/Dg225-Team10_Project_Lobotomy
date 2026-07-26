@@ -38,3 +38,10 @@ c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\obj\Debug\net9.0\Starter.pdb
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\obj\Debug\net9.0\Starter.genruntimeconfig.cache
 c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\obj\Debug\net9.0\ref\Starter.dll
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Counter.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\defend.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\heal.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Inspection.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Power up.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\Protection.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\src\Starter\bin\Debug\net9.0\Content\strike.xnb
