@@ -35,7 +35,7 @@ flowchart LR
 
 1. [Mechanic หลักที่ 1 — Rng Card draw]
 2. [Mechanic หลักที่ 2 - Rng room]
-3. [Mechanic หลักที่ 3 - Health system]
+3. [Mechanic หลักที่ 3 - Health system + Defense System]
 4. [Mechanic หลักที่ 4 = Sanity system]
 5. [Mechanic หลักที่ 5 - Currency/shop]
 6. [Mechanic หลักที่ 6 - cards]
