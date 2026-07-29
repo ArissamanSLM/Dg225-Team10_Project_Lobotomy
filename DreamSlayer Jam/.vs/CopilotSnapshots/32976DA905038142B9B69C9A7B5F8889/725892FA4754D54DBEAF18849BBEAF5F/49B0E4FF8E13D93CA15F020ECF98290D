@@ -1,0 +1,836 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
+
+namespace DreamSlayer;
+
+public enum EventType
+{
+    Cursed,
+    Blessed,
+    Shop
+}
+
+public class CardData
+{
+    public string Name { get; set; }
+    public int SanityCost { get; set; }
+    public int Value { get; set; }
+    public string Type { get; set; }
+
+    public CardData(string name, int cost, int value, string type)
+    {
+        Name = name;
+        SanityCost = cost;
+        Value = value;
+        Type = type;
+    }
+
+    public static List<CardData> MakeStartingDeck()
+    {
+        List<CardData> deck = new List<CardData>();
+        deck.Add(new CardData("Strike", 10, 6, "Attack"));
+        deck.Add(new CardData("Strike", 10, 6, "Attack"));
+        deck.Add(new CardData("Defend", 5, 4, "Defense"));
+        deck.Add(new CardData("Defend", 5, 4, "Defense"));
+        deck.Add(new CardData("Heal", 8, 2, "Heal"));
+        deck.Add(new CardData("Counter", 30, 6, "Counter"));
+        deck.Add(new CardData("Power Up", 12, 3, "PowerUp"));
+        deck.Add(new CardData("Protection", 7, 4, "Protection"));
+        deck.Add(new CardData("duplicate", 20, -1, "duplicate"));
+        deck.Add(new CardData("inpection", 10, 3, "inpection"));
+        deck.Add(new CardData("Forcefield", 35, 1000, "Forcefield"));
+        return deck;
+    }
+}
+
+public class CardManager
+{
+    private readonly Random _random = new Random();
+    public List<CardData> Deck { get; private set; } = new List<CardData>();
+
+    public CardManager()
+    {
+        Deck = CardData.MakeStartingDeck();
+    }
+
+    public List<CardData> DrawInitialHand(int count)
+    {
+        List<CardData> hand = new List<CardData>();
+        List<CardData> shuffledDeck = new List<CardData>(Deck);
+
+        for (int i = 0; i < count && shuffledDeck.Count > 0; i++)
+        {
+            int index = _random.Next(shuffledDeck.Count);
+            hand.Add(shuffledDeck[index]);
+            shuffledDeck.RemoveAt(index);
+        }
+
+        return hand;
+    }
+}
+
+public class PlayerManager
+{
+    public int Hp = 25;
+    public int Sanity = 100;
+    public int Defense = 0;
+    public int PowerBoost = 0;
+    public int DefenseBoostTurns = 0;
+    public int ClickLimit = 3;
+    public int HoldCard = 6;
+
+    private readonly CardManager cardManager = new CardManager();
+    public List<CardData> HandCards { get; private set; } = new List<CardData>();
+
+    public PlayerManager()
+    {
+        ResetHand();
+    }
+
+    public void ResetHand()
+    {
+        HandCards = cardManager.DrawInitialHand(HoldCard);
+        ClickLimit = 3;
+    }
+
+    public void ApplyCardEffect(CardData card)
+    {
+        if (card.Type == "Attack")
+        {
+            return;
+        }
+        else if (card.Type == "Defense")
+        {
+            GainDefense(card.Value);
+            Sanity += 2;
+        }
+        else if (card.Type == "Heal")
+        {
+            Heal(card.Value);
+            Sanity += 5;
+        }
+        else if (card.Type == "Counter")
+        {
+            GainDefense(3);
+            Sanity += 2;
+        }
+        else if (card.Type == "PowerUp")
+        {
+            PowerBoost += card.Value;
+            Sanity += 2;
+        }
+        else if (card.Type == "Protection")
+        {
+            DefenseBoostTurns = 1;
+            Sanity += 2;
+        }
+    }
+
+    public void GainDefense(int amount)
+    {
+        int blockAmount = DefenseBoostTurns > 0 ? (int)Math.Round(amount * 1.5f) : amount;
+        Defense += blockAmount;
+
+        if (DefenseBoostTurns > 0)
+        {
+            DefenseBoostTurns--;
+        }
+    }
+
+    public void ApplyIncomingDamage(int amount)
+    {
+        if (Defense > 0)
+        {
+            int blocked = Math.Min(Defense, amount);
+            Defense -= blocked;
+            amount -= blocked;
+        }
+
+        if (amount > 0)
+        {
+            Hp -= amount;
+        }
+    }
+
+    public void Heal(int amount)
+    {
+        Hp = Math.Min(15, Hp + amount);
+    }
+
+    public void LimitPlayerStats()
+    {
+        if (Hp > 15)
+        {
+            Hp = 15;
+        }
+        if (Sanity > 100)
+        {
+            Sanity = 100;
+        }
+        if (Defense < 0)
+        {
+            Defense = 0;
+        }
+    }
+}
+
+public class EnemyManager
+{
+    public int EnemyHp { get; set; } = 50;
+    public int BossHp { get; set; } = 200;
+    public int EnemyActionCount { get; set; } = 1;
+    public int BossActionCount { get; set; } = 2;
+
+    public void MonsterAction(PlayerManager playerManager)
+    {
+        Random rand = new Random();
+        int enemyDamage = 6 * rand.Next(1, 4);
+        if (EnemyActionCount == 0)
+        {
+            playerManager.ApplyIncomingDamage(enemyDamage);
+            EnemyActionCount = 1;
+        }
+        else
+        {
+            EnemyActionCount--;
+        }
+    }
+
+    public void BossAction(PlayerManager playerManager)
+    {
+        Random rand = new Random();
+        int bossDamage = 10 * rand.Next(1, 4);
+        if (BossActionCount == 0)
+        {
+            playerManager.ApplyIncomingDamage(bossDamage);
+            BossActionCount = 2;
+        }
+        else
+        {
+            BossActionCount--;
+        }
+    }
+}
+
+public class CoinManager
+{
+    public int Coins = 10;
+}
+
+public class RoomManager
+{
+    private int roomCount = 0;
+    private int recentEncounters = 0;
+    private int recentEvents = 0;
+
+    private static readonly Random rand = new Random();
+
+    public string GetNextBrownDoorType()
+    {
+        return "Encounter";
+    }
+
+    public string GetNextYellowDoorType()
+    {
+        return "Event";
+    }
+
+    public void RegisterRoomCompletion(string chosenType)
+    {
+        roomCount++;
+
+        if (chosenType == "Encounter")
+        {
+            recentEncounters++;
+        }
+        else if (chosenType == "Event")
+        {
+            recentEvents++;
+        }
+    }
+
+    public bool IsBossRoomReady()
+    {
+        return roomCount >= 5;
+    }
+
+    public void ResetRun()
+    {
+        roomCount = 0;
+        recentEncounters = 0;
+        recentEvents = 0;
+    }
+
+    public void EventRoom(ref int hp, ref int sanity, ref bool shopEvent, EventType eventType)
+    {
+        int roll = rand.Next(0, 100);
+        if (roll < 50)
+        {
+            hp -= 5;
+            sanity -= 10;
+        }
+        else if (roll > 50 && roll < 80)
+        {
+            hp += 10;
+            sanity += 20;
+        }
+        else
+        {
+            shopEvent = true;
+        }
+    }
+
+    public bool TryBuyItem(int choice, ref int coinSoul, ref int hp, ref int sanity, List<CardData> deck)
+    {
+        if (choice == 1 && coinSoul >= 50)
+        {
+            coinSoul -= 50;
+            deck.Add(new CardData("ShopCard", 12, 5, "Attack"));
+            return true;
+        }
+        else if (choice == 2 && coinSoul >= 20)
+        {
+            coinSoul -= 20;
+            hp += 10;
+            sanity += 20;
+            return true;
+        }
+        else if (choice == 3 && coinSoul >= 10)
+        {
+            coinSoul -= 10;
+            hp += 5;
+            sanity += 10;
+            return true;
+        }
+        return false;
+    }
+}
+
+public class Game1 : Game
+{
+    private GraphicsDeviceManager _graphics;
+    private SpriteBatch _spriteBatch;
+    private Texture2D _whitePixel;
+
+    Texture2D _cardTextureAttack;
+    Texture2D _cardTextureDefense;
+    Texture2D _cardTextureHeal;
+    Texture2D _cardTextureCounter;
+    Texture2D _cardTexturePowerUp;
+    Texture2D _cardTextureProtection;
+    Texture2D _cardTextureDuplicate;
+    Texture2D _cardTextureInspection;
+    Texture2D _cardTextureForcefield;
+
+    // New Textures for Enemy, Boss, and Doors
+    Texture2D _enemyTexture;
+    Texture2D _enemyTextureAlt;
+    Texture2D _bossTexture;
+    Texture2D _doorTexture;
+    Texture2D _roomTexture;
+    Texture2D _roomTextureBlack;
+    private Random _rand = new Random();
+    private bool _currentRoomIsBlack = false;
+
+    private SpriteFont _hellvoreFont;
+    private Song _battleMusic;
+    private Song _bossMusic1;
+    private SoundEffect _badEffectGain;
+
+    bool Shopevent = false;
+    bool isShopActive = false;
+    bool isEnermyDead = false;
+    bool isBossActive = false;
+    bool Skipturn = false;
+    bool isGameOver = false;
+    private string currentRoomType = "Encounter";
+
+    private MouseState previousMouse;
+    private MouseState currentMouse;
+
+    private RoomManager roomManager = new RoomManager();
+    private EnemyManager enemyManager = new EnemyManager();
+    private PlayerManager playerManager = new PlayerManager();
+    private CoinManager coinManager = new CoinManager();
+
+    public Game1()
+    {
+        _graphics = new GraphicsDeviceManager(this);
+        Content.RootDirectory = "Content";
+        IsMouseVisible = true;
+        _graphics.PreferredBackBufferWidth = 1280;
+        _graphics.PreferredBackBufferHeight = 768;
+        _graphics.ApplyChanges();
+    }
+
+    protected override void Initialize()
+    {
+        playerManager.ResetHand();
+        base.Initialize();
+    }
+
+    protected override void LoadContent()
+    {
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        _whitePixel = new Texture2D(GraphicsDevice, 1, 1);
+        _whitePixel.SetData(new[] { Color.White });
+
+        try { _cardTextureAttack = Content.Load<Texture2D>("strike"); } catch { }
+        try { _cardTextureDefense = Content.Load<Texture2D>("defend"); } catch { }
+        try { _cardTextureHeal = Content.Load<Texture2D>("heal"); } catch { }
+        try { _cardTextureCounter = Content.Load<Texture2D>("counter"); } catch { }
+        try { _cardTexturePowerUp = Content.Load<Texture2D>("Power up"); } catch { }
+        try { _cardTextureProtection = Content.Load<Texture2D>("Protection"); } catch { }
+        try { _cardTextureInspection = Content.Load<Texture2D>("Inspection"); } catch { }
+        _cardTextureDuplicate = _cardTextureInspection;
+        _cardTextureForcefield = _cardTextureProtection;
+
+        // Load Enemy, Boss, Door and Room assets (ensure these names exist in your MGCB)
+        try { _enemyTexture = Content.Load<Texture2D>("enemy"); } catch { }
+        try { _enemyTextureAlt = Content.Load<Texture2D>("enemy2"); } catch { }
+        // Prefer an explicit boss artwork called "eye_of_universe" if available, otherwise fall back to "boss"
+        try { _bossTexture = Content.Load<Texture2D>("eye_of_universe"); } catch { try { _bossTexture = Content.Load<Texture2D>("boss"); } catch { } }
+        try { _doorTexture = Content.Load<Texture2D>("door"); } catch { }
+        try { _roomTexture = Content.Load<Texture2D>("room_background"); } catch { }
+        try { _roomTextureBlack = Content.Load<Texture2D>("room_background_black"); } catch { }
+
+        try { _hellvoreFont = Content.Load<SpriteFont>("Hellvore"); } catch { }
+
+        try
+        {
+            _battleMusic = Content.Load<Song>("Battle_music_01");
+            _bossMusic1 = Content.Load<Song>("Boss_music_01");
+            _badEffectGain = Content.Load<SoundEffect>("Bad_effect_gain");
+
+            MediaPlayer.Play(_battleMusic);
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = 0.5f;
+        }
+        catch { }
+    }
+
+    protected override void Update(GameTime gameTime)
+    {
+        previousMouse = currentMouse;
+        currentMouse = Mouse.GetState();
+
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            Exit();
+
+        if (playerManager.Hp <= 0 || playerManager.Sanity <= 0)
+        {
+            isGameOver = true;
+            MediaPlayer.Stop();
+            return;
+        }
+
+        if (currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released)
+        {
+            Point mousePos = new Point(currentMouse.X, currentMouse.Y);
+            Rectangle skipRect = new Rectangle(1000, 600, 80, 40);
+
+            if (isShopActive)
+            {
+                Rectangle item1Rect = new Rectangle(300, 230, 150, 150);
+                Rectangle item2Rect = new Rectangle(500, 230, 150, 150);
+                Rectangle item3Rect = new Rectangle(700, 230, 150, 150);
+                Rectangle exitShopRect = new Rectangle(500, 430, 150, 50);
+
+                if (item1Rect.Contains(mousePos))
+                {
+                    roomManager.TryBuyItem(1, ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity, playerManager.HandCards);
+                }
+                else if (item2Rect.Contains(mousePos))
+                {
+                    roomManager.TryBuyItem(2, ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity, playerManager.HandCards);
+                }
+                else if (item3Rect.Contains(mousePos))
+                {
+                    roomManager.TryBuyItem(3, ref coinManager.Coins, ref playerManager.Hp, ref playerManager.Sanity, playerManager.HandCards);
+                }
+                else if (exitShopRect.Contains(mousePos))
+                {
+                    isShopActive = false;
+                }
+            }
+            // Only allow door clicks if doors are visible (meaning enemy is dead AND shop is NOT active)
+            else if (isEnermyDead && !isShopActive)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    int xPos = 300 + (i * 300);
+                    Rectangle doorRect = new Rectangle(xPos, 230, 128, 128);
+
+                    if (doorRect.Contains(mousePos))
+                    {
+                        string chosenType = i == 1 ? roomManager.GetNextYellowDoorType() : roomManager.GetNextBrownDoorType();
+                        roomManager.RegisterRoomCompletion(chosenType);
+                        EnterRoom(chosenType);
+                        break;
+                    }
+                }
+            }
+
+            if (!isEnermyDead)
+            {
+                if (Skipturn)
+                {
+                    AdvanceTurn();
+                    Skipturn = false;
+                }
+                else if (skipRect.Contains(mousePos))
+                {
+                    Skipturn = true;
+                }
+                else if (playerManager.HandCards.Count > 0 && playerManager.ClickLimit > 0)
+                {
+                    for (int i = 0; i < playerManager.HandCards.Count && i < playerManager.HoldCard; i++)
+                    {
+                        int xPos = 100 + (i * 100);
+                        Rectangle cardRect = new Rectangle(xPos, 600, 80, 120);
+
+                        if (cardRect.Contains(mousePos))
+                        {
+                            UseCard(i);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Skipturn = true;
+                }
+            }
+        }
+
+        base.Update(gameTime);
+    }
+
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.CornflowerBlue);
+
+        _spriteBatch.Begin();
+
+        // Draw room background: use provided textures if available, otherwise fall back to solid colors.
+        if (_currentRoomIsBlack)
+        {
+            if (_roomTextureBlack != null)
+                _spriteBatch.Draw(_roomTextureBlack, new Rectangle(0, 0, 1280, 768), Color.White);
+            else
+                _spriteBatch.Draw(_whitePixel, new Rectangle(0, 0, 1280, 768), Color.Black);
+        }
+        else
+        {
+            if (_roomTexture != null)
+                _spriteBatch.Draw(_roomTexture, new Rectangle(0, 0, 1280, 768), Color.White);
+            else
+                _spriteBatch.Draw(_whitePixel, new Rectangle(0, 0, 1280, 768), Color.Pink);
+        }
+
+        if (isGameOver)
+        {
+            _spriteBatch.Draw(_whitePixel, new Rectangle(0, 0, 1280, 768), Color.Black);
+            if (_hellvoreFont != null)
+            {   
+                _spriteBatch.DrawString(_hellvoreFont, "YOU HAVE BEEN CONSUMED BY THE VOID (GAME OVER)", new Vector2(250, 300), Color.Red, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0f);
+            }
+            _spriteBatch.End();
+            base.Draw(gameTime);
+            return;
+        }
+
+        // Draw Enemy or Boss if alive
+        if (!isEnermyDead)
+        {
+            int enemyHpBarMaxWidth = 256;
+            int enemyHpWidth = Math.Max(0, (int)(enemyHpBarMaxWidth * (enemyManager.EnemyHp / 50f)));
+            int bossHpWidth = Math.Max(0, (int)(enemyHpBarMaxWidth * (enemyManager.BossHp / 200f)));
+
+            _spriteBatch.Draw(_whitePixel, new Rectangle(512, 100, enemyHpBarMaxWidth, 32), Color.DarkGray);
+            if (isBossActive)
+            {
+                _spriteBatch.Draw(_whitePixel, new Rectangle(512, 100, bossHpWidth, 32), Color.DarkRed);
+            }
+            else
+            {
+                _spriteBatch.Draw(_whitePixel, new Rectangle(512, 100, enemyHpWidth, 32), Color.Red);
+            }
+
+            // Draw enemy/boss using texture aspect ratio and scale so it resizes nicely on different assets
+            Texture2D activeTexture = isBossActive ? (_bossTexture ?? _whitePixel) : (_enemyTexture ?? _whitePixel);
+            int targetHeight = isBossActive ? 220 : 160;
+            float aspect = activeTexture.Width > 0 && activeTexture.Height > 0 ? (float)activeTexture.Width / activeTexture.Height : 1f;
+            int drawWidth = (int)(targetHeight * aspect);
+            int drawX = (1280 - drawWidth) / 2;
+            int drawY = isBossActive ? 180 : 220;
+            Rectangle enemyRect = new Rectangle(drawX, drawY, drawWidth, targetHeight);
+            _spriteBatch.Draw(activeTexture, enemyRect, Color.White);
+        }
+
+        // Draw Doors ONLY if the enemy is dead AND shop is NOT active (makes them invisible during events/shops)
+        if (isEnermyDead && !isShopActive)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                int xPos = 300 + (i * 300);
+                Rectangle doorRect = new Rectangle(xPos, 230, 128, 128);
+                Texture2D doorTex = _doorTexture ?? _whitePixel;
+                Color doorColor = (i == 1) ? Color.Gold : Color.SaddleBrown; // Distinguish yellow door vs brown doors if using solid colors/fallback
+                _spriteBatch.Draw(doorTex, doorRect, doorColor);
+            }
+        }
+
+        // Draw Shop UI if active
+        if (isShopActive)
+        {
+            _spriteBatch.Draw(_whitePixel, new Rectangle(300, 230, 150, 150), Color.Gold);
+            _spriteBatch.Draw(_whitePixel, new Rectangle(500, 230, 150, 150), Color.LightGreen);
+            _spriteBatch.Draw(_whitePixel, new Rectangle(700, 230, 150, 150), Color.DarkSeaGreen);
+            _spriteBatch.Draw(_whitePixel, new Rectangle(500, 430, 150, 50), Color.Gray);
+        }
+
+        for (int i = 0; i < playerManager.HandCards.Count && i < playerManager.HoldCard; i++)
+        {
+            int xPos = 100 + (i * 100);
+            CardData card = playerManager.HandCards[i];
+            Texture2D cardTexture = GetCardTexture(card.Type);
+
+            _spriteBatch.Draw(cardTexture, new Rectangle(xPos, 600, 80, 120), Color.White);
+
+            if (_hellvoreFont != null)
+            {
+                _spriteBatch.DrawString(_hellvoreFont, card.Type, new Vector2(xPos + 5, 610), Color.Black, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
+            }
+        }
+
+        Color skipButtonColor = Skipturn ? Color.Goldenrod : Color.Gray;
+        _spriteBatch.Draw(_whitePixel, new Rectangle(1000, 600, 80, 40), skipButtonColor);
+        if (_hellvoreFont != null)
+        {
+            _spriteBatch.DrawString(_hellvoreFont, "SKIP", new Vector2(1015, 608), Color.White);
+        }
+
+        int hpBarMaxWidth = 256;
+        int sanityBarMaxWidth = 192;
+        int hpBarWidth = Math.Min(hpBarMaxWidth, (int)(hpBarMaxWidth * (playerManager.Hp / 25f)));
+        int sanityBarWidth = Math.Min(sanityBarMaxWidth, (int)(sanityBarMaxWidth * (playerManager.Sanity / 100f)));
+
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 64, hpBarMaxWidth, 32), Color.DarkGray);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 64, hpBarWidth, 32), Color.Green);
+
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 104, sanityBarMaxWidth, 24), Color.DarkGray);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 104, sanityBarWidth, 24), Color.LightBlue);
+
+        int defenseBarMaxWidth = 160;
+        int defenseBarWidth = Math.Min(defenseBarMaxWidth, playerManager.Defense * 10);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 144, defenseBarMaxWidth, 20), Color.DarkGray);
+        _spriteBatch.Draw(_whitePixel, new Rectangle(64, 144, defenseBarWidth, 20), Color.CornflowerBlue);
+
+        if (_hellvoreFont != null)
+        {
+            _spriteBatch.DrawString(_hellvoreFont, $"Coins: {coinManager.Coins}", new Vector2(64, 20), Color.Gold);
+            _spriteBatch.DrawString(_hellvoreFont, $"Room: {currentRoomType}", new Vector2(64, 180), Color.White);
+        }
+
+        _spriteBatch.End();
+
+        base.Draw(gameTime);
+    }
+
+    private Texture2D GetCardTexture(string cardType)
+    {
+        return cardType switch
+        {
+            "Attack" => _cardTextureAttack ?? _whitePixel,
+            "Defense" => _cardTextureDefense ?? _whitePixel,
+            "Heal" => _cardTextureHeal ?? _whitePixel,
+            "Counter" => _cardTextureCounter ?? _whitePixel,
+            "PowerUp" => _cardTexturePowerUp ?? _whitePixel,
+            "Protection" => _cardTextureProtection ?? _whitePixel,
+            "duplicate" => _cardTextureDuplicate ?? _cardTextureInspection ?? _whitePixel,
+            "inpection" => _cardTextureInspection ?? _whitePixel,
+            "Forcefield" => _cardTextureForcefield ?? _cardTextureProtection ?? _whitePixel,
+            _ => _whitePixel
+        };
+    }
+
+    private void UseCard(int cardIndex)
+    {
+        if (cardIndex < 0 || cardIndex >= playerManager.HandCards.Count)
+            return;
+
+        CardData card = playerManager.HandCards[cardIndex];
+        playerManager.HandCards.RemoveAt(cardIndex);
+        playerManager.ClickLimit--;
+
+        if (card.Type == "Attack" || card.Type == "Defense")
+        {
+            _badEffectGain?.CreateInstance().Play();
+        }
+
+        if (card.Type == "Attack")
+        {
+            int damage = card.Value + playerManager.PowerBoost;
+            playerManager.Sanity -= 5;
+            if (isBossActive)
+            {
+                enemyManager.BossHp -= damage;
+                if (enemyManager.BossHp <= 0)
+                {
+                    isEnermyDead = true;
+                    coinManager.Coins += 15;
+                    playerManager.PowerBoost = 0;
+                }
+            }
+            else
+            {
+                enemyManager.EnemyHp -= damage;
+                if (enemyManager.EnemyHp <= 0)
+                {
+                    isEnermyDead = true;
+                    coinManager.Coins += 15;
+                    playerManager.PowerBoost = 0;
+                }
+            }
+        }
+        else if (card.Type == "Defense")
+        {
+            playerManager.GainDefense(card.Value);
+            playerManager.Sanity -= 7;
+        }
+        else if (card.Type == "Heal")
+        {
+            playerManager.Heal(card.Value);
+            playerManager.Sanity -= 5;
+        }
+        else if (card.Type == "Counter")
+        {
+            playerManager.GainDefense(4);
+            playerManager.Sanity -= 5;
+            int damage = card.Value + playerManager.PowerBoost;
+            if (isBossActive)
+            {
+                enemyManager.BossHp -= damage;
+            }
+            else
+            {
+                enemyManager.EnemyHp -= damage;
+            }
+        }
+        else if (card.Type == "PowerUp")
+        {
+            playerManager.PowerBoost += card.Value;
+            playerManager.Sanity -= 8;
+        }
+        else if (card.Type == "Protection")
+        {
+            playerManager.DefenseBoostTurns = 1;
+            playerManager.GainDefense(card.Value);
+            playerManager.Sanity -= 4;
+        }
+        else if (card.Type == "inpection")
+        {
+            for (int k = 0; k < 3; k++)
+            {
+                List<CardData> availableCards = CardData.MakeStartingDeck();
+                if (availableCards.Count > 0)
+                {
+                    int randomIndex = new Random().Next(availableCards.Count);
+                    playerManager.HandCards.Add(availableCards[randomIndex]);
+                }
+            }
+            playerManager.Sanity += 20;
+        }
+        else if (card.Type == "duplicate")
+        {
+            if (playerManager.HandCards.Count > 0)
+            {
+                int randomIndex = new Random().Next(playerManager.HandCards.Count);
+                CardData cardToDuplicate = playerManager.HandCards[randomIndex];
+                playerManager.HandCards.Add(new CardData(cardToDuplicate.Name, cardToDuplicate.SanityCost, cardToDuplicate.Value, cardToDuplicate.Type));
+            }
+            playerManager.Sanity -= 20;
+        }
+
+        if (playerManager.ClickLimit <= 0 || playerManager.HandCards.Count == 0)
+        {
+            Skipturn = true;
+        }
+    }
+
+    private void AdvanceTurn()
+    {
+        if (isBossActive)
+        {
+            enemyManager.BossAction(playerManager);
+        }
+        else
+        {
+            enemyManager.MonsterAction(playerManager);
+        }
+        playerManager.Sanity += 25;
+        playerManager.LimitPlayerStats();
+        playerManager.ResetHand();
+    }
+
+    private void EnterRoom(string chosenType)
+    {
+        currentRoomType = chosenType;
+
+        // Decide if this room will use the 'black' background (approx 1 in 3 chance)
+        _currentRoomIsBlack = (_rand.Next(3) == 0);
+
+        if (roomManager.IsBossRoomReady())
+        {
+            currentRoomType = "Boss";
+            isBossActive = true;
+            enemyManager.BossHp = 200;
+            isEnermyDead = false;
+
+            try
+            {
+                MediaPlayer.Play(_bossMusic1);
+                MediaPlayer.IsRepeating = true;
+            }
+            catch { }
+        }
+        else if (chosenType == "Event")
+        {
+            isBossActive = false;
+            roomManager.EventRoom(ref playerManager.Hp, ref playerManager.Sanity, ref Shopevent, EventType.Cursed);
+
+            if (Shopevent)
+            {
+                isShopActive = true;
+                isEnermyDead = true;
+                Shopevent = false;
+            }
+            else
+            {
+                isEnermyDead = true;
+            }
+        }
+        else
+        {
+            isBossActive = false;
+            enemyManager.EnemyHp = 50;
+            isEnermyDead = false;
+
+            try
+            {
+                MediaPlayer.Play(_battleMusic);
+                MediaPlayer.IsRepeating = true;
+            }
+            catch { }
+        }
+
+        playerManager.ResetHand();
+    }
+}

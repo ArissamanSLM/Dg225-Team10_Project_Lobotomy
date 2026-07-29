@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/../../../../../Downloads/Abyssal Thorns.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/../../../../../Downloads/Fleshless Stalker.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/../../../../../Downloads/Portal.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/../../../../../Downloads/The All-Seeing Void.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/Abyssal Thorns.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/Counter.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/DeepseaDream.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/defend.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/Fleshless Stalker.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/heal2.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/HorrorForestDream.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/Inspection.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/Portal.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/Power up.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/Protection.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/SnowDream.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/strike.png</File>
+    <File>C:/Users/ASUS/source/repos/DreamSlayer Jam/DreamSlayer/Content/The All-Seeing Void.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File>Abyssal Thorns.png</File>
+    <File>Fleshless Stalker.png</File>
+    <File>Portal.png</File>
+    <File>The All-Seeing Void.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
