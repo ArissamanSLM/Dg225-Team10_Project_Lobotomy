@@ -3,7 +3,7 @@
 <!-- Sprint 1: เปลี่ยนชื่อ sprint-01.md จาก Lab 07 เป็น sprint-plan-01.md แล้วแทนที่เนื้อหาด้วย template นี้ -->
 <!-- Sprint 2-4 ในแลปถัดไป: คัดลอกไฟล์นี้ทั้งไฟล์ไปสร้าง sprint-plan-02.md, sprint-plan-03.md, sprint-plan-04.md ตามลำดับ -->
 
-# Sprint [N] Plan
+# Sprint [1] Plan
 
 **Sprint Goal:** [เป้าหมายหลักของ Sprint นี้ในหนึ่งประโยค]
 **ระยะเวลา:** [วันที่เริ่ม] — [วันที่สิ้นสุด]
