@@ -7,17 +7,17 @@
 
 ## Must Have (MVP)
 
-| # | User Story | Acceptance Criteria | Estimate (SP) | Sprint |
-|---|---|---|---|---|
-| 1 | As a player, I want to jump, so that I can avoid obstacles | กดปุ่มกระโดดแล้วตัวละครลอยขึ้นแล้วตกลงพื้นเดิม ไม่ทะลุพื้น | 5 | 1 |
-| 2 | [As a ..., I want ..., so that ...] | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"] | [SP] | [เลข sprint หรือ —] |
+| #   | User Story                                                       | Acceptance Criteria                                        | Estimate (SP) | Sprint              |
+| --- | ---------------------------------------------------------------- | ---------------------------------------------------------- | ------------- | ------------------- |
+| 1   | I want to Drag Cards as it intended                              | กดปุ่มกระโดดแล้วตัวละครลอยขึ้นแล้วตกลงพื้นเดิม ไม่ทะลุพื้น | 5             | 1                   |
+| 2   | i want to set a floor difficulty and increase monster difficulty | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"]                  | [SP]          | [เลข sprint หรือ —] |
 
 ## Should Have
 
-| # | User Story | Acceptance Criteria | Estimate (SP) | Sprint |
-|---|---|---|---|---|
-| 1 | As a player, I want to see my remaining lives, so that I know how close I am to game over | จำนวนชีวิตแสดงบนจอตลอดเวลา ลดลงทันทีที่โดนโจมตี | 2 | — |
-| 2 | [As a ..., I want ..., so that ...] | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"] | [SP] | — |
+| #   | User Story                                                                                | Acceptance Criteria                             | Estimate (SP) | Sprint |
+| --- | ----------------------------------------------------------------------------------------- | ----------------------------------------------- | ------------- | ------ |
+| 1   | As a player, I want to see my remaining lives, so that I know how close I am to game over | จำนวนชีวิตแสดงบนจอตลอดเวลา ลดลงทันทีที่โดนโจมตี | 2             | —      |
+| 2   | [As a ..., I want ..., so that ...]                                                       | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"]       | [SP]          | —      |
 
 ## Nice to Have
 
