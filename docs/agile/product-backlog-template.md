@@ -7,10 +7,11 @@
 
 ## Must Have (MVP)
 
-| #   | User Story                                                       | Acceptance Criteria                                        | Estimate (SP) | Sprint              |
-| --- | ---------------------------------------------------------------- | ---------------------------------------------------------- | ------------- | ------------------- |
-| 1   | I want to Drag Cards as it intended                              | กดปุ่มกระโดดแล้วตัวละครลอยขึ้นแล้วตกลงพื้นเดิม ไม่ทะลุพื้น | 5             | 1                   |
-| 2   | i want to set a floor difficulty and increase monster difficulty | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"]                  | [SP]          | [เลข sprint หรือ —] |
+| #   | User Story                                                       | Acceptance Criteria                                        | Estimate (SP) | Sprint |
+| --- | ---------------------------------------------------------------- | ---------------------------------------------------------- | ------------- | ------ |
+| 1   | I want to Drag Cards as it intended                              | กดปุ่มกระโดดแล้วตัวละครลอยขึ้นแล้วตกลงพื้นเดิม ไม่ทะลุพื้น | 5             | 1      |
+| 2   | i want to set a floor difficulty and increase monster difficulty | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"]                  | 4             | 1      |
+|     |                                                                  |                                                            |               |        |
 
 ## Should Have
 
@@ -21,10 +22,10 @@
 
 ## Nice to Have
 
-| # | User Story | Acceptance Criteria | Estimate (SP) | Sprint |
-|---|---|---|---|---|
-| 1 | As a designer, I want enemy spawn rate stored in a data file, so that I can tune difficulty without recompiling | ปรับค่า spawn rate ในไฟล์ data แล้วรันเกมใหม่ ค่าที่เปลี่ยนมีผลทันทีโดยไม่ต้อง build ใหม่ | 3 | — |
-| 2 | [As a ..., I want ..., so that ...] | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"] | [SP] | — |
+| #   | User Story                          | Acceptance Criteria                       | Estimate (SP) | Sprint |
+| --- | ----------------------------------- | ----------------------------------------- | ------------- | ------ |
+| 1   | Add a Relic System                  | make sure add relic system                | 3             | —      |
+| 2   | [As a ..., I want ..., so that ...] | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"] | [SP]          | —      |
 
 ## MoSCoW Legend
 - **Must Have** — จำเป็นต่อ core gameplay loop เกมเล่นไม่ได้ถ้าขาด (MVP)
