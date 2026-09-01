@@ -4,15 +4,18 @@ kanban-plugin: board
 
 ---
 
-## To do
+## To do-Ohm
+
+- [ ] BG
+- [ ] Enemy sprite
+- [ ] Card
+
+
+## in WIP-Ohm
 
 
 
-## in WIP
-
-
-
-## Done
+## Done-Ohm
 
 
 
