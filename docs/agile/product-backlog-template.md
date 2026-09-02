@@ -12,7 +12,7 @@
 | 1   | I want to Drag Cards as it intended so it not like a clicker game                                      | กดปุ่มกระโดดแล้วตัวละครลอยขึ้นแล้วตกลงพื้นเดิม ไม่ทะลุพื้น | 5             | 1      |
 | 2   | i want to set a floor difficulty and increase monster difficulty so that it has More challenging to do | make Boss finished and able to choose to continue          | 4             | 1      |
 | 3   | Add a title screen and Do screen mange mangement                                                       | Starting a title screen                                    | 3             | 1-2    |
-|     |                                                                                                        |                                                            |               | 1      |
+| 4   | As a game maker, I want Maze system, So that can fit to gerne Roglike                                  | Maze System can be play in the game                        | 5             | 1      |
 |     |                                                                                                        |                                                            |               | 1      |
 | X   | As a ..., I want ..., so that ...                                                                      | เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"]                   | [SP]          | -      |
 
