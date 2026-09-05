@@ -27,6 +27,8 @@
 | 4   | As a game maker, I want Player can upgrade Themself, So that Player can enjoy game longer                 | Player can upgrade themself after they finish stage                                                | 6             | 2      |
 | 5   | As a game maker, I want Enemy have many variant, So that Enemy can fit in variant stage                   | Enemy have variant of themself in others stage that can connect to story of the game               | 6             | 2      |
 | 6   | As a game maker, I want my game have story of itself, So that Player can understand                       | Player can find item that make player understand story in the game(Souls like story telling style) | 6             | 2      |
+| 7   | As a game maker, I want my game to have Sound Effects, So that Player get audio feedback from their actions | Sound effect plays on key actions such as attack, get hit, death, item pickup, and level up      | 3             | 2      |
+| 8   | As a game maker, I want my game to have Sound Ambient, So that Player feel more immersed in each scene    | Ambient/background sound loops continuously depending on current scene or stage, and stops/changes when scene changes | 3             | 2      |
 | X   | [As a ..., I want ..., so that ...]                                                                       | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"]                                                          | [SP]          | —      |
 
 ## Nice to Have
