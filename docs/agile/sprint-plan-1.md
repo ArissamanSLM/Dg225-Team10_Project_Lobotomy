@@ -16,9 +16,18 @@
 
 ## Sprint Backlog 
 
-| # | User Story                                                    | รับผิดชอบ | MoSCoW    | Estimate (SP) | Status  |
-| - | ------------------------------------------------------------- | ------------------ | --------- | ------------- | ------- |
-| 1 | [User Story ของ Sprint นี้ จาก 02-sprint-backlog.md] | [ชื่อ]         | Must Have | [SP]          | 🔲 Todo |
+| #   | User Story                                                                          | รับผิดชอบ | MoSCoW    | Estimate (SP) | Status  |
+| --- | ----------------------------------------------------------------------------------- | --------- | --------- | ------------- | ------- |
+| 0   | [User Story ของ Sprint นี้ จาก 02-sprint-backlog.md]                                | [ชื่อ]    | Must Have | [SP]          | 🔲 Todo |
+| 1   | As i want to Make Hover Card read Descrition and Click to Use Card                  |           | Must Have | 5             |         |
+| 2   | As a game maker, I want Maze system, So that can fit to gerne Roglike               |           |           |               |         |
+| 3   | As a game maker, I want Random encounter system, So that can fit to gerne Roguelike |           |           |               |         |
+| 4   |                                                                                     |           |           |               |         |
+| 5   |                                                                                     |           |           |               |         |
+| 6   |                                                                                     |           |           |               |         |
+| 7   |                                                                                     |           |           |               |         |
+| 8   |                                                                                     |           |           |               |         |
+| 9   |                                                                                     |           |           |               |         |
 
 ## Status Legend
 

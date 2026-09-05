@@ -1,6 +1,6 @@
 # Product Backlog
 
-**Version:** 1.0 | **Last Updated:** 2026-09-02
+**Version:** 1.0 | **Last Updated:** 2026-09-05
 
 > รวม User Story ทั้งหมดของโปรเจกต์ — ยังไม่ได้แปลว่าต้องทำใน Sprint นี้ทั้งหมด
 > โปรเจกต์นี้แบ่งงานตลอดเทอมเป็น **4 Sprint** (Sprint 1-4) — Sprint ไหนหยิบ Story ไปทำ ให้ใส่เลข Sprint นั้น (1-4) ลงคอลัมน์ `Sprint`
