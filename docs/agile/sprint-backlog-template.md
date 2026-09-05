@@ -8,18 +8,18 @@
 
 > ภาพรวมว่า User Story ไหนจาก `01-product-backlog.md` จะไปอยู่ Sprint ไหน — Sprint ที่ยังไม่ถึงคือ draft คร่าวๆ ปรับได้เสมอเมื่อเข้าใจงานมากขึ้น
 
-## Timeline (4 Sprint, Sprint ละ 2 สัปดาห์)
+## Timeline (3 Sprint, Sprint ละ 2 สัปดาห์)
 
 | Sprint   | เริ่ม | สิ้นสุด |
 | -------- | ---------- | -------------- |
 | Sprint 1 | 2026-09-01 | 2026-09-14     |
 | Sprint 2 | 2026-09-15 | 2026-09-28     |
-| Sprint 3 | 2026-09-29 | 2026-10-12     |
-| Sprint 4 | 2026-10-13 | 2026-10-26     |
+| Sprint 3 | 2026-09-29 | 2026-10-25     |
+|          |            |                |
 
 ```mermaid
 gantt
-    title Project Timeline — Sprint 1-4
+    title Project Timeline — Sprint 1-3
     dateFormat  YYYY-MM-DD
     section Sprints
     Sprint 1 :s1, 2026-09-01, 14d

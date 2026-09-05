@@ -33,10 +33,11 @@
 
 ## Nice to Have
 
-| #   | User Story                          | Acceptance Criteria                        | Estimate (SP) | Sprint |
-| --- | ----------------------------------- | ------------------------------------------ | ------------- | ------ |
-| 1   | Add a Relic System                  | make sure add relic system for Fun and QOL | 3             | —      |
-| 2   | [As a ..., I want ..., so that ...] | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"]  | [SP]          | —      |
+| #   | User Story                          | Acceptance Criteria                                                                        | Estimate (SP) | Sprint |
+| --- | ----------------------------------- | ------------------------------------------------------------------------------------------ | ------------- | ------ |
+| 1   | Add a Relic System                  | make sure add relic system for Fun and QOL                                                 | 3             | —      |
+| 2   | Add an extra Difficulty Level       | Make the Monster Odd higher and elite Monster higher and able to spawn Boss in normal room |               |        |
+| X   | [As a ..., I want ..., so that ...] | [เงื่อนไขที่นับว่า Story นี้ "เสร็จจริง"]                                                  | [SP]          | —      |
 
 ## MoSCoW Legend
 - **Must Have** — จำเป็นต่อ core gameplay loop เกมเล่นไม่ได้ถ้าขาด (MVP)
