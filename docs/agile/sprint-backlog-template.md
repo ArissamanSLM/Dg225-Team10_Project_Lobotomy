@@ -31,16 +31,20 @@ gantt
 
 ## Sprint 1 (กำลังทำ)
 
-| #   | User Story                             | MoSCoW    | Estimate (SP) |
-| --- | -------------------------------------- | --------- | ------------- |
-| 1   | As a player, I want to move left/right | Must Have | 3             |
-| 2   | As a player, I want to jump            | Must Have | 5             |
+| #   | User Story                                                                                    | MoSCoW      | Estimate (SP) |
+| --- | --------------------------------------------------------------------------------------------- | ----------- | ------------- |
+| 1   | As i want to Make Hover Card read Descrition and Click to Use Card                            | Must Have   | 5             |
+| 2   | As a game maker, I want Random encounter system, So that can fit to gerne Roguelike           | Must Have   | 5             |
+| 3   | As a game maker, I want Maze system, So that can fit to gerne Roglike                         | Must Have   | 5             |
+| 4   | As an artist, I want enemy animation, so that it have movement                                | Must Have   | 5             |
+| 5   | As a player, I want to see my remaining Hp/Sanity, so that I know how close I am to game over | Should have | 2             |
 
 ## Sprint 2 (Draft)
 
-| # | User Story                                    | MoSCoW      | Estimate (SP) |
-| - | --------------------------------------------- | ----------- | ------------- |
-| 1 | As a player, I want to see my remaining lives | Should Have | 2             |
+| #   | User Story                                    | MoSCoW      | Estimate (SP) |
+| --- | --------------------------------------------- | ----------- | ------------- |
+| 1   | As a player, I want to see my remaining lives | Should Have | 2             |
+|     |                                               |             |               |
 
 ## Sprint 3 (Draft)
 
