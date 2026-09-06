@@ -31,10 +31,10 @@ gantt
 
 ## Sprint 1 (กำลังทำ)
 
-| # | User Story                             | MoSCoW    | Estimate (SP) |
-| - | -------------------------------------- | --------- | ------------- |
-| 1 | As a player, I want to move left/right | Must Have | 3             |
-| 2 | As a player, I want to jump            | Must Have | 5             |
+| #   | User Story                             | MoSCoW    | Estimate (SP) |
+| --- | -------------------------------------- | --------- | ------------- |
+| 1   | As a player, I want to move left/right | Must Have | 3             |
+| 2   | As a player, I want to jump            | Must Have | 5             |
 
 ## Sprint 2 (Draft)
 
