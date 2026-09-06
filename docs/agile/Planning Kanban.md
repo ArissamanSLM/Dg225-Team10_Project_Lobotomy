@@ -24,7 +24,6 @@ kanban-plugin: board
 
 - [ ] Tower system/Infinite mode
 - [ ] Relic system
-- [ ] Drag card
 
 
 ## Work In Progress(Aris)
@@ -34,6 +33,7 @@ kanban-plugin: board
 
 ## Done (Aris)
 
+- [x] Make a card Description And Useable card
 
 
 ## To-do (Phurin)
