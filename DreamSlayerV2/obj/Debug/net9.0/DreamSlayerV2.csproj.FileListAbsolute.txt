@@ -35,3 +35,5 @@ C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayerV
 C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\DreamSlayerV2.pdb
 C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\DreamSlayerV2.genruntimeconfig.cache
 C:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\ref\DreamSlayerV2.dll
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\File.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\HorrorForestDream.xnb
