@@ -9,11 +9,11 @@ kanban-plugin: board
 - [ ] BG
 - [ ] Enemy sprite
 - [ ] Card
-- [ ] Improve old map and enemy sprite
 
 
 ## Work In Progress (Ohm)
 
+- [ ] Improve old map and enemy sprite
 
 
 ## Done (Ohm)
