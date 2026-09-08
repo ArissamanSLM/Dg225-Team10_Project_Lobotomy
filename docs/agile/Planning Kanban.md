@@ -28,6 +28,7 @@ kanban-plugin: board
 - [ ] Character info
 - [ ] ScreenMangement
 - [ ] Add a Start/Options/ChooseEventButton
+- [ ] Start Game Timeline
 
 
 ## Work In Progress(Aris)
