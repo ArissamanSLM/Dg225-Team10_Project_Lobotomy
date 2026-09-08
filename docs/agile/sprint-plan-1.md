@@ -14,20 +14,20 @@
 
 ---
 
-## Sprint Backlog 
+## Sprint Backlog
 
-| #   | User Story                                                                                    | รับผิดชอบ | MoSCoW      | Estimate (SP) | Status         |
-| --- | --------------------------------------------------------------------------------------------- | --------- | ----------- | ------------- | -------------- |
-| 0   | [User Story ของ Sprint นี้ จาก 02-sprint-backlog.md]                                          | [ชื่อ]    | Must Have   | [SP]          | 🔲 Todo        |
-| 1   | As i want to Make Hover Card read Descrition and Click to Use Card                            | Aris      | Must Have   | 5             | ✅ Done         |
-| 2   | As a game maker, I want Maze system, So that can fit to gerne Roglike                         | Aris      | Must Have   | 5             | 🔄 In Progress |
-| 3   | As a game maker, I want Random encounter system, So that can fit to gerne Roguelike           | Aris      | Must Have   | 5             | 🔄 In Progress |
-| 4   | As an artist, I want enemy animation, so that it have movement                                | Ohm       | Must Have   | 5             | 🔲 Todo        |
-| 5   | As a player, I want to see my remaining Hp/Sanity, so that I know how close I am to game over | Aris/Ohm  | Should have | 2             | 🔄 In Progress |
-| 6   |                                                                                               |           |             |               |                |
-| 7   |                                                                                               |           |             |               |                |
-| 8   |                                                                                               |           |             |               |                |
-| 9   |                                                                                               |           |             |               |                |
+| # | User Story                                                                                    | รับผิดชอบ | MoSCoW      | Estimate (SP) | Status         |
+| - | --------------------------------------------------------------------------------------------- | ------------------ | ----------- | ------------- | -------------- |
+| 0 | [User Story ของ Sprint นี้ จาก 02-sprint-backlog.md]                                 | [ชื่อ]         | Must Have   | [SP]          | 🔲 Todo        |
+| 1 | As i want to Make Hover Card read Descrition and Click to Use Card                            | Aris               | Must Have   | ❌            | ✅ Done        |
+| 2 | As a game maker, I want Maze system, So that can fit to gerne Roglike                         | Aris               | Must Have   | ❌            | 🔄 In Progress |
+| 3 | As a game maker, I want Random encounter system, So that can fit to gerne Roguelike           | Aris               | Must Have   | ❌            | 🔄 In Progress |
+| 4 | As an artist, I want enemy animation, so that it have movement                                | Ohm                | Must Have   | ❌            | 🔲 Todo        |
+| 5 | As a player, I want to see my remaining Hp/Sanity, so that I know how close I am to game over | Aris/Ohm           | Should have | ❌            | 🔄 In Progress |
+| 6 | ❌                                                                                            | ❌                 | ❌          | ❌            | ❌             |
+| 7 | ❌                                                                                            | ❌                 | ❌          | ❌            | ❌             |
+| 8 | ❌                                                                                            | ❌                 | ❌          | ❌            | ❌             |
+| 9 | ❌                                                                                            | ❌                 | ❌          | ❌            | ❌             |
 
 ## Status Legend
 
