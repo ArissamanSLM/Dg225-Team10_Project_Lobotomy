@@ -4,8 +4,8 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</File>
-    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HorrorForestDream.png</File>
+    <File>C:/Users/arissamann/Downloads/Group_Lobotomy/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</File>
+    <File>C:/Users/arissamann/Downloads/Group_Lobotomy/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HorrorForestDream.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
