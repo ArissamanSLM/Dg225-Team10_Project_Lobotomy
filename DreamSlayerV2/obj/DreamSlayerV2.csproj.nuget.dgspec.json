@@ -1,23 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj": {}
+    "C:\\Users\\arissamann\\Downloads\\Group_Lobotomy\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj": {}
   },
   "projects": {
-    "c:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj": {
+    "C:\\Users\\arissamann\\Downloads\\Group_Lobotomy\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj",
+        "projectUniqueName": "C:\\Users\\arissamann\\Downloads\\Group_Lobotomy\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj",
         "projectName": "DreamSlayerV2",
-        "projectPath": "c:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj",
-        "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\ASUS\\Downloads\\Team_DG225Git\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\obj\\",
+        "projectPath": "C:\\Users\\arissamann\\Downloads\\Group_Lobotomy\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj",
+        "packagesPath": "C:\\Users\\arissamann\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\arissamann\\Downloads\\Group_Lobotomy\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\arissamann\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -31,7 +32,6 @@
         },
         "frameworks": {
           "net9.0": {
-            "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {}
           }
@@ -46,11 +46,10 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.400"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
-          "framework": "net9.0",
           "targetAlias": "net9.0",
           "dependencies": {
             "MonoGame.Content.Builder.Task": {
@@ -78,7 +77,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400-preview.0.26322.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
