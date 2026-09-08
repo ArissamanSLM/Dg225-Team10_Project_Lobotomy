@@ -310,25 +310,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\arissamann\\.nuget\\packages\\": {},
+    "C:\\Users\\worametw\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\arissamann\\Downloads\\Group_Lobotomy\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj",
+      "projectUniqueName": "C:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj",
       "projectName": "DreamSlayerV2",
-      "projectPath": "c:\\Users\\arissamann\\Downloads\\Group_Lobotomy\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj",
-      "packagesPath": "C:\\Users\\arissamann\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\arissamann\\Downloads\\Group_Lobotomy\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\obj\\",
+      "projectPath": "C:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\DreamSlayerV2.csproj",
+      "packagesPath": "C:\\Users\\worametw\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\worametw\\Desktop\\dg140\\Dg225-Team10_Project_Lobotomy\\DreamSlayerV2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\arissamann\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\worametw\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
