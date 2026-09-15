@@ -1,5 +1,8 @@
-﻿.bin
-DreamSlayer Jam\DreamSlayer\obj
-.obsidian
-DreamSlayer Jam\DreamSlayer\bin
-DreamSlayerV2\obj
+﻿# ==========================================
+# Personal IDE & Temp (Added by Member)
+# ==========================================
+bin/
+obj/
+.vs/
+*.user
+*.suo
