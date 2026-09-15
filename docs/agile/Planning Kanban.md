@@ -10,6 +10,7 @@ kanban-plugin: board
 - [ ] Enemy sprite
 - [ ] Card
 - [ ] Improve old map and enemy sprite
+- [ ] ButtonSprite
 
 
 ## Work In Progress (Ohm)
@@ -24,6 +25,10 @@ kanban-plugin: board
 
 - [ ] Tower system/Infinite mode
 - [ ] Relic system
+- [ ] Character info
+- [ ] ScreenMangement
+- [ ] Add a Start/Options/ChooseEventButton
+- [ ] Start Game Timeline
 
 
 ## Work In Progress(Aris)
