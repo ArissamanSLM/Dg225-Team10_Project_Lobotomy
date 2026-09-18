@@ -7,7 +7,7 @@ using DreamSlayerV2.Scenes; // Adjust namespace to match your Scene classes
 
 namespace DreamSlayerV2.Scenes
 {
-    public class BattleScene : IScene
+    public class BattleScene  //IScene
     {
 
     }
