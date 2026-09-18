@@ -1,0 +1,6 @@
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Extended\net9.0\DreamSlayerV2.csproj.AssemblyReference.cache
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Extended\net9.0\DreamSlayerV2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Extended\net9.0\DreamSlayerV2.AssemblyInfoInputs.cache
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Extended\net9.0\DreamSlayerV2.AssemblyInfo.cs
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Extended\net9.0\DreamSlayerV2.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Extended\net9.0\DreamSlayerV2.sourcelink.json

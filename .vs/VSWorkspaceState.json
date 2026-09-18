@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\DreamSlayerV2"
+    "\\DreamSlayerV2",
+    "\\DreamSlayerV2\\Scenes"
   ],
-  "SelectedNode": "\\DreamSlayerV2\\ItemManager.cs",
+  "SelectedNode": "\\DreamSlayerV2\\Scenes\\BattleScene.Cs",
   "PreviewInSolutionExplorer": false
 }

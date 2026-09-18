@@ -28,6 +28,7 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.DrawString(_font, "Game Over. Press I to Retry.", new Vector2(50, 50), Color.Red);
             spriteBatch.End();
         }
