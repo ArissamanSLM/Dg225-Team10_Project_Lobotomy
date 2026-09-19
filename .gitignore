@@ -1,5 +1,5 @@
-﻿.bin
-DreamSlayer Jam\DreamSlayer\obj
+﻿.vs/
+.bin
 .obsidian
-DreamSlayer Jam\DreamSlayer\bin
+DreamSlayerV2/bin
 DreamSlayerV2\obj
