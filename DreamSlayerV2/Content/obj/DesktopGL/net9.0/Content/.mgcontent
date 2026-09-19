@@ -4,10 +4,14 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</File>
-    <File>c:/Users/ASUS/Downloads/Team_DG225Git/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HorrorForestDream.png</File>
+    <File>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</File>
+    <File>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HorrorForestDream.png</File>
+    <File>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Montagem Celestial Esperanza [x90ocGRT6EE].mp3</File>
+    <File>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Start_music (1).mp3</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
