@@ -32,3 +32,15 @@
 /processorParam:TextureFormat=Color
 /build:HorrorForestDream.png
 
+#begin Montagem Celestial Esperanza [x90ocGRT6EE].mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Montagem Celestial Esperanza [x90ocGRT6EE].mp3
+
+#begin Start_music (1).mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Start_music (1).mp3
+

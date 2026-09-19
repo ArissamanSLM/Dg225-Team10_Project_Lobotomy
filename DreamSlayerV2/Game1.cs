@@ -35,7 +35,7 @@ protected override void LoadContent()
     SceneManager.Initialize(Content);
 
     // 2. Then safely launch your starting scene
-    SceneManager.ChangeScene(new NodeSelectScene());
+    SceneManager.ChangeScene(new TitleScene());
 }
 
         protected override void Update(GameTime gameTime)
