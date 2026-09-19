@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DreamSlayerV2.Scenes
 {
-    public class TowerScene : IScene
+    public class TitleScene : IScene
     {
         private SpriteFont _font;
 
