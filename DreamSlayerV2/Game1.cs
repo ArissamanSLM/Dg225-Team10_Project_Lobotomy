@@ -22,17 +22,21 @@ namespace DreamSlayerV2
         }
 
         protected override void Initialize()
-        {
-            base.Initialize();
+{
+    base.Initialize();
+    // Remove ChangeScene from here because Content isn't ready yet!
+}
 
-            // Set your game's starting scene (e.g., NodeSelectScene or MainMenu)
-            SceneManager.ChangeScene(new NodeSelectScene());
-        }
+protected override void LoadContent()
+{
+    _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-        }
+    // 1. Give the Content manager to SceneManager first
+    SceneManager.Initialize(Content);
+
+    // 2. Then safely launch your starting scene
+    SceneManager.ChangeScene(new NodeSelectScene());
+}
 
         protected override void Update(GameTime gameTime)
         {

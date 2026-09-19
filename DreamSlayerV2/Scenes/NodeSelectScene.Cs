@@ -34,7 +34,7 @@ namespace  DreamSlayerV2.Scenes
             }
             if (Keyboard.GetState().IsKeyDown(Keys.T))
             {
-                SceneManager.ChangeScene(new TowerScene());
+                SceneManager.ChangeScene(new TitleScene());
             }
 
             // 1. Get the current mouse state every frame

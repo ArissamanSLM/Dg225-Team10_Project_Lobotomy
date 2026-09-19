@@ -21,14 +21,15 @@ namespace DreamSlayerV2.Scenes
         {
             if (Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.I))
             {
-                SceneManager.ChangeScene(new TowerScene());
+                SceneManager.ChangeScene(new TitleScene());
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            
             spriteBatch.Begin();
-            spriteBatch.GraphicsDevice.Clear(Color.Black);
+            
             spriteBatch.DrawString(_font, "Game Over. Press I to Retry.", new Vector2(50, 50), Color.Red);
             spriteBatch.End();
         }
