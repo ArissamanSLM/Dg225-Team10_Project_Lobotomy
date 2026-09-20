@@ -2,7 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\DreamSlayerV2",
-    "\\DreamSlayerV2\\Scenes"
+    "\\DreamSlayerV2\\Content",
+    "\\DreamSlayerV2\\Scenes",
+    "\\DreamSlayerV2\\Scenes\\StoryScenes"
   ],
+  "SelectedNode": "\\DreamSlayerV2\\Scenes\\BattleScene.Cs",
   "PreviewInSolutionExplorer": false
 }
