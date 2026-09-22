@@ -10,6 +10,7 @@ namespace DreamSlayerV2.Scenes
 {
     public class TitleScene : IScene
     {
+        private Texture2D BgTitle;
         private SpriteFont _font;
         private Song _titleMusic;
 
@@ -28,6 +29,7 @@ namespace DreamSlayerV2.Scenes
             _font = content.Load<SpriteFont>("File");
             _titleMusic = content.Load<Song>("Montagem Celestial Esperanza [x90ocGRT6EE]");
             MediaPlayer.Play(_titleMusic);
+            BgTitle = content.Load<>
             MediaPlayer.IsRepeating = true;
         }
 

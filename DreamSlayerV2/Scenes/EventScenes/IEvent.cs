@@ -6,23 +6,20 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
-namespace DreamSlayerV2.Scenes;
-
-public interface IEvent : IScene
+namespace DreamSlayerV2.Core
 {
+    public enum EventTag
+    {
+        Lucky,
+        Normal,
+        Nightmare
+    }
 
-public enum EventTag
-{
-    Lucky,
-    Normal,
-    Nightmare
-}
-
-public interface IEvent : IScene
-{
-    EventTag Tag { get; }
-    string DialogText { get; }
-    void ExecuteConsequence(int choiceIndex);
-}
+    public interface IEvent : IScene
+    {
+        EventTag Tag { get; }
+        string DialogText { get; }
+        void ExecuteConsequence(int choiceIndex);
+    }
 }
 

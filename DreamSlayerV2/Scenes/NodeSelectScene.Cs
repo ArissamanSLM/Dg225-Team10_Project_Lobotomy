@@ -10,22 +10,18 @@ using System.Linq;
 
 namespace DreamSlayerV2.Core
 {
+    // Node class properly isolated inside its namespace
     public class Node
     {
-        // Position of the node on the map
         public Vector2 Position { get; set; }
-
-        // Connected nodes you can travel to next
         public List<Node> ConnectedNodes { get; set; } = new List<Node>();
-
-        // Status of the node
         public bool IsCompleted { get; set; } = false;
     }
 }
 
 namespace DreamSlayerV2.Scenes
 {
-    public class NodeSelectScene : IScene 
+    public class NodeSelectScene : IScene
     {
         private SpriteFont _font;
         private Vector2 CameraPosition = Vector2.Zero;
@@ -33,42 +29,77 @@ namespace DreamSlayerV2.Scenes
         private Texture2D _pixelTexture;
         private List<Node> allNodes = new List<Node>();
         private Song NodeMusic;
-        // Track the previous mouse state to calculate scroll movement
         private MouseState _previousMouseState;
+
+        // Keep track of the currently active/current node the player is standing on
+        private Node _currentNode;
 
         public void Initialize()
         {
             _previousMouseState = Mouse.GetState();
 
-            // Create sample nodes so you can test the camera scrolling and lines immediately!
-            Node node1 = new Node { Position = new Vector2(300, 540) };
-            Node node2M = new Node { Position = new Vector2(800, 540) };
+            // 1. Create all map nodes for your 6-node demo + final Boss
+            Node node1 = new Node { Position = new Vector2(300, 540) };     // Start
+
+            Node node2M = new Node { Position = new Vector2(800, 540) };    // Part 2
             Node node2 = new Node { Position = new Vector2(800, 350) };
             Node node3 = new Node { Position = new Vector2(800, 730) };
-            Node node4 = new Node { Position = new Vector2(1300, 540) };
 
-            // Link them together
+            Node node4 = new Node { Position = new Vector2(1300, 540) };    // Part 3
+            Node node4U = new Node { Position = new Vector2(1300, 350) };
+
+            Node node5M = new Node { Position = new Vector2(1750, 540) };   // Part 4
+            Node node5D = new Node { Position = new Vector2(1750, 730) };
+
+            Node node6 = new Node { Position = new Vector2(2100, 540) };     // Part 5 (Rest/Shop)
+            Node node7 = new Node { Position = new Vector2(2550, 540) };     // Part 6 (Boss)
+
+            // 2. Link them together based on your branch paths
             node1.ConnectedNodes.Add(node2);
+            node1.ConnectedNodes.Add(node2M);
             node1.ConnectedNodes.Add(node3);
-            node2.ConnectedNodes.Add(node4);
-            node3.ConnectedNodes.Add(node4);
-            node1.ConnectedNodes.Add(node2M); 
-            node2M.ConnectedNodes.Add(node4); // Optional: Add a middle node for more complexity
 
-            // Add them to the master list
+            node2.ConnectedNodes.Add(node4);
+            node2.ConnectedNodes.Add(node4U);
+            node2M.ConnectedNodes.Add(node4);
+            node3.ConnectedNodes.Add(node4U);
+
+            node4.ConnectedNodes.Add(node5M);
+            node4U.ConnectedNodes.Add(node5M);
+            node4.ConnectedNodes.Add(node5D);
+
+            node5M.ConnectedNodes.Add(node6);
+            node5D.ConnectedNodes.Add(node6);
+
+            node6.ConnectedNodes.Add(node7); // Final link to Boss
+
+            // 3. Add all nodes to the master list so they render
             allNodes.Add(node1);
+            allNodes.Add(node2M);
             allNodes.Add(node2);
             allNodes.Add(node3);
-            allNodes.Add(node2M);
             allNodes.Add(node4);
+            allNodes.Add(node4U);
+            allNodes.Add(node5M);
+            allNodes.Add(node5D);
+            allNodes.Add(node6);
+            allNodes.Add(node7);
+
+            // Set starting active node
+            _currentNode = node1;
         }
 
         public void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("File");
             NodeMusic = content.Load<Song>("Start_music (1)");
+
+            if (MediaPlayer.State != MediaState.Playing)
+            {
                 MediaPlayer.Play(NodeMusic);
-            MediaPlayer.IsRepeating = true;
+                MediaPlayer.IsRepeating = true;
+            }
+
             var graphicsDevice = ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService))).GraphicsDevice;
             _pixelTexture = new Texture2D(graphicsDevice, 1, 1);
             _pixelTexture.SetData(new[] { Color.White });
@@ -78,32 +109,56 @@ namespace DreamSlayerV2.Scenes
         {
             if (Keyboard.GetState().IsKeyDown(Keys.G))
             {
-                SceneManager.ChangeScene(new GameOverScene());
+                SceneManager.ChangeScene(new GameOverScene(5, 3, 24, true, false, 1));
             }
             if (Keyboard.GetState().IsKeyDown(Keys.T))
             {
                 SceneManager.ChangeScene(new TitleScene());
             }
 
-            // 1. Get the current mouse state every frame
             MouseState currentMouseState = Mouse.GetState();
 
-            // 2. Calculate the difference (delta) in the scroll wheel
+            // Camera Scrolling via Scroll Wheel
             int scrollDelta = currentMouseState.ScrollWheelValue - _previousMouseState.ScrollWheelValue;
-
-            // 3. Move camera based on scroll direction
-            if (scrollDelta > 0)
-            {
-                CameraPosition.X -= 50f; // Scrolled up / forward
-            }
-            else if (scrollDelta < 0)
-            {
-                CameraPosition.X += 50f; // Scrolled down / backward
-            }
+            if (scrollDelta > 0) CameraPosition.X -= 50f;
+            else if (scrollDelta < 0) CameraPosition.X += 50f;
 
             CameraPosition.X = MathHelper.Clamp(CameraPosition.X, 0f, 4000f);
 
-            // 4. Save current state for the next frame
+            // Handle Node Selection via Mouse Click
+            bool isClicked = currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
+            if (isClicked)
+            {
+                Vector2 mouseWorldPos = new Vector2(currentMouseState.X, currentMouseState.Y) + (CameraPosition * scroll_factor);
+
+                foreach (var node in allNodes)
+                {
+                    // Define bounding box for each node on screen
+                    Rectangle nodeRect = new Rectangle((int)node.Position.X - 15, (int)node.Position.Y - 15, 32, 32);
+
+                    if (nodeRect.Contains(mouseWorldPos))
+                    {
+                        // Check if the clicked node is a valid connected path from the current node
+                        if (_currentNode.ConnectedNodes.Contains(node) || _currentNode == node)
+                        {
+                            _currentNode = node;
+                            _currentNode.IsCompleted = true;
+
+                            // Transition based on node type position
+                            if (node == allNodes.Last()) // Node 7 (Boss)
+                            {
+                                SceneManager.ChangeScene(new BattleScene());
+                            }
+                            else
+                            {
+                                SceneManager.ChangeScene(new BattleScene());
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
             _previousMouseState = currentMouseState;
         }
 
@@ -120,7 +175,7 @@ namespace DreamSlayerV2.Scenes
                 color,
                 angle,
                 Vector2.Zero,
-                new Vector2(length, thickness), // Scale X to length, Y to thickness
+                new Vector2(length, thickness),
                 SpriteEffects.None,
                 0f
             );
@@ -132,12 +187,11 @@ namespace DreamSlayerV2.Scenes
 
             // Draw HUD text
             spriteBatch.DrawString(_font, "Current Floor: Tower Ascent (Node Choice)", new Vector2(50, 50) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "Press G to go to Game Over Scene", new Vector2(50, 100) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "Press T to go to Title Scene", new Vector2(50, 150) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "Scroll to move camera left/right", new Vector2(50, 200) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "End of Map", new Vector2(3000, 50) - CameraPosition * scroll_factor, Color.White);
+            spriteBatch.DrawString(_font, "Press G for Game Over | Press T for Title", new Vector2(50, 90) - CameraPosition * scroll_factor, Color.White);
+            spriteBatch.DrawString(_font, "Click connected white nodes to travel!", new Vector2(50, 130) - CameraPosition * scroll_factor, Color.Yellow);
+            spriteBatch.DrawString(_font, "Boss Room (End)", new Vector2(2500, 480) - CameraPosition * scroll_factor, Color.Red);
 
-            // 1. Draw connection lines first (underneath nodes)
+            // 1. Draw connection lines first
             foreach (var node in allNodes)
             {
                 foreach (var nextNode in node.ConnectedNodes)
@@ -149,22 +203,23 @@ namespace DreamSlayerV2.Scenes
                 }
             }
 
-            // 2. Draw nodes on top of the lines (using small boxes or circles made with _pixelTexture)
+            // 2. Draw nodes on top
             foreach (var node in allNodes)
             {
                 Vector2 drawPos = node.Position - CameraPosition * scroll_factor;
-
-                // Draw a simple 32x32 square placeholder for each node centered at drawPos
                 Rectangle nodeRect = new Rectangle((int)drawPos.X - 15, (int)drawPos.Y - 15, 32, 32);
-                spriteBatch.Draw(_pixelTexture, nodeRect, Color.White);
+
+                // Highlight current or available nodes differently
+                Color nodeColor = Color.White;
+                if (node == _currentNode) nodeColor = Color.Cyan;
+                else if (_currentNode.ConnectedNodes.Contains(node)) nodeColor = Color.LightGreen; // Available choices!
+
+                spriteBatch.Draw(_pixelTexture, nodeRect, nodeColor);
             }
 
             spriteBatch.End();
         }
 
-        public void UnloadContent()
-        {
-            // Clear textures or memory specific to this floor when leaving
-        }
+        public void UnloadContent() { }
     }
 }

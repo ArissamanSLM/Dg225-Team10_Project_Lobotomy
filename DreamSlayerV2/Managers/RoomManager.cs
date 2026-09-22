@@ -18,9 +18,10 @@ namespace DreamSlayerV2
         public int RoomCount { get; private set; } = 0;
         public bool NightmareMode { get; set; } = false;
 
-        // FloorDifficulty: 1 for rooms 0..12, 2 for 13..25, etc.
-        public int FloorDifficulty => (RoomCount / 13) + 1;
+        // Toggle this to true for your Friday Demo version (Nodes 1-7)
+        public bool IsDemoMode { get; set; } = true;
 
+        public int FloorDifficulty => (RoomCount / 13) + 1;
         public RoomType CurrentRoom { get; private set; } = RoomType.Event;
 
         public RoomManager() { }
@@ -30,33 +31,56 @@ namespace DreamSlayerV2
         {
             RoomCount++;
 
-            // Every 13th room is a Boss
+            // --- DEMO MODE (Strict Node 1 to 7 Structure) ---
+            if (IsDemoMode)
+            {
+                if (RoomCount == 7)
+                {
+                    CurrentRoom = RoomType.Elite; // Node 7 is a forced Elite Encounter!
+                    return CurrentRoom;
+                }
+                else if (RoomCount > 7)
+                {
+                    CurrentRoom = RoomType.Boss; // End of Demo / Boss transition
+                    return CurrentRoom;
+                }
+
+                // For nodes 1 to 6 in the demo, pick randomly or via your event pool distribution 
+                // (1 Lucky, 3 Normal, 1 Nightmare, etc.)
+                int demoRoll = _rng.Next(0, 3);
+                switch (demoRoll)
+                {
+                    case 0: CurrentRoom = RoomType.Event; break;
+                    case 1: CurrentRoom = RoomType.Encounter; break;
+                    case 2: CurrentRoom = RoomType.Shop; break;
+                }
+                return CurrentRoom;
+            }
+
+            // --- FULL VERSION MODE (Original 13-Room Cycle) ---
             if (RoomCount % 13 == 0)
             {
                 CurrentRoom = RoomType.Boss;
                 return CurrentRoom;
             }
 
-            int roll = _rng.Next(0, 101); // 0..100
+            int roll = _rng.Next(0, 101);
 
-            // Nightmare small forced encounter chance on early floors
             if (NightmareMode && FloorDifficulty < 5 && roll < 20)
             {
                 CurrentRoom = RoomType.Encounter;
                 return CurrentRoom;
             }
 
-            // Base weights (can be tuned)
             int encounterWeight = 50;
             int eliteWeight = 10;
             int eventWeight = 20;
             int shopWeight = 20;
 
-            // At floor 5+ increase odds for encounters and elites
             if (FloorDifficulty >= 5)
             {
-                encounterWeight += 20; // more encounters
-                eliteWeight += 10;     // more elites
+                encounterWeight += 20;
+                eliteWeight += 10;
                 eventWeight = Math.Max(5, eventWeight - 15);
                 shopWeight = Math.Max(5, shopWeight - 15);
             }
