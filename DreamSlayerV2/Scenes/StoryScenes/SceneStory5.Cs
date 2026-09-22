@@ -45,7 +45,7 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "A massive, swirling rift tears open right in the center of the village square.\nAs you stumble backward, your boot hits something half-buried in the dirt-\nan ancient, glowing tome. As you touch its cover, the whispers begin...", new Vector2(50, 50), Color.Red);
+            spriteBatch.DrawString(_font, "Before I know it, I was in the other world. I can tell this place is really dangerous.\n I need to get out here as soon as possible... or maybe I could stay a bit longer and get as much forbidden spell.", new Vector2(50, 50), Color.Red);
 
             Vector2 textSize = _font.MeasureString(promptText);
             Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);

@@ -44,7 +44,7 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "You wake up to the familiar quiet of your remote village.\nThe morning fog rolls lazily over the hills, hiding nothing out of the ordinary... yet.", new Vector2(50, 50), Color.Red);
+            spriteBatch.DrawString(_font, "I was a newly mage accepted in this magic school.\nCleaning in the library as I were punish for having the lowest score in the test. Very stupid punishment if you think.", new Vector2(50, 50), Color.Red);
 
             Vector2 textSize = _font.MeasureString(promptText);
             Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);

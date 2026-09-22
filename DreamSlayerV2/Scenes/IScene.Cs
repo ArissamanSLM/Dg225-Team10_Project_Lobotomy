@@ -11,5 +11,7 @@ namespace DreamSlayerV2.Core
         void Update(GameTime gameTime);
         void Draw(SpriteBatch spriteBatch);
         void UnloadContent();
+
+        //Test
     }
 }

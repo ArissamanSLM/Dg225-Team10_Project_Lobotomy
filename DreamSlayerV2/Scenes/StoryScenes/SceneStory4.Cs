@@ -44,7 +44,7 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "Suddenly, the sky twists. The wind stops entirely.\nThe air grows heavy, charged with an unnatural, humming static.", new Vector2(50, 50), Color.Red);
+            spriteBatch.DrawString(_font, "As the book open, the power burst out from the book.\n Ah... I am 100% sure it has the \"DO NOT OPEN\" tape and I miss it. Oh well.", new Vector2(50, 50), Color.Red);
 
             Vector2 textSize = _font.MeasureString(promptText);
             Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);
