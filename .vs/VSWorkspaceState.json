@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\DreamSlayerV2"
+    "\\DreamSlayerV2",
+    "\\DreamSlayerV2\\Content"
   ],
-  "SelectedNode": "\\DreamSlayerV2\\ItemManager.cs",
+  "SelectedNode": "\\DreamSlayerV2\\Content\\Content.mgcb",
   "PreviewInSolutionExplorer": false
 }
