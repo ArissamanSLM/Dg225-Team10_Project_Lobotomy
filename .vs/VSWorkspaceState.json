@@ -3,9 +3,9 @@
     "",
     "\\DreamSlayerV2",
     "\\DreamSlayerV2\\Content",
-    "\\DreamSlayerV2\\Scenes",
-    "\\DreamSlayerV2\\Scenes\\StoryScenes"
+    "\\DreamSlayerV2\\Managers",
+    "\\DreamSlayerV2\\Scenes"
   ],
-  "SelectedNode": "\\DreamSlayerV2\\Scenes\\BattleScene.Cs",
+  "SelectedNode": "\\DreamSlayerV2\\Content\\HorrorForestDream.png",
   "PreviewInSolutionExplorer": false
 }
