@@ -168,7 +168,7 @@ namespace DreamSlayerV2.Scenes
                             }
                             else if (node.Type == NodeType.Event)
                             {
-                                SceneManager.ChangeScene(new EventScene());
+                                SceneManager.ChangeScene(EventSceneFactory.CreateRandomEvent());
                             }
                             else
                             {

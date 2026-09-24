@@ -27,6 +27,7 @@ namespace DreamSlayerV2.Scenes
 
         // Player instance handling stats, deck, and hand
         private PlayerController _player;
+        private Node targetNode;
 
         // Constructor
         public BattleScene(bool bossRoom = false, Node nodeToComplete = null)
