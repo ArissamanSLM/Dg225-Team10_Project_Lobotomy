@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DreamSlayerV2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+26edecf6ecae3e46b86956f465703b8d4c8a1187")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+24bb01c6b4daab9c0ec90a6cad1431ac7304cd88")]
 [assembly: System.Reflection.AssemblyProductAttribute("DreamSlayerV2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DreamSlayerV2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
