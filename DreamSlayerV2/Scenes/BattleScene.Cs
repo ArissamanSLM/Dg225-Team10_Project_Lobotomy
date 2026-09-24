@@ -74,10 +74,23 @@ namespace DreamSlayerV2.Scenes
             // Check for Win Condition (Enemy HP <= 0)
             if (enemyHP <= 0)
             {
-                // Pass reward tier: 0 for normal enemy, 2 for boss room
-                int rewardTier = isBossRoom ? 2 : 0;
-                SceneManager.ChangeScene(new RewardScene(rewardTier));
+                if (isBossRoom)
+                {
+                    SceneManager.ChangeScene(new GameOverScene(5, 3, 24, true, false, 1));
+                }
+                else
+                {
+                    // Pass reward tier: 0 for normal enemy, 2 for boss room
+                    int rewardTier = isBossRoom ? 2 : 0;
+                    SceneManager.ChangeScene(new RewardScene(rewardTier));
+                }
                 return; // Stop updating battle logic once won
+            }
+
+            if (_player.PlayerHP <= 0)
+            {
+                SceneManager.ChangeScene(new GameOverScene(5, 3, 24, false, true, 1));
+                return;
             }
 
             // Play cards using keys [1] through [5]
@@ -115,7 +128,25 @@ namespace DreamSlayerV2.Scenes
             if (currentKeyboardState.IsKeyDown(Keys.E) && _previousKeyboardState.IsKeyUp(Keys.E))
             {
                 _player.EndTurn();
+                EnermyTurn();
                 _player.PlayerTurn();
+
+                if (_player.PlayerHP <= 0)
+                {
+                    SceneManager.ChangeScene(new GameOverScene(5, 3, 24, false, true, 1));
+                    return;
+                }
+            }
+        }
+
+        private void EnermyTurn()
+        {
+            int damage = isBossRoom ? 18 : 8;
+
+            _player.PlayerHP -= damage;
+            if (_player.PlayerHP < 0)
+            {
+                _player.PlayerHP = 0;
             }
         }
 
@@ -171,13 +202,13 @@ namespace DreamSlayerV2.Scenes
                     };
 
                     int sourceWidth = CardTexture.Width / 4;
-                    Rectangle sourceRect = new Rectangle(textureIndex * sourceWidth, 0, sourceWidth, CardTexture.Height);
+                    Rectangle sourceRect = new Rectangle(textureIndex * sourceWidth, 0, sourceWidth, CardTexture.Height/4);
 
                     // Draw Card Visual Texture
                     spriteBatch.Draw(CardTexture, new Rectangle((int)cardX, (int)cardY, cardWidth, cardHeight), sourceRect, Color.White);
 
                     // Draw Card Name & Cost over the visual
-                    spriteBatch.DrawString(_font, $"[{i + 1}] {card.Name}\nCost: {card.Cost}", new Vector2(cardX + 10, cardY + 10), Color.Black);
+                    //spriteBatch.DrawString(_font, $"[{i + 1}] {card.Name}\nCost: {card.Cost}", new Vector2(cardX + 10, cardY + 10), Color.White);
                 }
             }
 

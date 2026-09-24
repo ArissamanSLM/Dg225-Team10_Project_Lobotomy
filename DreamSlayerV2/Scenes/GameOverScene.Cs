@@ -76,24 +76,23 @@ namespace DreamSlayerV2.Scenes
         {
             spriteBatch.Begin();
 
-            string titleText = _isVictory ? "--- DEMO VICTORY! ---" : "--- GAME OVER ---";
+            string titleText = _isVictory ? "Demo Victory" : "Game Over";
             Color titleColor = _isVictory ? Color.Gold : Color.Red;
 
             // Draw header
             spriteBatch.DrawString(_font, titleText, new Vector2(50, 40), titleColor);
 
-            // Draw detailed breakdown matching your scoring rules
-           // string breakdown =
-                //$"Nodes Passed ({_nodesPassed}): +{_nodesPassed * 200}\n" +
-                //$"Enemies Cleared ({_enemiesCleared}): +{_enemiesCleared * 100}\n" +
-                //$"Cards Used ({_cardsPlayed}): +{_cardsPlayed * 5}\n" +
-                //$"Floor Bonus ({_floorsPassed}): +{_floorsPassed * 250}\n" +
-                //(_isVictory ? "Boss Cleared / Demo End: +1000\n" : "") +
-                //(_died ? "Death Penalty: -100\n" : "") +
-                //$"----------------------------------\n" +
-                //$"FINAL SCORE: {_finalScore}";
+            string breakdown =
+                $"Nodes Passed ({_nodesPassed}): +{_nodesPassed * 200}\n" +
+                $"Enemies Cleared ({_enemiesCleared}): +{_enemiesCleared * 100}\n" +
+                $"Cards Used ({_cardsPlayed}): +{_cardsPlayed * 5}\n" +
+                $"Floor Bonus ({_floorsPassed}): +{_floorsPassed * 250}\n" +
+                (_isVictory ? "Boss Cleared / Demo End: +1000\n" : "") +
+                (_died ? "Death Penalty: -100\n" : "") +
+                $"----------------------------------\n" +
+                $"FINAL SCORE: {_finalScore}";
 
-            //spriteBatch.DrawString(_font, breakdown, new Vector2(50, 100), Color.White);
+            spriteBatch.DrawString(_font, breakdown, new Vector2(50, 100), Color.White);
 
             // Prompt to restart/exit
             spriteBatch.DrawString(_font, "Press 'I' to return to Title Screen", new Vector2(50, 420), Color.Yellow);
