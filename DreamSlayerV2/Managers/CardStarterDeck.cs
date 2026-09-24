@@ -10,6 +10,10 @@ namespace DreamSlayerV2
 
             switch (characterClass)
             {
+                case CharacterClassV2.HumanDemo:
+                    for (int i = 0; i < 2; i++) starterDeck.Add(new CardManager(i + 1, "Strike", 1, CardManager.CardType.Attack));
+                    for (int i = 0; i < 2; i++) starterDeck.Add(new CardManager(i + 3, "Defend", 1, CardManager.CardType.Defense));
+                    break;
                 case CharacterClassV2.Human:
                     for (int i = 0; i < 3; i++) starterDeck.Add(new CardManager(i + 1, "Strike", 1, CardManager.CardType.Attack));
                     for (int i = 0; i < 3; i++) starterDeck.Add(new CardManager(i + 4, "Defend", 1, CardManager.CardType.Defense));

@@ -6,6 +6,7 @@ namespace DreamSlayerV2
     public enum CharacterClassV2
     {
         Human,
+        HumanDemo, 
         ShadowBind,
         PactBinder,
         TheOrbMaster,
@@ -23,7 +24,9 @@ namespace DreamSlayerV2
         public CharacterClassV2 SelectedClass { get; set; }
         public List<CardManager> Deck { get; set; } = new List<CardManager>();
         public CardManager[] Hand { get; set; } = new CardManager[5];
+        public List<CardManager> DiscardPile { get; set; } = new List<CardManager>(); // <-- ADD THIS
         public int Level { get; set; } = 1;
+        public int SoulCoins { get; set; } = 0;
 
         public int[] PassiveRelics { get; set; } = new int[5];
         private readonly Random _rand = new Random();
@@ -40,6 +43,8 @@ namespace DreamSlayerV2
         {
             switch (SelectedClass)
             {
+                case CharacterClassV2.HumanDemo:
+                    PlayerHP = 60; MaxHP = 60; Sanity = 100; Honor = 0; break;
                 case CharacterClassV2.Human:
                     PlayerHP = 72; MaxHP = 72; Sanity = 100; Honor = 0; break;
                 case CharacterClassV2.ShadowBind:
@@ -76,6 +81,8 @@ namespace DreamSlayerV2
         {
             if (IsValidHandIndex(handIndex))
             {
+                // Send the played card to the Discard Pile
+                DiscardPile.Add(Hand[handIndex]);
                 Hand[handIndex] = null;
             }
         }
@@ -114,14 +121,29 @@ namespace DreamSlayerV2
 
         public void EndTurn()
         {
+            // Clear remaining hand into discard pile
             for (int i = 0; i < Hand.Length; i++)
             {
                 if (Hand[i] != null)
                 {
-                    ReturnCardToDeck(i);
+                    DiscardPile.Add(Hand[i]);
+                    Hand[i] = null;
                 }
             }
-            Shuffle();
+
+            // FIXED: Moved outside the loop so it only happens once per turn end, not 5 times!
+            Sanity += 30;
+
+            // Optional cap so Sanity doesn't go over max (assuming 100 max for HumanDemo)
+            if (Sanity > 100) Sanity = 100;
+
+            // If deck runs out, recycle discard pile back into the deck
+            if (Deck.Count == 0)
+            {
+                Deck.AddRange(DiscardPile);
+                DiscardPile.Clear();
+                Shuffle();  
+            }
         }
 
         private bool IsValidHandIndex(int index) => index >= 0 && index < Hand.Length && Hand[index] != null;

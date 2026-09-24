@@ -29,7 +29,7 @@ namespace DreamSlayerV2.Scenes
                 _soulReward = _rand.Next(20, 31);
                 _isEliteOrBoss = false;
                 _enemyTypeLabel = "Enemy";
-                // Test
+               
             }
             else if (rewardTier == 1) // Elite (50-75 Soul Coins + Relic chance for full version)
             {
@@ -68,6 +68,10 @@ namespace DreamSlayerV2.Scenes
             if (isClicked)
             {
                 SceneManager.ChangeScene(new NodeSelectScene());
+                if (DreamSlayerV2.Core.GameState.CurrentPlayer != null)
+                {
+                    DreamSlayerV2.Core.GameState.CurrentPlayer.SoulCoins += _soulReward;
+                }
             }
 
             _previousMouseState = currentMouseState;
