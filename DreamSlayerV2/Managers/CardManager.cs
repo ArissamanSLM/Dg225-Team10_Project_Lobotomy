@@ -74,7 +74,7 @@ namespace DreamSlayerV2
             {
                 case CardType.Attack:
                     Name = "Strike";
-                    InHandDamage = 6;
+                    InHandDamage = 10;
                     Description = "This is an attack card. It can be used to deal damage to enemies.";
                     Does = $"Deals {InHandDamage} damage. Cost: {Cost} Sanity.";
                     break;

@@ -16,8 +16,8 @@ namespace DreamSlayerV2.Scenes
         private Texture2D CardTexture;
 
         // Combat Stats
-        private int enemyHP = 50;
-        private int maxEnemyHP = 50;
+        private int enemyHP = 30;
+        private int maxEnemyHP = 30;
         private bool isBossRoom = false; // Set to true if this is the Node 7 boss encounter
 
         // Input States
@@ -36,8 +36,8 @@ namespace DreamSlayerV2.Scenes
             targetNode = nodeToComplete; // <--- บันทึกค่า Node เอาไว้
             if (isBossRoom)
             {
-                enemyHP = 150;
-                maxEnemyHP = 150;
+                enemyHP = 90;
+                maxEnemyHP = 90;
             }
         }
 

@@ -44,7 +44,7 @@ namespace DreamSlayerV2
             switch (SelectedClass)
             {
                 case CharacterClassV2.HumanDemo:
-                    PlayerHP = 60; MaxHP = 60; Sanity = 100; Honor = 0; break;
+                    PlayerHP = 65; MaxHP = 65; Sanity = 100; Honor = 0; break;
                 case CharacterClassV2.Human:
                     PlayerHP = 72; MaxHP = 72; Sanity = 100; Honor = 0; break;
                 case CharacterClassV2.ShadowBind:

@@ -5,6 +5,7 @@
   <Config />
   <SourceFiles>
     <File>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/All16Card.png</File>
+    <File>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/E_enemy2.png</File>
     <File>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</File>
     <File>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HorrorForestDreamV2.png</File>
     <File>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Montagem Celestial Esperanza [x90ocGRT6EE].mp3</File>
@@ -13,6 +14,7 @@
     <File>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/UnrealWolf.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
