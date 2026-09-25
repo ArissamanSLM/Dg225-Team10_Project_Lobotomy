@@ -16,9 +16,9 @@
 
 ## Sprint Backlog
 
-| # | User Story                                                    | รับผิดชอบ | MoSCoW    | Estimate (SP) | Status  |
-| - | ------------------------------------------------------------- | ------------------ | --------- | ------------- | ------- |
-| 1 | [User Story ของ Sprint นี้ จาก 02-sprint-backlog.md] | [ชื่อ]         | Must Have | [SP]          | 🔲 Todo |
+| # | User Story                                       | รับผิดชอบ | MoSCoW    | Estimate (SP) | Status         |
+| - | ------------------------------------------------ | ------------------ | --------- | ------------- | -------------- |
+| 1 | Add a title screen and Do screen mange mangement | Aris               | Must Have | 5             | 🔄 In Progress |
 
 ## Status Legend
 
