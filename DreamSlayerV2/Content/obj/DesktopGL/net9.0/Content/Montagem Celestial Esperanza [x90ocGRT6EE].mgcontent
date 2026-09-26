@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Montagem Celestial Esperanza [x90ocGRT6EE].mp3</SourceFile>
-  <SourceTime>2026-09-25T13:24:35.2291477+07:00</SourceTime>
-  <DestFile>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Montagem Celestial Esperanza [x90ocGRT6EE].xnb</DestFile>
-  <DestTime>2026-09-25T14:09:29.1021654+07:00</DestTime>
+  <SourceFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Montagem Celestial Esperanza [x90ocGRT6EE].mp3</SourceFile>
+  <SourceTime>2026-09-25T10:58:58.984534+07:00</SourceTime>
+  <DestFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Montagem Celestial Esperanza [x90ocGRT6EE].xnb</DestFile>
+  <DestTime>2026-09-25T18:00:58.5379136+07:00</DestTime>
   <Importer>Mp3Importer</Importer>
   <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
   <Processor>SongProcessor</Processor>
@@ -15,6 +15,6 @@
   <Dependencies />
   <BuildAsset />
   <BuildOutput>
-    <string>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Montagem Celestial Esperanza [x90ocGRT6EE].ogg</string>
+    <string>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Montagem Celestial Esperanza [x90ocGRT6EE].ogg</string>
   </BuildOutput>
 </PipelineBuildEvent>

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 namespace DreamSlayerV2.Scenes
 {
@@ -14,7 +15,7 @@ namespace DreamSlayerV2.Scenes
         private Texture2D _pixel;
         private bool boughtHeal = false;
         private bool boughtInspect = false;
-
+        public List<CardManager> starterDeck = new List<CardManager>();
         public void Initialize() { _prevMouse = Mouse.GetState(); }
 
         public void LoadContent(ContentManager content)
@@ -41,25 +42,48 @@ namespace DreamSlayerV2.Scenes
             if (player == null) return;
 
             if (clicked && rHeal.Contains(ms.Position) && !boughtHeal)
-            {
-                if (player.SoulCoins >= 20)
-                {
-                    player.SoulCoins -= 20;
-                    int heal = (int)Math.Ceiling(player.MaxHP * 0.5);
-                    player.PlayerHP = Math.Min(player.MaxHP, player.PlayerHP + heal);
-                    boughtHeal = true;
-                }
-            }
+{
+    if (player.SoulCoins >= 20)
+    {
+        player.SoulCoins -= 20;
+        int heal = (int)Math.Ceiling(player.MaxHP * 0.5);
+        player.PlayerHP = Math.Min(player.MaxHP, player.PlayerHP + heal);
+        boughtHeal = true;
 
-            if (clicked && rInspect.Contains(ms.Position) && !boughtInspect)
-            {
-                if (player.SoulCoins >= 50)
-                {
-                    player.SoulCoins -= 50;
-                    player.Honor += 1;
-                    boughtInspect = true;
-                }
-            }
+        // แก้ไขตรงนี้: ใส่ ID การ์ด (เช่น 101) และเพิ่มเข้าเด็คของผู้เล่นให้ถูกต้อง
+        // (ปรับชื่อตัวแปรสตาร์ทเตอร์เด็คหรือเด็คของผู้เล่นตามโครงสร้างจริงของคุณ เช่น player.Deck.Add หรือ starterDeck.Add)
+        // ตัวอย่างการสร้าง CardManager ที่ถูกต้อง:
+        CardManager newHealCard = new CardManager(101, "Restore", 1, CardManager.CardType.Heal);
+        
+        // ถ้าใช้ starterDeck เป็นลิสต์เก็บการ์ด ให้แน่ใจว่าประกาศตัวแปรและกำหนดค่าให้เรียบร้อยก่อนใช้งาน
+        if (starterDeck != null)
+        {
+            starterDeck.Add(newHealCard);
+        }
+    }
+}
+
+           if (clicked && rHeal.Contains(ms.Position) && !boughtHeal)
+{
+    if (player.SoulCoins >= 20)
+    {
+        player.SoulCoins -= 20;
+        int heal = (int)Math.Ceiling(player.MaxHP * 0.5);
+        player.PlayerHP = Math.Min(player.MaxHP, player.PlayerHP + heal);
+        boughtHeal = true;
+
+        // แก้ไขตรงนี้: ใส่ ID การ์ด (เช่น 101) และเพิ่มเข้าเด็คของผู้เล่นให้ถูกต้อง
+        // (ปรับชื่อตัวแปรสตาร์ทเตอร์เด็คหรือเด็คของผู้เล่นตามโครงสร้างจริงของคุณ เช่น player.Deck.Add หรือ starterDeck.Add)
+        // ตัวอย่างการสร้าง CardManager ที่ถูกต้อง:
+        CardManager newHealCard = new CardManager(101, "Restore", 1, CardManager.CardType.Heal);
+        
+        // ถ้าใช้ starterDeck เป็นลิสต์เก็บการ์ด ให้แน่ใจว่าประกาศตัวแปรและกำหนดค่าให้เรียบร้อยก่อนใช้งาน
+        if (starterDeck != null)
+        {
+            starterDeck.Add(newHealCard);
+        }
+    }
+}
 
             if (clicked && rRest.Contains(ms.Position))
             {
@@ -87,7 +111,7 @@ namespace DreamSlayerV2.Scenes
             spriteBatch.DrawString(_font, $"Buy Inspection (50) {(boughtInspect ? "- Bought" : "")}", new Vector2(200, 360), Color.White);
 
             spriteBatch.DrawString(_font, "Rest (Free) - Heal 15% MaxHP and Restore Sanity", new Vector2(200, 420), Color.LightGreen);
-            spriteBatch.DrawString(_font, "Right-click to leave", new Vector2(200, 520), Color.Gray);
+            spriteBatch.DrawString(_font, "Right-click to leave", new Vector2(200, 520), Color.AntiqueWhite);
 
             // Show player coins using global state
             var player = GameState.CurrentPlayer;

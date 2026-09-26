@@ -3,9 +3,14 @@ using System;
 
 namespace DreamSlayerV2
 {
+    enum EnermyList
+    {
+        Unrealwolf,
+        CursedFlower,
+    }
     public class MonsterController
     {
-        public string MonsterName { get; set; }
+        
         public int MonsterHP { get; set; }
         public int MaxHP { get; set; }
         public int MonsterBlock { get; set; }
@@ -14,9 +19,9 @@ namespace DreamSlayerV2
 
         private readonly Random _rand = new Random();
 
-        public MonsterController(string name, int hp)
+        public MonsterController(Enum EnermyList, int hp)
         {
-            MonsterName = name;
+            
             MonsterHP = hp;
             MaxHP = hp;
             MonsterBlock = 0;
@@ -45,7 +50,7 @@ namespace DreamSlayerV2
             {
                 case 1:
                     IntentType = "Attack";
-                    IntentDamage = _rand.Next(6, 12);
+                    IntentDamage = _rand.Next(3, 9);
                     break;
                 case 2:
                     IntentType = "Defend";
@@ -54,25 +59,40 @@ namespace DreamSlayerV2
                     break;
                 case 3:
                     IntentType = "Debuff";
-                    IntentDamage = _rand.Next(3, 7);
+                    IntentDamage = _rand.Next(2, 5);
                     break;
             }
         }
 
         public void PerformTurn(PlayerController player)
+{
+    if (IntentType == "Attack")
+    {
+        // คำนวณดาเมจที่ทะลุเกราะมา
+        int netDamage = IntentDamage - player.Defense;
+
+        if (netDamage > 0)
         {
-            if (IntentType == "Attack")
-            {
-                player.PlayerHP -= IntentDamage;
-                if (player.PlayerHP < 0) player.PlayerHP = 0;
-            }
-            else if (IntentType == "Debuff")
-            {
-                player.Sanity -= IntentDamage;
-                if (player.Sanity < 0) player.Sanity = 0;
-            }
-            
-            DetermineNextIntent();
+            // ถ้าดาเมจทะลุเกราะ: ให้เกราะเหลือ 0 และเอาดาเมจส่วนที่เหลือไปลด HP
+            player.Defense = 0;
+            player.PlayerHP -= netDamage;
         }
+        else
+        {
+            // ถ้าเกราะรับดาเมจได้หมด: ให้เกราะลดลงตามดาเมจที่โจมตีมา (HP ไม่ลด)
+            player.Defense -= IntentDamage;
+        }
+
+        // ป้องกันไม่ให้เลือดติดลบ
+        if (player.PlayerHP < 0) player.PlayerHP = 0;
+    }
+    else if (IntentType == "Debuff")
+    {
+        player.Sanity -= IntentDamage;
+        if (player.Sanity < 0) player.Sanity = 0;
+    }
+    
+    DetermineNextIntent();
+}
     }
 }

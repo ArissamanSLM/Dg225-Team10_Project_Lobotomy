@@ -5,7 +5,7 @@ namespace DreamSlayerV2
 {
     public class CardManager
     {
-        public enum CardType { Attack, Defense, Utility, Status }
+        public enum CardType { Attack, Defense, Heal, Utility }
         public enum CardColorType { Red, Blue, Green, Yellow }
         public enum HazardSubtype { None, Slime, Rock, Curse, Energy }
 
@@ -44,10 +44,10 @@ namespace DreamSlayerV2
                 case CardType.Defense:
                     CardColor = CardColorType.Blue;
                     break;
-                case CardType.Utility:
+                case CardType.Heal:
                     CardColor = CardColorType.Green;
                     break;
-                case CardType.Status:
+                case CardType.Utility:
                     CardColor = CardColorType.Yellow;
                     break;
             }
@@ -88,10 +88,10 @@ namespace DreamSlayerV2
                     Description = "This is a utility card for drawing extra options.";
                     Does = $"Draw 1 Card. Cost: {Cost} Sanity.";
                     break;
-                case CardType.Status:
+                case CardType.Heal:
                     Name = "Restore";
                     Description = "Heals over time.";
-                    Does = $"Heal 4 for 2 turns. Cost: {Cost} Sanity.";
+                    Does = $"Heal 10 hp. Cost: {Cost} Sanity.";
                     break;
             }
         }

@@ -72,10 +72,10 @@ namespace DreamSlayerV2
                 return CurrentRoom;
             }
 
-            int encounterWeight = 50;
-            int eliteWeight = 10;
-            int eventWeight = 20;
-            int shopWeight = 20;
+            int encounterWeight = 40;
+            int eliteWeight = 5;
+            int eventWeight = 40;
+            int shopWeight = 15;
 
             if (FloorDifficulty >= 5)
             {

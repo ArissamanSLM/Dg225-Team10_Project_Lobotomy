@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/E_enemy2.png</SourceFile>
-  <SourceTime>2026-09-25T13:40:11.9449258+07:00</SourceTime>
-  <DestFile>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/E_enemy2.xnb</DestFile>
-  <DestTime>2026-09-25T14:09:27.9252284+07:00</DestTime>
+  <SourceFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/E_enemy2.png</SourceFile>
+  <SourceTime>2026-09-25T13:22:22.0787742+07:00</SourceTime>
+  <DestFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/E_enemy2.xnb</DestFile>
+  <DestTime>2026-09-25T18:00:54.9757009+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

@@ -21,6 +21,7 @@ namespace DreamSlayerV2
         public int Sanity { get; set; }
         public int Honor { get; set; } = 0;
         public int Energy { get; private set; }
+        public int Defense { get; set;} = 0;
         public CharacterClassV2 SelectedClass { get; set; }
         public List<CardManager> Deck { get; set; } = new List<CardManager>();
         public CardManager[] Hand { get; set; } = new CardManager[5];

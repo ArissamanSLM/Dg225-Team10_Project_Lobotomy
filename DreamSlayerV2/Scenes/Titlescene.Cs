@@ -64,9 +64,6 @@ namespace DreamSlayerV2.Scenes
 
         public void UnloadContent()
         {
-            // Clear textures or memory specific to this floor when leaving
-
-            
 
         }
     }

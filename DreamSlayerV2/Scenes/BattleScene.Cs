@@ -116,6 +116,17 @@ namespace DreamSlayerV2.Scenes
                             {
                                 enemyHP -= selectedCard.InHandDamage;
                             }
+                            else if (selectedCard.Type == CardManager.CardType.Heal)
+                            {
+                                // ตัวอย่าง: เพิ่มเลือดให้ผู้เล่นตามความเหมาะสม (เช่น ฟื้นฟู 15 หรือตามสเตตัสการ์ด)
+                                int healAmount = 8; 
+                                _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + healAmount);
+                            }
+                            else if (selectedCard.Type == CardManager.CardType.Defense)
+                            {
+                                int IncreseDefense = 6;
+                                _player.Defense = (_player.Defense + IncreseDefense);
+                            }
 
                             // Remove card from hand slot (automatically moves it to discard pile)
                             _player.UseCard(i);
@@ -140,15 +151,30 @@ namespace DreamSlayerV2.Scenes
         }
 
         private void EnermyTurn()
-        {
-            int damage = isBossRoom ? 18 : 8;
+{
+    int damage = isBossRoom ? 18 : 8;
 
-            _player.PlayerHP -= damage;
-            if (_player.PlayerHP < 0)
-            {
-                _player.PlayerHP = 0;
-            }
-        }
+    // Calculate damage that gets through player's defense
+    int netDamage = damage - _player.Defense;
+
+    if (netDamage > 0)
+    {
+        // Defense is completely broken; subtract remaining damage from HP
+        _player.Defense = 0;
+        _player.PlayerHP -= netDamage;
+    }
+    else
+    {
+        // Defense absorbs all damage
+        _player.Defense -= damage;
+    }
+
+    // Ensure HP does not drop below zero
+    if (_player.PlayerHP < 0)
+    {
+        _player.PlayerHP = 0;
+    }
+}
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -164,9 +190,10 @@ namespace DreamSlayerV2.Scenes
 
             // 3. Draw Player Stats UI on the top-left
             spriteBatch.DrawString(_font, $"HP: {_player.PlayerHP} / {_player.MaxHP}", new Vector2(80, 80), Color.White);
-            spriteBatch.DrawString(_font, $"Sanity: {_player.Sanity}", new Vector2(80, 130), Color.Cyan);
-            spriteBatch.DrawString(_font, $"Energy: {_player.Energy}", new Vector2(80, 180), Color.Yellow);
-            spriteBatch.DrawString(_font, $"Deck: {_player.Deck.Count}  |  Discard: {_player.DiscardPile.Count}", new Vector2(80, 230), Color.LightGray);
+            spriteBatch.DrawString(_font,$"Defense : {_player.Defense}",new Vector2(80,130),Color.SkyBlue);
+            spriteBatch.DrawString(_font, $"Sanity: {_player.Sanity}", new Vector2(80, 180), Color.Cyan);
+            spriteBatch.DrawString(_font, $"Energy: {_player.Energy}", new Vector2(80, 230), Color.Yellow);
+            spriteBatch.DrawString(_font, $"Deck: {_player.Deck.Count}  |  Discard: {_player.DiscardPile.Count}", new Vector2(80, 280), Color.LightGray);
 
             // 4. Display current cards in hand with hover tooltips and textures
             float startX = 500;
@@ -197,7 +224,7 @@ namespace DreamSlayerV2.Scenes
                     {
                         CardManager.CardType.Attack => 0,
                         CardManager.CardType.Defense => 1,
-                        CardManager.CardType.Utility => 2,
+                        CardManager.CardType.Heal => 2,
                         _ => 3
                     };
 
