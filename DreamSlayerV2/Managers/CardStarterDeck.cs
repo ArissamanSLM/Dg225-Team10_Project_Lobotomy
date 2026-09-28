@@ -10,15 +10,15 @@ namespace DreamSlayerV2
 
             switch (characterClass)
             {
-                case CharacterClassV2.HumanDemo:
-                    for (int i = 0; i < 2; i++) starterDeck.Add(new CardManager(i + 1, "Strike", 1, CardManager.CardType.Attack));
-                    for (int i = 0; i < 2; i++) starterDeck.Add(new CardManager(i + 3, "Defend", 1, CardManager.CardType.Defense));
-                    break;
+
                 case CharacterClassV2.Human:
-                    for (int i = 0; i < 3; i++) starterDeck.Add(new CardManager(i + 1, "Strike", 1, CardManager.CardType.Attack));
-                    for (int i = 0; i < 3; i++) starterDeck.Add(new CardManager(i + 4, "Defend", 1, CardManager.CardType.Defense));
-                    starterDeck.Add(new CardManager(7, "Counter", 1, CardManager.CardType.Defense));
-                    starterDeck.Add(new CardManager(8, "Powerup", 1, CardManager.CardType.Utility));
+                    // 4 Strikes, 4 Defends temporarily until unique cards are implemented
+                    for (int i = 0; i < 4; i++) starterDeck.Add(new CardManager(i + 1, "Strike", 1, CardManager.CardType.Attack));
+                    for (int i = 0; i < 4; i++) starterDeck.Add(new CardManager(i + 5, "Defend", 1, CardManager.CardType.Defense));
+
+                    // TODO: Implement unique mechanics for these cards before adding back
+                    // starterDeck.Add(new CardManager(9, "Counter", 1, CardManager.CardType.Defense));
+                    // starterDeck.Add(new CardManager(10, "Powerup", 1, CardManager.CardType.Utility));
                     break;
 
                 case CharacterClassV2.ShadowBind:

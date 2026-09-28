@@ -224,7 +224,7 @@ namespace DreamSlayerV2.Scenes
                 case 0:
                     player.SoulCoins += 20;
                     player.MaxHP += 2;
-                    player.PlayerHP = player.MaxHP;
+                    player.PlayerHP = player.MaxHP-2;
                     break;
                 case 1:
                     player.PlayerHP = player.MaxHP;
@@ -243,10 +243,10 @@ namespace DreamSlayerV2.Scenes
         public Event7() : base(
             EventTag.Nightmare,
             "You found something you were not supposed to see.\nSuddenly you faint, and when you wake, you are trapped in a cage.\nFour doors stand before you; only one leads to survival:",
-            "1. Red Door: Terrible curse — lose 25 HP and 20 Sanity",
-            "2. Black Door: The cage opens and you lose 30 Soul Coins",
-            "3. Silver Door: A shadow emerges and you must fight an Elite",
-            "4. White Door: Survive and escape with 15 Soul Coins and a heal")
+            "1. Red Door:",
+            "2. Black Door:",
+            "3. Silver Door:",
+            "4. White Door:")
         {
         }
 

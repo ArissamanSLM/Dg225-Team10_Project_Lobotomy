@@ -16,18 +16,19 @@ namespace DreamSlayerV2.Scenes
         private int _enemiesCleared;
         private int _cardsPlayed;
         private bool _isVictory;
-        private bool _died;
         private int _floorsPassed;
         private int _finalScore;
+        private bool _isdefeat;
 
         // Constructor to accept run statistics
-        public GameOverScene(int nodesPassed, int enemiesCleared, int cardsPlayed, bool isVictory, bool died, int floorsPassed)
+        public GameOverScene(int nodesPassed, int enemiesCleared, int cardsPlayed, bool isVictory  , bool isDefeat,  int floorsPassed)
         {
             _nodesPassed = nodesPassed;
             _enemiesCleared = enemiesCleared;
             _cardsPlayed = cardsPlayed;
             _isVictory = isVictory;
-            _died = died;
+            _isdefeat = isDefeat;
+           
             _floorsPassed = floorsPassed;
 
             // Calculate final score using your custom rules
@@ -46,7 +47,7 @@ namespace DreamSlayerV2.Scenes
                 score += 1000;
             }
 
-            if (_died)
+            if (_isdefeat)
             {
                 score -= 100;
             }
@@ -88,7 +89,7 @@ namespace DreamSlayerV2.Scenes
                 $"Cards Used ({_cardsPlayed}): +{_cardsPlayed * 5}\n" +
                 $"Floor Bonus ({_floorsPassed}): +{_floorsPassed * 250}\n" +
                 (_isVictory ? "Boss Cleared / Demo End: +1000\n" : "") +
-                (_died ? "Death Penalty: -100\n" : "") +
+                (_isdefeat ? "Death Penalty: -100\n" : "") +
                 $"----------------------------------\n" +
                 $"FINAL SCORE: {_finalScore}";
 
