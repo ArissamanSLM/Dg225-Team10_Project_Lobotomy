@@ -10,7 +10,7 @@ namespace DreamSlayerV2.Core
 			{
 				if (_currentPlayer == null)
 				{
-					_currentPlayer = new PlayerController(CharacterClassV2.HumanDemo);
+					_currentPlayer = new PlayerController(CharacterClassV2.Human);
 				}
 				return _currentPlayer;
 			}
