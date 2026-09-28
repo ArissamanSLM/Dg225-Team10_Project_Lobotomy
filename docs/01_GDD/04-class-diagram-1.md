@@ -5,128 +5,77 @@ date: 2026-07-21
 ---
 # Class Diagram — Dream Slayer
 
+Set the `hp` variable to `50` in 
+
 ```mermaid
-classDiagram
-    class Game1 {
-        +GameState CurrentState
-        +Initialize()
-        +LoadContent()
-        +Update(GameTime)
-        +Draw(GameTime)
-        +StartGame()
-        +PauseGame()
-        +EndGame()
+
+flowchart TD
+    Start([Start Run]) --> Node[Node Selection]
+
+    subgraph CoreLoop [Core Game Loop]
+        Node --> Explore[Explore / Combat / Event]
+        Explore --> Reward[Reward / Consequence]
+        Reward --> Node
+    end
+
+    Explore -->|Player Dies| Defeat([Game Over])
+    Explore -->|Boss Defeated| Victory([Victory])
+```
+
+```csharp
+
+using System;
+
+public class Program
+{
+    public static void Main()
+    {
+        int hp = 50;
+        for (int i = 0; i < 5; i++)
+        {
+            Console.WriteLine(hp);
+        }
     }
+}
+```
 
-    class SceneManager {
-        -Dictionary~string, BaseScene~ Scenes
-        +ChangeScene(string)
-        +Update(GameTime)
-        +Draw(SpriteBatch)
-    }
+```
 
-    class BaseScene {
-        <<abstract>>
-        +LoadContent()
-        +Update(GameTime)
-        +Draw(SpriteBatch)
-    }
+```
 
-    class TitleScene
-    class GameplayScene
-    class CombatScene
-    class EndScene
+```mermaid
+graph TD
+    Start([Game Start]) --> TitleScene
+  
+    TitleScene -->|Start Game| SceneStory1
+    TitleScene -->|Quit Game| EndGame([Exit Game])
+  
+    subgraph StorySequence [Story Intro]
+        SceneStory1 --> SceneStory2
+        SceneStory2 --> SceneStory3
+        SceneStory3 --> SceneStory4
+        SceneStory4 --> SceneStory5
+    end
 
-    class Player {
-        -Vector2 Position
-        -float Health
-        -float Sanity
-        -int Currency
-        -List~Card~ Hand
-        +HandleInput()
-        +TakeDamage(float)
-        +ConsumeSanity(float)
-        +GainCurrency(int)
-        +Draw(SpriteBatch)
-    }
+    SceneStory5 --> NodeSelectScene
 
-    class Card {
-        +string Name
-        +CardType Type
-        +int Cost
-        +int Damage
-        +ApplyEffect(Player, Enemy)
-    }
+    NodeSelectScene -->|Select Node| RoomNode{Node Type}
 
-    class DeckManager {
-        -List~Card~ DrawPile
-        -List~Card~ DiscardPile
-        +DrawCard()
-        +DiscardCard(Card)
-        +Shuffle()
-    }
+    RoomNode -->|Encounter / Elite / Boss| BattleScene
+    RoomNode -->|Event| EventChoice[Event Scene via EventSceneFactory]
+    RoomNode -->|Shop| ShopRestScene
 
-    class Enemy {
-        -string Name
-        -float Health
-        -int Damage
-        +TakeDamage(float)
-        +PerformAction()
-        +IsDefeated()
-    }
+    BattleScene -->|Victory| RewardScene
+    BattleScene -->|Player Defeated| GameOverScene
+  
+    RewardScene -->|Continue| NodeSelectScene
+    ShopRestScene -->|Leave| NodeSelectScene
+    EventChoice -->|Resolve Choice| NodeSelectScene
 
-    class RoomMap {
-        -List~RoomNode~ Nodes
-        -RoomNode CurrentNode
-        +GenerateMap()
-        +MoveToNextNode()
-        +GetCurrentRoom()
-    }
+    NodeSelectScene -.->|View Stats| PlayerStatsScene
+    PlayerStatsScene -.->|Back| NodeSelectScene
 
-    class RoomNode {
-        +RoomType Type
-        +List~RoomNode~ NextNodes
-        +bool IsBossRoom
-    }
+    GameOverScene -->|Restart| TitleScene
+    GameOverScene -->|Quit Game| EndGame
 
-    class CombatSystem {
-        +ResolveTurn(Player, Enemy)
-        +CheckVictory()
-        +CheckDefeat()
-    }
-
-    class EventSystem {
-        +TriggerEvent(RoomNode)
-        +ApplyReward()
-        +ApplyConsequence()
-    }
-
-    class UIManager {
-        +ShowHUD(Player)
-        +ShowCardSelection(List~Card~)
-        +ShowPauseMenu()
-        +ShowResultScreen(bool)
-    }
-
-    class SaveSystem {
-        +SaveProgress(GameData)
-        +LoadProgress()
-    }
-
-    Game1 --> SceneManager
-    SceneManager --> BaseScene
-    BaseScene <|-- TitleScene
-    BaseScene <|-- GameplayScene
-    BaseScene <|-- CombatScene
-    BaseScene <|-- EndScene
-    GameplayScene --> Player
-    GameplayScene --> RoomMap
-    GameplayScene --> CombatSystem
-    GameplayScene --> EventSystem
-    GameplayScene --> UIManager
-    Player --> DeckManager
-    Player --> Card
-    CombatSystem --> Enemy
-    RoomMap --> RoomNode
-    Game1 --> SaveSystem
 ```
