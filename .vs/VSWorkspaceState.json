@@ -2,10 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\DreamSlayerV2",
+    "\\DreamSlayerV2\\Content",
+    "\\DreamSlayerV2\\Managers",
     "\\DreamSlayerV2\\Scenes",
     "\\DreamSlayerV2\\Scenes\\EventScenes",
     "\\DreamSlayerV2\\Scenes\\StoryScenes"
   ],
-  "SelectedNode": "\\DreamSlayerV2\\DreamSlayerV2.csproj",
+  "SelectedNode": "\\DreamSlayerV2\\Scenes\\SceneManager.Cs",
   "PreviewInSolutionExplorer": false
 }
