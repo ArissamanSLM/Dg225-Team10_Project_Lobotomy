@@ -4,6 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
+<<<<<<< HEAD
     <File>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Card_Attack_1.png</File>
     <File>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</File>
     <File>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HorrorForestDreamV2.png</File>
@@ -11,6 +12,15 @@
     <File>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Start_music (1).mp3</File>
     <File>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/TheDarkCave.png</File>
     <File>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/UnrealWolf.png</File>
+=======
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/All16Card.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HorrorForestDreamV2.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Montagem Celestial Esperanza [x90ocGRT6EE].mp3</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Start_music (1).mp3</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/TheDarkCave.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/UnrealWolf.png</File>
+>>>>>>> 3178dd52031dec8fb9ea97716a198cb1b2e252a1
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

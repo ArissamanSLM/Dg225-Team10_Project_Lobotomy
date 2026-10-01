@@ -12,6 +12,5 @@ namespace DreamSlayerV2.Core
         void Draw(SpriteBatch spriteBatch);
         void UnloadContent();
 
-        //Test
     }
 }
