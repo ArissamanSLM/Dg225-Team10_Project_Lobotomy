@@ -1,143 +1,170 @@
 using DreamSlayerV2.Core;
-using DreamSlayerV2.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-
-namespace DreamSlayerV2.Core
-{
-    public class Node
-    {
-        // Position of the node on the map
-        public Vector2 Position { get; set; }
-
-        // Connected nodes you can travel to next
-        public List<Node> ConnectedNodes { get; set; } = new List<Node>();
-
-        // Status of the node
-        public bool IsCompleted { get; set; } = false;
-    }
-}
 
 namespace DreamSlayerV2.Scenes
 {
-    public class NodeSelectScene : IScene 
+    public class NodeSelectScene : IScene
     {
         private SpriteFont _font;
         private Vector2 CameraPosition = Vector2.Zero;
         private Vector2 scroll_factor = new Vector2(1.0f, 1f);
         private Texture2D _pixelTexture;
-        private List<Node> allNodes = new List<Node>();
+
+        private Texture2D _shopTexture;
+        private Texture2D _eliteTexture;
+        private Texture2D _bossTexture;
+        private Texture2D _eventTexture;
+        private Texture2D _encounterTexture;
+
         private Song NodeMusic;
-        // Track the previous mouse state to calculate scroll movement
         private MouseState _previousMouseState;
+
+        private static List<MapNode> allNodes = new List<MapNode>();
+        private static MapNode _currentNode = null;
 
         public void Initialize()
         {
             _previousMouseState = Mouse.GetState();
 
-            // Create sample nodes so you can test the camera scrolling and lines immediately!
-            Node node1 = new Node { Position = new Vector2(300, 540) };
-            Node node2M = new Node { Position = new Vector2(800, 540) };
-            Node node2 = new Node { Position = new Vector2(800, 350) };
-            Node node3 = new Node { Position = new Vector2(800, 730) };
-            Node node4 = new Node { Position = new Vector2(1300, 540) };
+            if (allNodes.Count == 0)
+            {
+                allNodes = MapGenerator.GenerateLovecraftianMap(stages: 13, startY: 540);
 
-            // Link them together
-            node1.ConnectedNodes.Add(node2);
-            node1.ConnectedNodes.Add(node3);
-            node2.ConnectedNodes.Add(node4);
-            node3.ConnectedNodes.Add(node4);
-            node1.ConnectedNodes.Add(node2M); 
-            node2M.ConnectedNodes.Add(node4); // Optional: Add a middle node for more complexity
-
-            // Add them to the master list
-            allNodes.Add(node1);
-            allNodes.Add(node2);
-            allNodes.Add(node3);
-            allNodes.Add(node2M);
-            allNodes.Add(node4);
+                if (_currentNode == null)
+                {
+                    _currentNode = allNodes[0];
+                    _currentNode.IsAvailable = true;
+                }
+            }
         }
 
         public void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("File");
             NodeMusic = content.Load<Song>("Start_music (1)");
+
+            if (MediaPlayer.State != MediaState.Playing)
+            {
                 MediaPlayer.Play(NodeMusic);
-            MediaPlayer.IsRepeating = true;
+                MediaPlayer.IsRepeating = true;
+            }
+
             var graphicsDevice = ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService))).GraphicsDevice;
             _pixelTexture = new Texture2D(graphicsDevice, 1, 1);
             _pixelTexture.SetData(new[] { Color.White });
+
+            try
+            {
+                _shopTexture = content.Load<Texture2D>("ShopIcon");
+                _eliteTexture = content.Load<Texture2D>("EliteIcon");
+                _bossTexture = content.Load<Texture2D>("BossIcon");
+                _eventTexture = content.Load<Texture2D>("EventIcon");
+                _encounterTexture = content.Load<Texture2D>("EncounterIcon");
+            }
+            catch { }
         }
 
         public void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.G))
             {
-                SceneManager.ChangeScene(new GameOverScene());
+                SceneManager.ChangeScene(new GameOverScene(5, 3, 24, true, false ,0));
             }
             if (Keyboard.GetState().IsKeyDown(Keys.T))
             {
                 SceneManager.ChangeScene(new TitleScene());
             }
 
-            // 1. Get the current mouse state every frame
             MouseState currentMouseState = Mouse.GetState();
 
-            // 2. Calculate the difference (delta) in the scroll wheel
+            // Camera scroll
             int scrollDelta = currentMouseState.ScrollWheelValue - _previousMouseState.ScrollWheelValue;
-
-            // 3. Move camera based on scroll direction
-            if (scrollDelta > 0)
-            {
-                CameraPosition.X -= 50f; // Scrolled up / forward
-            }
-            else if (scrollDelta < 0)
-            {
-                CameraPosition.X += 50f; // Scrolled down / backward
-            }
+            if (scrollDelta > 0) CameraPosition.X -= 60f;
+            else if (scrollDelta < 0) CameraPosition.X += 60f;
 
             CameraPosition.X = MathHelper.Clamp(CameraPosition.X, 0f, 4000f);
 
-            // 4. Save current state for the next frame
+            // Node Click Selection
+            bool isClicked = currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
+            if (isClicked)
+            {
+                Vector2 mouseWorldPos = new Vector2(currentMouseState.X, currentMouseState.Y) + (CameraPosition * scroll_factor);
+
+                foreach (var node in allNodes)
+                {
+                    Rectangle nodeRect = new Rectangle((int)node.Position.X - 20, (int)node.Position.Y - 20, 40, 40);
+
+                    if (nodeRect.Contains(mouseWorldPos))
+                    {
+                        // Check if node is available to travel to
+                        if (node.IsAvailable)
+                        {
+                            _currentNode.IsVisited = true;
+                            _currentNode.IsAvailable = false;
+
+                            // Mark all nodes in current stage unavailable
+                            foreach (var n in allNodes) n.IsAvailable = false;
+
+                            // Set chosen node as current and mark its connected paths as available
+                            _currentNode = node;
+                            _currentNode.IsVisited = true;
+
+                            foreach (var connected in _currentNode.ConnectedNodes)
+                            {
+                                connected.IsAvailable = true;
+                            }
+
+                            // Scene Switching
+                            switch (node.Type)
+                            {
+                                case NodeType.Boss:
+                                case NodeType.Elite:
+                                    SceneManager.ChangeScene(new BattleScene(true, null));
+                                    break;
+                                case NodeType.Shop:
+                                    SceneManager.ChangeScene(new ShopRestScene());
+                                    break;
+                                case NodeType.Event:
+                                    SceneManager.ChangeScene(EventSceneFactory.CreateRandomEvent());
+                                    break;
+                                case NodeType.Encounter:
+                                case NodeType.Start:
+                                default:
+                                    SceneManager.ChangeScene(new BattleScene(false, null));
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
             _previousMouseState = currentMouseState;
         }
 
-        private void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, float thickness = 5f)
+        private void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, float thickness = 3f)
         {
             Vector2 edge = end - start;
-            float angle = (float)System.Math.Atan2(edge.Y, edge.X);
+            float angle = (float)Math.Atan2(edge.Y, edge.X);
             float length = edge.Length();
 
-            spriteBatch.Draw(
-                _pixelTexture,
-                start,
-                null,
-                color,
-                angle,
-                Vector2.Zero,
-                new Vector2(length, thickness), // Scale X to length, Y to thickness
-                SpriteEffects.None,
-                0f
-            );
+            spriteBatch.Draw(_pixelTexture, start, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0f);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
 
-            // Draw HUD text
-            spriteBatch.DrawString(_font, "Current Floor: Tower Ascent (Node Choice)", new Vector2(50, 50) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "Press G to go to Game Over Scene", new Vector2(50, 100) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "Press T to go to Title Scene", new Vector2(50, 150) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "Scroll to move camera left/right", new Vector2(50, 200) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "End of Map", new Vector2(3000, 50) - CameraPosition * scroll_factor, Color.White);
+            spriteBatch.DrawString(_font, "Tower Ascent Map", new Vector2(50, 50) - CameraPosition * scroll_factor, Color.White);
+            spriteBatch.DrawString(_font, "Use Mouse Scroll Wheel to view full map!", new Vector2(50, 85) - CameraPosition * scroll_factor, Color.Yellow);
 
-            // 1. Draw connection lines first (underneath nodes)
+            // Draw Paths
             foreach (var node in allNodes)
             {
                 foreach (var nextNode in node.ConnectedNodes)
@@ -145,26 +172,67 @@ namespace DreamSlayerV2.Scenes
                     Vector2 startPos = node.Position - CameraPosition * scroll_factor;
                     Vector2 endPos = nextNode.Position - CameraPosition * scroll_factor;
 
-                    DrawLine(spriteBatch, startPos, endPos, Color.Purple, 2f);
+                    Color lineCol = (node.IsVisited && nextNode.IsAvailable) ? Color.Gold : Color.DarkSlateBlue;
+                    DrawLine(spriteBatch, startPos, endPos, lineCol, 2.5f);
                 }
             }
 
-            // 2. Draw nodes on top of the lines (using small boxes or circles made with _pixelTexture)
+            // Draw Nodes
             foreach (var node in allNodes)
             {
                 Vector2 drawPos = node.Position - CameraPosition * scroll_factor;
+                Rectangle nodeRect = new Rectangle((int)drawPos.X - 20, (int)drawPos.Y - 20, 40, 40);
 
-                // Draw a simple 32x32 square placeholder for each node centered at drawPos
-                Rectangle nodeRect = new Rectangle((int)drawPos.X - 15, (int)drawPos.Y - 15, 32, 32);
-                spriteBatch.Draw(_pixelTexture, nodeRect, Color.White);
+                Color tintColor = Color.DarkGray; // Default locked/unreachable state
+                if (node.IsVisited)
+                {
+                    tintColor = Color.Gray;
+                }
+                else if (node == _currentNode)
+                {
+                    tintColor = Color.Cyan;
+                }
+                else if (node.IsAvailable)
+                {
+                    tintColor = Color.LightGreen; // Ready to click!
+                }
+
+                Texture2D currentTexture = node.Type switch
+                {
+                    NodeType.Shop => _shopTexture,
+                    NodeType.Elite => _eliteTexture,
+                    NodeType.Boss => _bossTexture,
+                    NodeType.Event => _eventTexture,
+                    NodeType.Encounter => _encounterTexture,
+                    _ => null
+                };
+
+                if (currentTexture != null)
+                    spriteBatch.Draw(currentTexture, nodeRect, tintColor);
+                else
+                    spriteBatch.Draw(_pixelTexture, nodeRect, tintColor);
+
+                string alertText = node.Type switch
+                {
+                    NodeType.Shop => "[ REST / SHOP ]",
+                    NodeType.Elite => "!! WARNING: ELITE !!",
+                    NodeType.Boss => "*** FINAL BOSS ***",
+                    NodeType.Event => "? EVENT ?",
+                    NodeType.Start => "START",
+                    _ => node.Name
+                };
+
+                Color textColor = node.IsAvailable ? Color.Gold : Color.Gray;
+
+                Vector2 textSize = _font.MeasureString(alertText);
+                Vector2 textPosition = new Vector2(drawPos.X - (textSize.X / 2), drawPos.Y - 45);
+
+                spriteBatch.DrawString(_font, alertText, textPosition, textColor);
             }
 
             spriteBatch.End();
         }
 
-        public void UnloadContent()
-        {
-            // Clear textures or memory specific to this floor when leaving
-        }
+        public void UnloadContent() { }
     }
 }
