@@ -4,12 +4,12 @@ using System;
 
 namespace DreamSlayerV2.Core
 {
-    public enum NodeType { Start, Encounter, Event, Shop, Elite, Boss }
+    public enum NodeType { Start, Encounter, Event, Shop, Elite, Boss, Victory }
 
     public class MapNode
     {
         public string Name { get; set; } = "Node";
-        public Vector2 Position; // Where it sits on your 4000px map
+        public Vector2 Position; // Where it sits on your map
         public NodeType Type;
         public List<MapNode> ConnectedNodes = new List<MapNode>(); // The "branches" leading forward
         public bool IsVisited = false;
@@ -22,14 +22,17 @@ namespace DreamSlayerV2.Core
             NodeType.Shop => RoomType.Shop,
             NodeType.Event => RoomType.Event,
             NodeType.Boss => RoomType.Boss,
+            NodeType.Victory => RoomType.Boss, // Map to Victory / Game Complete state
             _ => RoomType.Encounter
         };
     }
+
     public class MapGenerator
     {
         private static readonly Random Rng = new Random();
 
-        public static List<MapNode> GenerateLovecraftianMap(int stages = 13, int startY = 540)
+        // Updated default stages to 14 (Stage 13 = Boss, Stage 14 = Exit / Victory)
+        public static List<MapNode> GenerateLovecraftianMap(int stages = 14, int startY = 540)
         {
             List<MapNode> generatedNodes = new List<MapNode>();
             List<List<MapNode>> mapColumns = new List<List<MapNode>>();
@@ -48,8 +51,8 @@ namespace DreamSlayerV2.Core
             int currentX = 650;
             int xSpacing = 350;
 
-            // 2. STAGES 2 TO 12
-            for (int stage = 2; stage <= stages - 1; stage++)
+            // 2. STAGES 2 TO 12 (Random & Fixed Nodes)
+            for (int stage = 2; stage <= 12; stage++)
             {
                 List<MapNode> currentColumn = new List<MapNode>();
 
@@ -77,9 +80,13 @@ namespace DreamSlayerV2.Core
                     for (int i = 0; i < chosenYs.Count; i++)
                     {
                         NodeType assignedType = RollNodeType();
+
+                        // Formats name as "!Encounter!", "!Event!", or "!Elite!" instead of lane codes
+                        string typeLabel = $"!{assignedType}!";
+
                         MapNode node = new MapNode
                         {
-                            Name = $"{stage}-{(LaneLabel(chosenYs[i]))}",
+                            Name = $"{stage}-{typeLabel}",
                             Position = new Vector2(currentX, chosenYs[i]),
                             Type = assignedType
                         };
@@ -96,7 +103,7 @@ namespace DreamSlayerV2.Core
                 currentX += xSpacing;
             }
 
-            // 3. STAGE 13: Final Boss
+            // 3. STAGE 13: Boss Node
             MapNode bossNode = new MapNode
             {
                 Name = "13-Boss",
@@ -109,6 +116,20 @@ namespace DreamSlayerV2.Core
             {
                 node.ConnectedNodes.Add(bossNode);
             }
+
+            currentX += xSpacing;
+
+            // 4. STAGE 14: Exit / Victory Star Node
+            MapNode victoryNode = new MapNode
+            {
+                Name = "14-Victory",
+                Position = new Vector2(currentX, startY),
+                Type = NodeType.Victory
+            };
+            generatedNodes.Add(victoryNode);
+
+            // Connect Boss to the Victory exit node
+            bossNode.ConnectedNodes.Add(victoryNode);
 
             return generatedNodes;
         }
@@ -152,20 +173,10 @@ namespace DreamSlayerV2.Core
         private static NodeType RollNodeType()
         {
             int roll = Rng.Next(0, 100);
-            if (roll < 45) return NodeType.Encounter;
-            if (roll < 80) return NodeType.Event;
+            if (roll < 50) return NodeType.Encounter;
+            if (roll < 95) return NodeType.Event;
             return NodeType.Elite;
         }
-
-        private static string LaneLabel(int yPos) => yPos switch
-        {
-            200 => "U2",
-            350 => "U",
-            540 => "M",
-            730 => "D",
-            900 => "D2",
-            _ => "N"
-        };
 
         private static List<int> GetRandomSample(int[] array, int count)
         {
