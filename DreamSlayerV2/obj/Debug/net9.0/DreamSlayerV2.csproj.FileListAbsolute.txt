@@ -45,3 +45,7 @@ C:\Users\arissamann\GitVsCode\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\De
 C:\Users\arissamann\GitVsCode\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\DreamSlayerV2.pdb
 C:\Users\arissamann\GitVsCode\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\DreamSlayerV2.genruntimeconfig.cache
 C:\Users\arissamann\GitVsCode\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\ref\DreamSlayerV2.dll
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\mgcb.tool.restore
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\DreamSlayerV2.dll
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\refint\DreamSlayerV2.dll
+C:\Users\arissamann\Downloads\Group_Lobotomy\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Debug\net9.0\DreamSlayerV2.pdb
