@@ -159,6 +159,13 @@ namespace DreamSlayerV2.Scenes
             {
                 ExecuteEnemyTurn();
             }
+            // Check if 'P' key was pressed to open the Pause Scene
+            if (currentKeyboardState.IsKeyDown(Keys.P) && _previousKeyboardState.IsKeyUp(Keys.P))
+            {
+                // Passes the current active player instance and 'this' scene so it can resume seamlessly
+                SceneManager.ChangeScene(new PlayerStatsScene(_player, this));
+                return;
+            }
         }
 
         private void TryPlayCard(int cardIndex)

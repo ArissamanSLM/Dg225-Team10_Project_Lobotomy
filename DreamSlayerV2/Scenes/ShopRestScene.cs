@@ -88,6 +88,7 @@ namespace DreamSlayerV2.Scenes
             }
 
             _prevMouse = ms;
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)
