@@ -5,6 +5,8 @@ date: 2026-07-21
 ---
 # Class Diagram — Dream Slayer
 
+Set the `hp` variable to `50` in 
+
 ```mermaid
 classDiagram
     class Game1 {
@@ -155,6 +157,47 @@ classDiagram
         +string DialogText
         +ExecuteConsequence(int choiceIndex)*
     }
+}
+```
+
+```
+
+```
+
+```mermaid
+graph TD
+    Start([Game Start]) --> TitleScene
+  
+    TitleScene -->|Start Game| SceneStory1
+    TitleScene -->|Quit Game| EndGame([Exit Game])
+  
+    subgraph StorySequence [Story Intro]
+        SceneStory1 --> SceneStory2
+        SceneStory2 --> SceneStory3
+        SceneStory3 --> SceneStory4
+        SceneStory4 --> SceneStory5
+    end
+
+    SceneStory5 --> NodeSelectScene
+
+    NodeSelectScene -->|Select Node| RoomNode{Node Type}
+
+    RoomNode -->|Encounter / Elite / Boss| BattleScene
+    RoomNode -->|Event| EventChoice[Event Scene via EventSceneFactory]
+    RoomNode -->|Shop| ShopRestScene
+
+    BattleScene -->|Victory| RewardScene
+    BattleScene -->|Player Defeated| GameOverScene
+  
+    RewardScene -->|Continue| NodeSelectScene
+    ShopRestScene -->|Leave| NodeSelectScene
+    EventChoice -->|Resolve Choice| NodeSelectScene
+
+    NodeSelectScene -.->|View Stats| PlayerStatsScene
+    PlayerStatsScene -.->|Back| NodeSelectScene
+
+    GameOverScene -->|Restart| TitleScene
+    GameOverScene -->|Quit Game| EndGame
 
     class Event1 {
         +Event1()

@@ -21,6 +21,7 @@ namespace DreamSlayerV2.Scenes
         private Texture2D _bossTexture;
         private Texture2D _eventTexture;
         private Texture2D _encounterTexture;
+        
 
         private Song NodeMusic;
         private MouseState _previousMouseState;
@@ -61,11 +62,11 @@ namespace DreamSlayerV2.Scenes
 
             try
             {
-                _shopTexture = content.Load<Texture2D>("ShopIcon");
-                _eliteTexture = content.Load<Texture2D>("EliteIcon");
-                _bossTexture = content.Load<Texture2D>("BossIcon");
+                _shopTexture = content.Load<Texture2D>("Shop_logo");
+                _eliteTexture = content.Load<Texture2D>("E_enemy2");
+                _bossTexture = content.Load<Texture2D>("Boss_logo");
                 _eventTexture = content.Load<Texture2D>("EventIcon");
-                _encounterTexture = content.Load<Texture2D>("EncounterIcon");
+                _encounterTexture = content.Load<Texture2D>("enermy_logo");
             }
             catch { }
         }
@@ -123,6 +124,9 @@ namespace DreamSlayerV2.Scenes
                             // Scene Switching
                             switch (node.Type)
                             {
+                                case NodeType.Victory:
+                                    SceneManager.ChangeScene(new GameOverScene(13,3,5,true,false,1));
+                                    break;
                                 case NodeType.Boss:
                                 case NodeType.Elite:
                                     SceneManager.ChangeScene(new BattleScene(true, null));

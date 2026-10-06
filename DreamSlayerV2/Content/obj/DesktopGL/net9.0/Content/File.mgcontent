@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/arissamann/Downloads/Group_Lobotomy/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</SourceFile>
-  <SourceTime>2026-09-15T14:43:55.6541578+07:00</SourceTime>
-  <DestFile>C:/Users/arissamann/Downloads/Group_Lobotomy/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/File.xnb</DestFile>
-  <DestTime>2026-09-29T15:18:17.8232085+07:00</DestTime>
+<<<<<<< HEAD
+  <SourceFile>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</SourceFile>
+  <SourceTime>2026-10-01T16:08:17.7389638+07:00</SourceTime>
+  <DestFile>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/File.xnb</DestFile>
+  <DestTime>2026-10-01T16:11:24.3087234+07:00</DestTime>
+=======
+  <SourceFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/File.spritefont</SourceFile>
+  <SourceTime>2026-09-07T18:47:37.4436835+07:00</SourceTime>
+  <DestFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/File.xnb</DestFile>
+  <DestTime>2026-09-29T20:51:19.7639884+07:00</DestTime>
+>>>>>>> 7caab74cf13420ac25840349612bac60c25e1f2d
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
