@@ -1,28 +1,48 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace DreamSlayerV2.Core
 {
-    public enum NodeType { Start, Encounter, Event, Shop, Elite, Boss, Victory }
+    // Restricting strictly to your implemented node types
+    public enum NodeType 
+    { 
+        Start,      // Starting Node
+        Encounter,  // Standard Combat (Combat Ops)
+        Elite,      // Hard Combat (Emergency Ops)
+        Shop,       // Rogue Trader
+        Rest,       // Safe House / Rest (Not fully implemented)
+        Boss        // Dreadful Foe / Final Stage
+    }
 
     public class MapNode
     {
         public string Name { get; set; } = "Node";
-        public Vector2 Position; // Where it sits on your map
+        public Vector2 Position;
         public NodeType Type;
-        public List<MapNode> ConnectedNodes = new List<MapNode>(); // The "branches" leading forward
+        public List<MapNode> ConnectedNodes = new List<MapNode>();
         public bool IsVisited = false;
-        public bool IsAvailable = false; // Can the player click this next?
+        public bool IsAvailable = false;
+
+        // Arknights-style UI labels for active node types
+        public string GetArknightsLabel() => Type switch
+        {
+            NodeType.Start => "START",
+            NodeType.Encounter => "Combat Ops",
+            NodeType.Elite => "Emergency Ops",
+            NodeType.Shop => "Rogue Trader",
+            NodeType.Rest => "Safe House",
+            NodeType.Boss => "Dreadful Foe",
+            _ => "Unknown"
+        };
 
         // Helper to convert NodeType to RoomType for RoomManager compatibility
         public RoomType ToRoomType() => Type switch
         {
             NodeType.Elite => RoomType.Elite,
             NodeType.Shop => RoomType.Shop,
-            NodeType.Event => RoomType.Event,
+            NodeType.Rest => RoomType.Event, // Fallback placeholder since Rest isn't fully implemented
             NodeType.Boss => RoomType.Boss,
-            NodeType.Victory => RoomType.Boss, // Map to Victory / Game Complete state
             _ => RoomType.Encounter
         };
     }
@@ -31,8 +51,7 @@ namespace DreamSlayerV2.Core
     {
         private static readonly Random Rng = new Random();
 
-        // Updated default stages to 14 (Stage 13 = Boss, Stage 14 = Exit / Victory)
-        public static List<MapNode> GenerateLovecraftianMap(int stages = 14, int startY = 540)
+        public static List<MapNode> GenerateLovecraftianMap(int stages = 13, int startY = 540)
         {
             List<MapNode> generatedNodes = new List<MapNode>();
             List<List<MapNode>> mapColumns = new List<List<MapNode>>();
@@ -43,7 +62,7 @@ namespace DreamSlayerV2.Core
                 Name = "1-Start",
                 Position = new Vector2(300, startY),
                 Type = NodeType.Start,
-                IsAvailable = true // Player starts here!
+                IsAvailable = true
             };
             generatedNodes.Add(startNode);
             mapColumns.Add(new List<MapNode> { startNode });
@@ -51,42 +70,58 @@ namespace DreamSlayerV2.Core
             int currentX = 650;
             int xSpacing = 350;
 
-            // 2. STAGES 2 TO 12 (Random & Fixed Nodes)
+            // 2. STAGES 2 TO 12
             for (int stage = 2; stage <= 12; stage++)
             {
                 List<MapNode> currentColumn = new List<MapNode>();
 
                 if (stage == 6)
                 {
-                    MapNode shopNode = new MapNode { Name = $"{stage}-Shop", Position = new Vector2(currentX, startY), Type = NodeType.Shop };
+                    // Mid-run Shop
+                    MapNode shopNode = new MapNode 
+                    { 
+                        Name = $"{stage}-Shop", 
+                        Position = new Vector2(currentX, startY), 
+                        Type = NodeType.Shop 
+                    };
                     currentColumn.Add(shopNode);
                 }
                 else if (stage == 7)
                 {
-                    MapNode eliteNode = new MapNode { Name = $"{stage}-Elite", Position = new Vector2(currentX, startY), Type = NodeType.Elite };
+                    // Mid-run Elite encounter
+                    MapNode eliteNode = new MapNode 
+                    { 
+                        Name = $"{stage}-Elite", 
+                        Position = new Vector2(currentX, startY), 
+                        Type = NodeType.Elite 
+                    };
                     currentColumn.Add(eliteNode);
                 }
                 else if (stage == 12)
                 {
-                    MapNode shopNode2 = new MapNode { Name = $"{stage}-Shop", Position = new Vector2(currentX, startY), Type = NodeType.Shop };
+                    // Pre-Boss Shop
+                    MapNode shopNode2 = new MapNode 
+                    { 
+                        Name = $"{stage}-Shop", 
+                        Position = new Vector2(currentX, startY), 
+                        Type = NodeType.Shop 
+                    };
                     currentColumn.Add(shopNode2);
                 }
                 else
                 {
-                    int laneCount = Rng.Next(2, 4);
-                    int[] possibleYPositions = new int[] { 200, 350, 540, 730, 900 };
+                    int laneCount = Rng.Next(2, 4); // 2 or 3 branches
+                    int[] possibleYPositions = new int[] { 250, 400, 540, 680, 830 };
                     List<int> chosenYs = GetRandomSample(possibleYPositions, laneCount);
+                    chosenYs.Sort();
 
                     for (int i = 0; i < chosenYs.Count; i++)
                     {
                         NodeType assignedType = RollNodeType();
 
-                        // Formats name as "!Encounter!", "!Event!", or "!Elite!" instead of lane codes
-                        string typeLabel = $"!{assignedType}!";
-
                         MapNode node = new MapNode
                         {
-                            Name = $"{stage}-{typeLabel}",
+                            Name = $"{stage}-{assignedType}",
                             Position = new Vector2(currentX, chosenYs[i]),
                             Type = assignedType
                         };
@@ -98,7 +133,7 @@ namespace DreamSlayerV2.Core
                 mapColumns.Add(currentColumn);
 
                 List<MapNode> previousColumn = mapColumns[stage - 2];
-                ConnectColumns(previousColumn, currentColumn);
+                ConnectArknightsLanes(previousColumn, currentColumn);
 
                 currentX += xSpacing;
             }
@@ -117,55 +152,41 @@ namespace DreamSlayerV2.Core
                 node.ConnectedNodes.Add(bossNode);
             }
 
-            currentX += xSpacing;
-
-            // 4. STAGE 14: Exit / Victory Star Node
-            MapNode victoryNode = new MapNode
-            {
-                Name = "14-Victory",
-                Position = new Vector2(currentX, startY),
-                Type = NodeType.Victory
-            };
-            generatedNodes.Add(victoryNode);
-
-            // Connect Boss to the Victory exit node
-            bossNode.ConnectedNodes.Add(victoryNode);
-
             return generatedNodes;
         }
 
-        private static void ConnectColumns(List<MapNode> prevCol, List<MapNode> currCol)
+        private static void ConnectArknightsLanes(List<MapNode> prevCol, List<MapNode> currCol)
         {
-            foreach (var prevNode in prevCol)
+            if (prevCol.Count == 1)
             {
-                int connections = Rng.Next(1, Math.Min(3, currCol.Count + 1));
-                List<MapNode> targets = GetRandomSampleNodes(currCol, connections);
-
-                foreach (var target in targets)
-                {
-                    if (!prevNode.ConnectedNodes.Contains(target))
-                    {
-                        prevNode.ConnectedNodes.Add(target);
-                    }
-                }
+                foreach (var curr in currCol)
+                    prevCol[0].ConnectedNodes.Add(curr);
             }
-
-            foreach (var currNode in currCol)
+            else if (currCol.Count == 1)
             {
-                bool isReachable = false;
-                foreach (var prevNode in prevCol)
+                foreach (var prev in prevCol)
+                    prev.ConnectedNodes.Add(currCol[0]);
+            }
+            else
+            {
+                for (int i = 0; i < prevCol.Count; i++)
                 {
-                    if (prevNode.ConnectedNodes.Contains(currNode))
+                    int targetIndex = (i * currCol.Count) / prevCol.Count;
+                    prevCol[i].ConnectedNodes.Add(currCol[targetIndex]);
+
+                    if (targetIndex + 1 < currCol.Count && Rng.Next(0, 2) == 0)
                     {
-                        isReachable = true;
-                        break;
+                        prevCol[i].ConnectedNodes.Add(currCol[targetIndex + 1]);
                     }
                 }
 
-                if (!isReachable)
+                foreach (var currNode in currCol)
                 {
-                    MapNode randomPrev = prevCol[Rng.Next(prevCol.Count)];
-                    randomPrev.ConnectedNodes.Add(currNode);
+                    bool isReachable = prevCol.Exists(p => p.ConnectedNodes.Contains(currNode));
+                    if (!isReachable)
+                    {
+                        prevCol[Rng.Next(prevCol.Count)].ConnectedNodes.Add(currNode);
+                    }
                 }
             }
         }
@@ -173,9 +194,9 @@ namespace DreamSlayerV2.Core
         private static NodeType RollNodeType()
         {
             int roll = Rng.Next(0, 100);
-            if (roll < 50) return NodeType.Encounter;
-            if (roll < 95) return NodeType.Event;
-            return NodeType.Elite;
+            if (roll < 75) return NodeType.Encounter; // 80% Standard Combat
+            if (roll < 95) return NodeType.Elite;     // 10% Elite Combat
+            return NodeType.Rest;                     // 10% Rest Area
         }
 
         private static List<int> GetRandomSample(int[] array, int count)
@@ -187,19 +208,6 @@ namespace DreamSlayerV2.Core
                 int index = Rng.Next(list.Count);
                 result.Add(list[index]);
                 list.RemoveAt(index);
-            }
-            return result;
-        }
-
-        private static List<MapNode> GetRandomSampleNodes(List<MapNode> list, int count)
-        {
-            List<MapNode> copy = new List<MapNode>(list);
-            List<MapNode> result = new List<MapNode>();
-            for (int i = 0; i < count && copy.Count > 0; i++)
-            {
-                int index = Rng.Next(copy.Count);
-                result.Add(copy[index]);
-                copy.RemoveAt(index);
             }
             return result;
         }

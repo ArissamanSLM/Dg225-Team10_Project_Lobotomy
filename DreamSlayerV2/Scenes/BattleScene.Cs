@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using DreamSlayerV2.Core;
 using DreamSlayerV2.Scenes;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace DreamSlayerV2.Scenes
 {
@@ -16,6 +19,10 @@ namespace DreamSlayerV2.Scenes
         private Texture2D EnemyTexture;
         private Texture2D[] BgTexture = new Texture2D[3];
         private Texture2D CardTexture;
+        
+        // Audio Storage
+        private List<SoundEffect> _soundEffects = new List<SoundEffect>();
+        private SoundEffectInstance _debuffSoundInstance;
 
         // Combat Stats
         private int enemyHP = 30;
@@ -23,7 +30,7 @@ namespace DreamSlayerV2.Scenes
         private int enemyDefense = 0;
         private bool isBossRoom = false;
 
-        // Enemy Intent (Slay the Spire mechanics)
+        // Enemy Intent Mechanics
         private EnemyActionType nextEnemyAction;
         private int nextEnemyActionValue;
         private Random _rng = new Random();
@@ -59,14 +66,23 @@ namespace DreamSlayerV2.Scenes
         }
 
         public void LoadContent(ContentManager content)
-        {
-            _font = content.Load<SpriteFont>("File");
-            EnemyTexture = content.Load<Texture2D>("UnrealWolf");
-            BgTexture[1] = content.Load<Texture2D>("HorrorForestDreamV2");
-            BgTexture[2] = content.Load<Texture2D>("TheDarkCave");
-            CardTexture = content.Load<Texture2D>("All16Card");
-        }
+{
+    _font = content.Load<SpriteFont>("File");
+    EnemyTexture = content.Load<Texture2D>("UnrealWolf");
+    BgTexture[0] = content.Load<Texture2D>("HorrorForestDreamV2");
+    BgTexture[1] = content.Load<Texture2D>("HorrorForestDreamV2");
+    BgTexture[2] = content.Load<Texture2D>("TheDarkCave");
+    CardTexture = content.Load<Texture2D>("All16Card");
 
+    // Load SFX (.wav)
+    SoundEffect badEffect = content.Load<SoundEffect>("Bad_Effect_gain");
+    _soundEffects.Add(badEffect);
+
+    // Create and configure the sound instance
+    _debuffSoundInstance = badEffect.CreateInstance();
+    _debuffSoundInstance.Volume = 1.0f;    // Max volume
+    _debuffSoundInstance.Pitch = -0.509f;  // ~0.491x pitch / speed lowering
+}
         public void Update(GameTime gameTime)
         {
             _previousKeyboardState = currentKeyboardState;
@@ -85,35 +101,31 @@ namespace DreamSlayerV2.Scenes
             // Check for Win Condition (Enemy HP <= 0)
             if (enemyHP <= 0)
             {
-                // Check if this node is the Stage 13 Final Boss node
                 bool isFinalBossNode = targetNode != null &&
-                          targetNode.Name == "13-Boss" &&
-                          targetNode.Type == NodeType.Boss;
+                                       targetNode.Name == "13-Boss" &&
+                                       targetNode.Type == NodeType.Boss;
 
                 if (isFinalBossNode)
                 {
-                    // Victory: 6 arguments (nodesPassed, enemiesCleared, cardsPlayed, isVictory: true, died: false, floorsPassed: 13)
-                    SceneManager.ChangeScene(new GameOverScene(5, 3, 24, true, false ,6));
+                    SceneManager.ChangeScene(new GameOverScene(5, 3, 24, true, false, 6));
                 }
                 else
                 {
-                    // Normal encounter/elite clear -> Proceed to Reward Scene
                     int rewardTier = (targetNode != null && targetNode.Type == NodeType.Elite) ? 1 : 0;
                     SceneManager.ChangeScene(new RewardScene(rewardTier));
                 }
-                return; // Stop updating battle logic after scene transition
+                return;
             }
 
             // Check Defeat Condition
             if (_player.PlayerHP <= 0)
             {
-                // Defeat: 6 arguments (nodesPassed, enemiesCleared, cardsPlayed, isVictory: false, died: true, floorsPassed: 1)
-                SceneManager.ChangeScene(new GameOverScene(5, 3, 24, false, true ,0));
+                SceneManager.ChangeScene(new GameOverScene(5, 3, 24, false, true, 0));
                 return;
             }
 
             bool isMouseClicked = currentMouseState.LeftButton == ButtonState.Pressed &&
-                                   _previousMouseState.LeftButton == ButtonState.Released;
+                                  _previousMouseState.LeftButton == ButtonState.Released;
 
             // 1. PLAY CARDS (Keyboard 1-5 OR Left Mouse Click)
             Keys[] cardKeys = { Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5 };
@@ -127,7 +139,6 @@ namespace DreamSlayerV2.Scenes
 
                 bool keyPressed = currentKeyboardState.IsKeyDown(cardKeys[i]) && _previousKeyboardState.IsKeyUp(cardKeys[i]);
 
-                // Calculate mouse collision bounds
                 float cardX = startX + (i * 200);
                 float cardY = 800;
                 Rectangle cardBounds = new Rectangle((int)cardX, (int)cardY, cardWidth, cardHeight);
@@ -165,7 +176,6 @@ namespace DreamSlayerV2.Scenes
                 {
                     int damage = selectedCard.InHandDamage;
 
-                    // Attack passes through Enemy Defense first
                     if (enemyDefense > 0)
                     {
                         if (damage <= enemyDefense)
@@ -216,16 +226,16 @@ namespace DreamSlayerV2.Scenes
             else
             {
                 nextEnemyAction = EnemyActionType.EldritchDebuff;
-                nextEnemyActionValue = 15; // Drains player Sanity
+                nextEnemyActionValue = 15;
             }
         }
 
         private void ExecuteEnemyTurn()
         {
-            // 1. Reset enemy shield at start of their turn
+            // 1. Reset enemy shield
             enemyDefense = 0;
 
-            // 2. Execute Telegraphed Intent
+            // 2. Execute Intent
             switch (nextEnemyAction)
             {
                 case EnemyActionType.Attack:
@@ -254,15 +264,24 @@ namespace DreamSlayerV2.Scenes
                     break;
 
                 case EnemyActionType.EldritchDebuff:
-                    _player.Sanity = Math.Max(0, _player.Sanity - nextEnemyActionValue);
-                    break;
+    _player.Sanity = Math.Max(0, _player.Sanity - nextEnemyActionValue);
+    
+    // Trigger sound effect with max volume and 0.491x pitch
+    
+    
+        
+        _debuffSoundInstance.Volume = 1.0f;   // Ensure volume is turned up max
+        _debuffSoundInstance.Pitch = -0.509f; // Lowers pitch/speed to 0.491x
+        _debuffSoundInstance.Play();
+    
+    break;
             }
 
-            // 3. Complete Player End Turn & Start Next Player Turn
+            // 3. Complete Player Turn
             _player.EndTurn();
             _player.PlayerTurn();
 
-            // 4. Roll fresh intent for enemy's upcoming turn
+            // 4. Roll next intent
             RollNextEnemyAction();
         }
 
@@ -273,14 +292,14 @@ namespace DreamSlayerV2.Scenes
             // 1. Background
             int bgIndex = isBossRoom ? 2 : 1;
             spriteBatch.Draw(BgTexture[bgIndex], new Rectangle(0, 0, 1920, 1080), Color.White);
+            int MoveY = (int)(Math.Sin(DateTime.Now.TimeOfDay.TotalSeconds * 3.5) * 10);
 
-            // 2. Enemy, Stats & Slay the Spire INTENT DISPLAY
-            spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300, 300, 300), Color.White);
+// 2. Enemy & Intent Display
+spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color.White);
 
             string enemyDefenseText = enemyDefense > 0 ? $" (+{enemyDefense} DEF)" : "";
             spriteBatch.DrawString(_font, $"Enemy HP: {enemyHP} / {maxEnemyHP}{enemyDefenseText}", new Vector2(1200, 240), Color.Red);
 
-            // RENDER NEXT ENEMY ACTION INTENT
             string intentText = nextEnemyAction switch
             {
                 EnemyActionType.Attack => $"INTENT: Attacking for {nextEnemyActionValue} DMG",
