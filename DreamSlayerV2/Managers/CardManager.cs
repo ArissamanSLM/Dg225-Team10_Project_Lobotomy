@@ -180,11 +180,6 @@ namespace DreamSlayerV2
                 case CardType.Special:
                     switch (Name)
                     {
-                        case "Counter":
-                            Rarity = CardRarity.Uncommon;
-                            Description = "Execute attack and defense in a single motion.";
-                            Does = $"Deal 4 Damage and gain 4 Defense. Cost: {Cost} Sanity.";
-                            break;
 
                         case "Alpha":
                             Rarity = CardRarity.Rare;

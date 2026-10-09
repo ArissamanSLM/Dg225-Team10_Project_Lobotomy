@@ -12,6 +12,7 @@ namespace DreamSlayerV2.Scenes
     {
         private SpriteFont _font;
         private MouseState _previousMouseState;
+        private KeyboardState _previousKeyboardState; // Track keyboard for 'P' toggle
 
         private PlayerController _player;
 
@@ -27,6 +28,7 @@ namespace DreamSlayerV2.Scenes
         public void Initialize()
         {
             _previousMouseState = Mouse.GetState();
+            _previousKeyboardState = Keyboard.GetState();
         }
 
         public void LoadContent(ContentManager content)
@@ -37,8 +39,17 @@ namespace DreamSlayerV2.Scenes
         public void Update(GameTime gameTime)
         {
             MouseState currentMouseState = Mouse.GetState();
+            KeyboardState currentKeyboardState = Keyboard.GetState();
 
-            // Define button rectangles for mouse collision detection
+            // 1. Press 'P' to Resume / Unpause
+            bool isPKeyPressed = currentKeyboardState.IsKeyDown(Keys.P) && _previousKeyboardState.IsKeyUp(Keys.P);
+            if (isPKeyPressed)
+            {
+                ResumeGame();
+                return;
+            }
+
+            // 2. Define button rectangles for mouse collision detection
             Rectangle resumeButtonBounds = new Rectangle(50, 450, 200, 40);
             Rectangle quitButtonBounds = new Rectangle(50, 510, 200, 40);
 
@@ -48,19 +59,10 @@ namespace DreamSlayerV2.Scenes
             {
                 Point mousePoint = new Point(currentMouseState.X, currentMouseState.Y);
 
-                // Option 1: Resume Game (Returns to whatever scene they were playing)
                 if (resumeButtonBounds.Contains(mousePoint))
                 {
-                    if (_previousScene != null)
-                    {
-                        SceneManager.ChangeScene(_previousScene);
-                    }
-                    else
-                    {
-                        SceneManager.ChangeScene(new NodeSelectScene()); // Fallback
-                    }
+                    ResumeGame();
                 }
-                // Option 2: Quit to Title Screen
                 else if (quitButtonBounds.Contains(mousePoint))
                 {
                     SceneManager.ChangeScene(new TitleScene());
@@ -68,18 +70,29 @@ namespace DreamSlayerV2.Scenes
             }
 
             _previousMouseState = currentMouseState;
+            _previousKeyboardState = currentKeyboardState;
+        }
+
+        private void ResumeGame()
+        {
+            if (_previousScene != null)
+            {
+                SceneManager.ChangeScene(_previousScene);
+            }
+            else
+            {
+                SceneManager.ChangeScene(new NodeSelectScene()); // Fallback
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
 
-            // Semi-transparent background overlay effect (optional, or draw a dark tint)
             spriteBatch.DrawString(_font, "--- PAUSED / PLAYER STATS ---", new Vector2(50, 40), Color.Gold);
 
             if (_player != null)
             {
-                // Display player stats using properties from PlayerController.cs
                 string statsText =
                     $"Class: {_player.SelectedClass}\n" +
                     $"HP: {_player.PlayerHP} / {_player.MaxHP}\n" +
@@ -106,7 +119,7 @@ namespace DreamSlayerV2.Scenes
             Color resumeColor = resumeButtonBounds.Contains(mousePoint) ? Color.LightGreen : Color.Green;
             Color quitColor = quitButtonBounds.Contains(mousePoint) ? Color.LightCoral : Color.IndianRed;
 
-            spriteBatch.DrawString(_font, "> Resume Game", new Vector2(resumeButtonBounds.X, resumeButtonBounds.Y), resumeColor);
+            spriteBatch.DrawString(_font, "> Resume Game (Press [P])", new Vector2(resumeButtonBounds.X, resumeButtonBounds.Y), resumeColor);
             spriteBatch.DrawString(_font, "> Quit to Title", new Vector2(quitButtonBounds.X, quitButtonBounds.Y), quitColor);
 
             spriteBatch.End();

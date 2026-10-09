@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Bad_effect_gain.wav</SourceFile>
+  <SourceTime>2026-10-09T13:58:47.3456272+07:00</SourceTime>
+  <DestFile>C:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Bad_effect_gain.xnb</DestFile>
+  <DestTime>2026-10-09T14:04:20.6198882+07:00</DestTime>
+  <Importer>WavImporter</Importer>
+  <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
+  <Processor>SoundEffectProcessor</Processor>
+  <ProcessorTime>2025-10-20T21:25:32+07:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
