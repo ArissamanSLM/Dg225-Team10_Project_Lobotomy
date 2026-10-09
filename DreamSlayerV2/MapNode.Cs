@@ -74,7 +74,7 @@ namespace DreamSlayerV2.Core
                 else
                 {
                     int laneCount = Rng.Next(2, 4);
-                    int[] possibleYPositions = new int[] { 200, 350, 540, 730, 900 };
+                    int[] possibleYPositions = new int[] {  350, 540, 730  };
                     List<int> chosenYs = GetRandomSample(possibleYPositions, laneCount);
 
                     for (int i = 0; i < chosenYs.Count; i++)

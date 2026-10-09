@@ -65,8 +65,8 @@ namespace DreamSlayerV2.Scenes
                 _shopTexture = content.Load<Texture2D>("Shop_logo");
                 _eliteTexture = content.Load<Texture2D>("E_enemy2");
                 _bossTexture = content.Load<Texture2D>("Boss_logo");
-                _eventTexture = content.Load<Texture2D>("EventIcon");
-                _encounterTexture = content.Load<Texture2D>("enermy_logo");
+               // _eventTexture = content.Load<Texture2D>("EventIcon");
+                _encounterTexture = content.Load<Texture2D>("enemy_logo");
             }
             catch { }
         }
@@ -187,7 +187,7 @@ namespace DreamSlayerV2.Scenes
                 Vector2 drawPos = node.Position - CameraPosition * scroll_factor;
                 Rectangle nodeRect = new Rectangle((int)drawPos.X - 20, (int)drawPos.Y - 20, 40, 40);
 
-                Color tintColor = Color.DarkGray; // Default locked/unreachable state
+                Color tintColor = Color.LightGray; // Default locked/unreachable state
                 if (node.IsVisited)
                 {
                     tintColor = Color.Gray;

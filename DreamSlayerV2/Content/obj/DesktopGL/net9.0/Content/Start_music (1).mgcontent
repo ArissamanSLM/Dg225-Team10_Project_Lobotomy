@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-<<<<<<< HEAD
-  <SourceFile>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Start_music (1).mp3</SourceFile>
-  <SourceTime>2026-09-24T15:09:39.533367+07:00</SourceTime>
-  <DestFile>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Start_music (1).xnb</DestFile>
-  <DestTime>2026-10-01T16:11:27.7871312+07:00</DestTime>
-=======
-  <SourceFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Start_music (1).mp3</SourceFile>
-  <SourceTime>2026-09-25T10:58:59.0335413+07:00</SourceTime>
-  <DestFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Start_music (1).xnb</DestFile>
-  <DestTime>2026-09-29T20:51:26.72163+07:00</DestTime>
->>>>>>> 7caab74cf13420ac25840349612bac60c25e1f2d
+  <SourceFile>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Start_music (1).mp3</SourceFile>
+  <SourceTime>2026-09-25T13:24:35.2557316+07:00</SourceTime>
+  <DestFile>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Start_music (1).xnb</DestFile>
+  <DestTime>2026-10-02T14:43:01.4982797+07:00</DestTime>
   <Importer>Mp3Importer</Importer>
   <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
   <Processor>SongProcessor</Processor>
@@ -22,10 +15,6 @@
   <Dependencies />
   <BuildAsset />
   <BuildOutput>
-<<<<<<< HEAD
-    <string>C:/Users/arissamann/GitVsCode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Start_music (1).ogg</string>
-=======
-    <string>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Start_music (1).ogg</string>
->>>>>>> 7caab74cf13420ac25840349612bac60c25e1f2d
+    <string>c:/Users/arissamann/GitVscode/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Start_music (1).ogg</string>
   </BuildOutput>
 </PipelineBuildEvent>
