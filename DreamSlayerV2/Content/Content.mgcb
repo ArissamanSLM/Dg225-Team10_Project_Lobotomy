@@ -13,12 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../../../Documents/Audacity/Bad_effect_gain.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:../../../../../../Documents/Audacity/Bad_effect_gain.wav;Bad_effect_gain.wav
-
 #begin All16Card.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -30,6 +24,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:All16Card.png
+
+#begin Bad_effect_gain.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Bad_effect_gain.wav
 
 #begin Bad_effect_gain.wav
 /importer:WavImporter
