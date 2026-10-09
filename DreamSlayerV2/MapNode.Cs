@@ -12,6 +12,7 @@ namespace DreamSlayerV2.Core
         Elite,      // Hard Combat (Emergency Ops)
         Shop,       // Rogue Trader
         Rest,       // Safe House / Rest (Not fully implemented)
+        Event,      // Random event scene
         Boss        // Dreadful Foe / Final Stage
     }
 
@@ -32,6 +33,7 @@ namespace DreamSlayerV2.Core
             NodeType.Elite => "Emergency Ops",
             NodeType.Shop => "Rogue Trader",
             NodeType.Rest => "Safe House",
+            NodeType.Event => "Event",
             NodeType.Boss => "Dreadful Foe",
             _ => "Unknown"
         };
@@ -42,6 +44,7 @@ namespace DreamSlayerV2.Core
             NodeType.Elite => RoomType.Elite,
             NodeType.Shop => RoomType.Shop,
             NodeType.Rest => RoomType.Event, // Fallback placeholder since Rest isn't fully implemented
+            NodeType.Event => RoomType.Event,
             NodeType.Boss => RoomType.Boss,
             _ => RoomType.Encounter
         };
@@ -193,10 +196,11 @@ namespace DreamSlayerV2.Core
 
         private static NodeType RollNodeType()
         {
-            int roll = Rng.Next(0, 100);
-            if (roll < 75) return NodeType.Encounter; // 80% Standard Combat
-            if (roll < 95) return NodeType.Elite;     // 10% Elite Combat
-            return NodeType.Rest;                     // 10% Rest Area
+            int roll = Rng.Next(100);
+            if (roll < 70) return NodeType.Encounter; // 70% Standard Combat
+            if (roll < 90) return NodeType.Elite;     // 20% Elite Combat
+            if (roll < 95) return NodeType.Rest;      // 5% Rest Area
+            return NodeType.Event;                    // 5% Random event
         }
 
         private static List<int> GetRandomSample(int[] array, int count)

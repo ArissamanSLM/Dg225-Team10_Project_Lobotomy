@@ -118,9 +118,9 @@ namespace DreamSlayerV2.Scenes
             }
 
             // Check Defeat Condition
-            if (_player.PlayerHP <= 0)
+            if (_player.PlayerHP <= 0 || _player.Sanity <= 0)
             {
-                SceneManager.ChangeScene(new GameOverScene(5, 3, 24, false, true, 0));
+                SceneManager.ChangeScene(new GameOverScene(0, 0, 0, false, true, 0));
                 return;
             }
 
@@ -211,6 +211,10 @@ namespace DreamSlayerV2.Scenes
                     int increaseDefense = 6;
                     _player.Defense += increaseDefense;
                 }
+                // else if (selectedCard.Type == CardManager.CardType.Utility)
+                // {
+                    
+                // }
 
                 _player.UseCard(cardIndex);
             }
@@ -328,6 +332,14 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
             spriteBatch.DrawString(_font, $"HP: {_player.PlayerHP} / {_player.MaxHP}", new Vector2(80, 80), Color.White);
             spriteBatch.DrawString(_font, $"Defense: {_player.Defense}", new Vector2(80, 130), Color.SkyBlue);
             spriteBatch.DrawString(_font, $"Sanity: {_player.Sanity}", new Vector2(80, 180), Color.Cyan);
+            if (_player.Sanity <= 30)
+            {
+                spriteBatch.DrawString(_font, "Sanity is critically low!", new Vector2(200, 180), Color.Red);
+            }
+            else
+            {
+                spriteBatch.DrawString(_font, "Sanity is stable.", new Vector2(200, 180), Color.LightGreen);
+            }
             spriteBatch.DrawString(_font, $"Energy: {_player.Energy}", new Vector2(80, 230), Color.Yellow);
             spriteBatch.DrawString(_font, $"Deck: {_player.Deck.Count}  |  Discard: {_player.DiscardPile.Count}", new Vector2(80, 280), Color.LightGray);
 
@@ -358,7 +370,8 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
                     {
                         CardManager.CardType.Attack => 0,
                         CardManager.CardType.Defense => 1,
-                        CardManager.CardType.Heal => 2,
+                        CardManager.CardType.Utility => 2,
+                        CardManager.CardType.Heal => 3,
                         _ => 3
                     };
 

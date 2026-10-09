@@ -54,7 +54,7 @@ namespace DreamSlayerV2.Scenes
 
             score += _floorsPassed * 250;
 
-            return Math.Max(0, score);
+            return score;
         }
 
         public void Initialize() { }

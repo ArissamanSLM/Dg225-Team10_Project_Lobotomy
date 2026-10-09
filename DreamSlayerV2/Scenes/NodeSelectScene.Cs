@@ -21,6 +21,7 @@ namespace DreamSlayerV2.Scenes
         private Texture2D _eliteTexture;
         private Texture2D _bossTexture;
         private Texture2D _encounterTexture;
+        private Texture2D _eventTexture;
         
 
         private Song NodeMusic;
@@ -65,10 +66,12 @@ namespace DreamSlayerV2.Scenes
                 _shopTexture = content.Load<Texture2D>("Shop_logo");
                 _eliteTexture = content.Load<Texture2D>("E_enemy2");
                 _bossTexture = content.Load<Texture2D>("Boss_logo");
-                //_eventTexture = content.Load<Texture2D>("EventIcon");
-                _encounterTexture = content.Load<Texture2D>("enermy_logo");
+                _encounterTexture = content.Load<Texture2D>("enemy_logo");
+                _eventTexture = content.Load<Texture2D>("EventIcon");
+                
             }
             catch { }
+            _nodeCircleTexture = CreateCircleTexture(graphicsDevice, 64);
         }
 
         public void Update(GameTime gameTime)
@@ -132,6 +135,9 @@ namespace DreamSlayerV2.Scenes
                                 case NodeType.Rest:
                                     SceneManager.ChangeScene(new ShopRestScene());
                                     break;
+                                case NodeType.Event:
+                                    SceneManager.ChangeScene(EventSceneFactory.CreateRandomEvent());
+                                    break;
                                 case NodeType.Encounter:
                                 case NodeType.Start:
                                 default:
@@ -184,6 +190,7 @@ namespace DreamSlayerV2.Scenes
             NodeType.Elite => Color.OrangeRed,
             NodeType.Shop => Color.Gold,
             NodeType.Rest => Color.MediumSeaGreen,
+            NodeType.Event => Color.MediumPurple,
             NodeType.Boss => Color.Crimson,
             _ => Color.White
         };
@@ -223,8 +230,8 @@ namespace DreamSlayerV2.Scenes
                 Color ringColor = node.IsVisited
                     ? Color.Lerp(nodeColor, Color.Black, 0.5f)
                     : node.IsAvailable ? Color.White : nodeColor * 0.45f;
-
-                Color tintColor = Color.DarkGray; // Default locked/unreachable state
+                
+                Color tintColor = Color.LightGray; // Default locked/unreachable state
                 if (node.IsVisited)
                 {
                     tintColor = Color.Gray;
@@ -244,9 +251,19 @@ namespace DreamSlayerV2.Scenes
                     NodeType.Elite => _eliteTexture,
                     NodeType.Boss => _bossTexture,
                     NodeType.Encounter => _encounterTexture,
+                    NodeType.Event => _eventTexture,
                     _ => null
                 };
-
+                spriteBatch.Draw(
+    _nodeCircleTexture,
+    drawPos,
+    null,
+    ringColor,
+    0f,
+    new Vector2(_nodeCircleTexture.Width / 2f, _nodeCircleTexture.Height / 2f),
+    1f,
+    SpriteEffects.None,
+    0f);
                 if (currentTexture != null)
                 {
                     float scale = Math.Min(30f / currentTexture.Width, 30f / currentTexture.Height);
