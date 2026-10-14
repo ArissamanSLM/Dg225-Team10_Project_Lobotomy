@@ -26,7 +26,7 @@ namespace DreamSlayerV2.Scenes
             _nodesPassed = nodesPassed;
             _enemiesCleared = enemiesCleared;
             _cardsPlayed = cardsPlayed;
-            _isVictory = isVictory;
+            _isVictory = isVictory; 
             _isdefeat = isDefeat;
            
             _floorsPassed = floorsPassed;
@@ -54,7 +54,7 @@ namespace DreamSlayerV2.Scenes
 
             score += _floorsPassed * 250;
 
-            return Math.Max(0, score);
+            return score;
         }
 
         public void Initialize() { }

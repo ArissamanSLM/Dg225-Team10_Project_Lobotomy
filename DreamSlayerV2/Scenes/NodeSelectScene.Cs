@@ -21,6 +21,7 @@ namespace DreamSlayerV2.Scenes
         private Texture2D _eliteTexture;
         private Texture2D _bossTexture;
         private Texture2D _encounterTexture;
+        private Texture2D _eventTexture;
         
 
         private Song NodeMusic;
@@ -60,11 +61,17 @@ namespace DreamSlayerV2.Scenes
             _pixelTexture = new Texture2D(graphicsDevice, 1, 1);
             _pixelTexture.SetData(new[] { Color.White });
 
+            try
+            {
+                _shopTexture = content.Load<Texture2D>("Shop_logo");
+                _eliteTexture = content.Load<Texture2D>("E_enemy2");
+                _bossTexture = content.Load<Texture2D>("Boss_logo");
+                _encounterTexture = content.Load<Texture2D>("enemy_logo");
+                _eventTexture = content.Load<Texture2D>("EventIcon");
+                
+            }
+            catch { }
             _nodeCircleTexture = CreateCircleTexture(graphicsDevice, 64);
-            _shopTexture = content.Load<Texture2D>("Shop_logo");
-            _eliteTexture = content.Load<Texture2D>("E_enemy2");
-            _bossTexture = content.Load<Texture2D>("Boss_logo");
-            _encounterTexture = content.Load<Texture2D>("enemy_logo");
         }
 
         public void Update(GameTime gameTime)
@@ -118,15 +125,22 @@ namespace DreamSlayerV2.Scenes
                             }
 
                             // Scene Switching
+                            // Scene Switching ใน NodeSelectScene.Cs
                             switch (node.Type)
                             {
                                 case NodeType.Boss:
+                                    // เมื่อคลิกโดนโหนด Boss (Stage 13) ให้เปิดฉากคัตซีนสนทนาก่อนสู้
+                                    SceneManager.ChangeScene(new BossScene(node));
+                                    break;
                                 case NodeType.Elite:
-                                    SceneManager.ChangeScene(new BattleScene(true, null));
+                                    SceneManager.ChangeScene(new BattleScene(true, node));
                                     break;
                                 case NodeType.Shop:
                                 case NodeType.Rest:
                                     SceneManager.ChangeScene(new ShopRestScene());
+                                    break;
+                                case NodeType.Event:
+                                    SceneManager.ChangeScene(EventSceneFactory.CreateRandomEvent());
                                     break;
                                 case NodeType.Encounter:
                                 case NodeType.Start:
@@ -134,14 +148,15 @@ namespace DreamSlayerV2.Scenes
                                     SceneManager.ChangeScene(new BattleScene(false, null));
                                     break;
                             }
-                            break;
                         }
                     }
                 }
             }
-        
-            _previousMouseState = currentMouseState;
         }
+        
+            
+            
+        
 
         private void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, float thickness = 3f)
         {
@@ -180,6 +195,7 @@ namespace DreamSlayerV2.Scenes
             NodeType.Elite => Color.OrangeRed,
             NodeType.Shop => Color.Gold,
             NodeType.Rest => Color.MediumSeaGreen,
+            NodeType.Event => Color.MediumPurple,
             NodeType.Boss => Color.Crimson,
             _ => Color.White
         };
@@ -219,11 +235,20 @@ namespace DreamSlayerV2.Scenes
                 Color ringColor = node.IsVisited
                     ? Color.Lerp(nodeColor, Color.Black, 0.5f)
                     : node.IsAvailable ? Color.White : nodeColor * 0.45f;
-
-                Rectangle outerRect = new Rectangle((int)drawPos.X - 30, (int)drawPos.Y - 30, 60, 60);
-                Rectangle innerRect = new Rectangle((int)drawPos.X - 24, (int)drawPos.Y - 24, 48, 48);
-                spriteBatch.Draw(_nodeCircleTexture, outerRect, ringColor);
-                spriteBatch.Draw(_nodeCircleTexture, innerRect, new Color(22, 29, 32));
+                
+                Color tintColor = Color.LightGray; // Default locked/unreachable state
+                if (node.IsVisited)
+                {
+                    tintColor = Color.Gray;
+                }
+                else if (node == _currentNode)
+                {
+                    tintColor = Color.Cyan;
+                }
+                else if (node.IsAvailable)
+                {
+                    tintColor = Color.LightGreen; // Ready to click!
+                }
 
                 Texture2D currentTexture = node.Type switch
                 {
@@ -231,9 +256,19 @@ namespace DreamSlayerV2.Scenes
                     NodeType.Elite => _eliteTexture,
                     NodeType.Boss => _bossTexture,
                     NodeType.Encounter => _encounterTexture,
+                    NodeType.Event => _eventTexture,
                     _ => null
                 };
-
+                spriteBatch.Draw(
+    _nodeCircleTexture,
+    drawPos,
+    null,
+    ringColor,
+    0f,
+    new Vector2(_nodeCircleTexture.Width / 2f, _nodeCircleTexture.Height / 2f),
+    1f,
+    SpriteEffects.None,
+    0f);
                 if (currentTexture != null)
                 {
                     float scale = Math.Min(30f / currentTexture.Width, 30f / currentTexture.Height);

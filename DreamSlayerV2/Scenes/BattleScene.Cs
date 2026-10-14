@@ -13,8 +13,6 @@ namespace DreamSlayerV2.Scenes
 {
     public class BattleScene : IScene
     {
-        public enum EnemyActionType { Attack, Defend, EldritchDebuff }
-
         private SpriteFont _font;
         private Texture2D EnemyTexture;
         private Texture2D[] BgTexture = new Texture2D[3];
@@ -29,15 +27,10 @@ namespace DreamSlayerV2.Scenes
         private SoundEffectInstance _debuffSoundInstance;
 
         // Combat Stats
-        private int enemyHP = 30;
-        private int maxEnemyHP = 30;
-        private int enemyDefense = 0;
-        private bool isBossRoom = false;
-
-        // Enemy Intent Mechanics
-        private EnemyActionType nextEnemyAction;
-        private int nextEnemyActionValue;
-        private Random _rng = new Random();
+        private readonly BaseEnemy _enemy;
+        private readonly bool isBossRoom;
+        private bool _initialized;
+        private bool _contentLoaded;
 
         // Input States
         private KeyboardState currentKeyboardState;
@@ -52,25 +45,26 @@ namespace DreamSlayerV2.Scenes
         public BattleScene(bool bossRoom = false, MapNode nodeToComplete = null)
         {
             isBossRoom = bossRoom;
+            _enemy = nodeToComplete != null && nodeToComplete.Type == NodeType.Boss
+                ? new BossBattle()
+                : new MonsterBattle(bossRoom);
             targetNode = nodeToComplete;
-            if (isBossRoom)
-            {
-                enemyHP = 90;
-                maxEnemyHP = 90;
-            }
         }
 
         public void Initialize()
         {
+            if (_initialized) return;
+
             _player = DreamSlayerV2.Core.GameState.CurrentPlayer ?? new PlayerController(CharacterClassV2.Human);
             _player.PlayerTurn();
-
-            // Roll initial intent for turn 1
-            RollNextEnemyAction();
+            _enemy.RollNextAction(_player.Sanity < 30);
+            _initialized = true;
         }
 
         public void LoadContent(ContentManager content)
 {
+    if (_contentLoaded) return;
+
     _font = content.Load<SpriteFont>("File");
     EnemyTexture = content.Load<Texture2D>("UnrealWolf");
     BgTexture[0] = content.Load<Texture2D>("HorrorForestDreamV2");
@@ -86,6 +80,7 @@ namespace DreamSlayerV2.Scenes
     _debuffSoundInstance = badEffect.CreateInstance();
     _debuffSoundInstance.Volume = 1.0f;    // Max volume
     _debuffSoundInstance.Pitch = -0.509f;  // ~0.491x pitch / speed lowering
+    _contentLoaded = true;
 }
         public void Update(GameTime gameTime)
         {
@@ -102,8 +97,16 @@ namespace DreamSlayerV2.Scenes
                 return;
             }
 
+            if (_enemy is BossBattle boss && boss.CurrentPhase == 1 && boss.HP <= 0)
+            {
+                boss.TransitionToPhase2();
+                boss.RollNextAction(_player.Sanity < 30);
+                SceneManager.ChangeScene(new BossScene(_player, this));
+                return;
+            }
+
             // Check for Win Condition (Enemy HP <= 0)
-            if (enemyHP <= 0)
+            if (_enemy.HP <= 0)
             {
                 bool isFinalBossNode = targetNode != null &&
                                        targetNode.Name == "13-Boss" &&
@@ -122,9 +125,9 @@ namespace DreamSlayerV2.Scenes
             }
 
             // Check Defeat Condition
-            if (_player.PlayerHP <= 0)
+            if (_player.PlayerHP <= 0 || _player.Sanity <= 0)
             {
-                SceneManager.ChangeScene(new GameOverScene(5, 3, 24, false, true, 0));
+                SceneManager.ChangeScene(new GameOverScene(0, 0, 0, false, true, 0));
                 return;
             }
 
@@ -159,10 +162,7 @@ namespace DreamSlayerV2.Scenes
             bool endTurnClicked = isMouseClicked && endTurnButtonBounds.Contains(currentMouseState.Position);
             bool endTurnKeyPressed = currentKeyboardState.IsKeyDown(Keys.E) && _previousKeyboardState.IsKeyUp(Keys.E);
 
-            if (endTurnKeyPressed || endTurnClicked)
-            {
-                ExecuteEnemyTurn();
-            }
+            if (endTurnKeyPressed || endTurnClicked) CompleteTurn();
             // Check if 'P' key was pressed to open the Pause Scene
             if (currentKeyboardState.IsKeyDown(Keys.P) && _previousKeyboardState.IsKeyUp(Keys.P))
             {
@@ -221,22 +221,22 @@ else
                 {
                     int damage = selectedCard.InHandDamage;
 
-                    if (enemyDefense > 0)
+                    if (_enemy.Defense > 0)
                     {
-                        if (damage <= enemyDefense)
+                        if (damage <= _enemy.Defense)
                         {
-                            enemyDefense -= damage;
+                            _enemy.Defense -= damage;
                         }
                         else
                         {
-                            damage -= enemyDefense;
-                            enemyDefense = 0;
-                            enemyHP -= damage;
+                            damage -= _enemy.Defense;
+                            _enemy.Defense = 0;
+                            _enemy.HP -= damage;
                         }
                     }
                     else
                     {
-                        enemyHP -= damage;
+                        _enemy.HP -= damage;
                     }
                 }
                 else if (selectedCard.Type == CardManager.CardType.Heal)
@@ -249,85 +249,34 @@ else
                     int increaseDefense = 6;
                     _player.Defense += increaseDefense;
                 }
+                // else if (selectedCard.Type == CardManager.CardType.Utility)
+                // {
+                    
+                // }
 
                 _player.UseCard(cardIndex);
             }
         }
 
-        private void RollNextEnemyAction()
+        private void CompleteTurn()
         {
-            int roll = _rng.Next(0, 100);
+            _enemy.Defense = 0;
+            _enemy.ExecuteTurn(_player);
 
-            if (roll < 60)
+            foreach (EnemyAction action in _enemy.NextActions)
             {
-                nextEnemyAction = EnemyActionType.Attack;
-                nextEnemyActionValue = isBossRoom ? _rng.Next(12, 20) : _rng.Next(6, 12);
-            }
-            else if (roll < 85)
-            {
-                nextEnemyAction = EnemyActionType.Defend;
-                nextEnemyActionValue = isBossRoom ? 12 : 8;
-            }
-            else
-            {
-                nextEnemyAction = EnemyActionType.EldritchDebuff;
-                nextEnemyActionValue = 15;
-            }
-        }
-
-        private void ExecuteEnemyTurn()
-        {
-            // 1. Reset enemy shield
-            enemyDefense = 0;
-
-            // 2. Execute Intent
-            switch (nextEnemyAction)
-            {
-                case EnemyActionType.Attack:
-                    int incomingDamage = nextEnemyActionValue;
-                    if (_player.Defense > 0)
-                    {
-                        if (incomingDamage <= _player.Defense)
-                        {
-                            _player.Defense -= incomingDamage;
-                        }
-                        else
-                        {
-                            incomingDamage -= _player.Defense;
-                            _player.Defense = 0;
-                            _player.PlayerHP -= incomingDamage;
-                        }
-                    }
-                    else
-                    {
-                        _player.PlayerHP -= incomingDamage;
-                    }
+                if (action.Type == EnemyActionType.EldritchDebuff)
+                {
+                    _debuffSoundInstance.Volume = 1.0f;
+                    _debuffSoundInstance.Pitch = -0.509f;
+                    _debuffSoundInstance.Play();
                     break;
-
-                case EnemyActionType.Defend:
-                    enemyDefense += nextEnemyActionValue;
-                    break;
-
-                case EnemyActionType.EldritchDebuff:
-    _player.Sanity = Math.Max(0, _player.Sanity - nextEnemyActionValue);
-    
-    // Trigger sound effect with max volume and 0.491x pitch
-    
-    
-        
-        _debuffSoundInstance.Volume = 1.0f;   // Ensure volume is turned up max
-        _debuffSoundInstance.Pitch = -0.509f; // Lowers pitch/speed to 0.491x
-        _debuffSoundInstance.Play();
-    
-    break;
+                }
             }
 
-            // 3. Complete Player Turn
             _player.EndTurn();
             _player.PlayerTurn();
-
-            // 4. Roll next intent
-            RollNextEnemyAction();
+            _enemy.RollNextAction(_player.Sanity < 30);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -342,23 +291,34 @@ else
 // 2. Enemy & Intent Display
 spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color.White);
 
-            string enemyDefenseText = enemyDefense > 0 ? $" (+{enemyDefense} DEF)" : "";
-            spriteBatch.DrawString(_font, $"Enemy HP: {enemyHP} / {maxEnemyHP}{enemyDefenseText}", new Vector2(1200, 240), Color.Red);
+            string enemyDefenseText = _enemy.Defense > 0 ? $" (+{_enemy.Defense} DEF)" : "";
+            spriteBatch.DrawString(_font, $"Enemy HP: {_enemy.HP} / {_enemy.MaxHP}{enemyDefenseText}", new Vector2(1200, 240), Color.Red);
 
-            string intentText = nextEnemyAction switch
+            string intentText = "INTENT: ";
+            Color intentColor = Color.Yellow;
+            for (int i = 0; i < _enemy.NextActions.Count; i++)
             {
-                EnemyActionType.Attack => $"INTENT: Attacking for {nextEnemyActionValue} DMG",
-                EnemyActionType.Defend => $"INTENT: Gaining {nextEnemyActionValue} Defense",
-                EnemyActionType.EldritchDebuff => $"INTENT: Eldritch Gaze (-{nextEnemyActionValue} Sanity)",
-                _ => ""
-            };
-            Color intentColor = nextEnemyAction switch
-            {
-                EnemyActionType.Attack => Color.OrangeRed,
-                EnemyActionType.Defend => Color.LightBlue,
-                EnemyActionType.EldritchDebuff => Color.MediumPurple,
-                _ => Color.Yellow
-            };
+                EnemyAction action = _enemy.NextActions[i];
+                if (i > 0) intentText += " + ";
+                intentText += action.Type switch
+                {
+                    EnemyActionType.Attack => $"Attacking for {action.Value} DMG",
+                    EnemyActionType.Defend => $"Gaining {action.Value} Defense",
+                    EnemyActionType.EldritchDebuff => $"Eldritch Gaze (-{action.Value} Sanity)",
+                    _ => "Doing nothing"
+                };
+
+                if (i == 0)
+                {
+                    intentColor = action.Type switch
+                    {
+                        EnemyActionType.Attack => Color.OrangeRed,
+                        EnemyActionType.Defend => Color.LightBlue,
+                        EnemyActionType.EldritchDebuff => Color.MediumPurple,
+                        _ => Color.Yellow
+                    };
+                }
+            }
 
             spriteBatch.DrawString(_font, intentText, new Vector2(1200, 190), intentColor);
 
@@ -366,6 +326,14 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
             spriteBatch.DrawString(_font, $"HP: {_player.PlayerHP} / {_player.MaxHP}", new Vector2(80, 80), Color.White);
             spriteBatch.DrawString(_font, $"Defense: {_player.Defense}", new Vector2(80, 130), Color.SkyBlue);
             spriteBatch.DrawString(_font, $"Sanity: {_player.Sanity}", new Vector2(80, 180), Color.Cyan);
+            if (_player.Sanity <= 30)
+            {
+                spriteBatch.DrawString(_font, "Sanity is critically low!", new Vector2(200, 180), Color.Red);
+            }
+            else
+            {
+                spriteBatch.DrawString(_font, "Sanity is stable.", new Vector2(200, 180), Color.LightGreen);
+            }
             spriteBatch.DrawString(_font, $"Energy: {_player.Energy}", new Vector2(80, 230), Color.Yellow);
             spriteBatch.DrawString(_font, $"Deck: {_player.Deck.Count}  |  Discard: {_player.DiscardPile.Count}", new Vector2(80, 280), Color.LightGray);
 
@@ -396,7 +364,8 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
                     {
                         CardManager.CardType.Attack => 0,
                         CardManager.CardType.Defense => 1,
-                        CardManager.CardType.Heal => 2,
+                        CardManager.CardType.Utility => 2,
+                        CardManager.CardType.Heal => 3,
                         _ => 3
                     };
 

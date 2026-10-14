@@ -130,7 +130,7 @@ namespace DreamSlayerV2
             }
 
             // FIXED: Moved outside the loop so it only happens once per turn end, not 5 times!
-            Sanity += 30;
+            Sanity += 40;
 
             // Optional cap so Sanity doesn't go over max (assuming 100 max for HumanDemo)
             if (Sanity > 100) Sanity = 100;

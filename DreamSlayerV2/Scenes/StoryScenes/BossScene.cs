@@ -1,3 +1,4 @@
+using System;
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -8,12 +9,19 @@ namespace DreamSlayerV2.Scenes
 {
     public class BossScene : IScene
     {
+        private const int AngelHealAmount = 30;
+
         private SpriteFont _font;
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
+        private readonly MapNode _targetNode;
+        private readonly PlayerController _player;
+        private readonly BattleScene _battleToResume;
+        private readonly string[] _dialogues;
+        private readonly bool _isPhase2Dialogue;
+        private bool _angelBuffGranted;
 
-        // บทสนทนาเฟส 1
-        private string[] bossTexts = new string[]
+        private readonly string[] _bossTexts =
         {
             "Mage: Phew after 13 Long Nodes, I finally reached the final node. I can feel the power of the book in my hand.",
             "???: You Dare to Enter my Domain of Dreamland.",
@@ -23,37 +31,50 @@ namespace DreamSlayerV2.Scenes
             "???: Prepare to Die!"
         };
 
-        // บทสนทนาเฟส 2
-        private string[] phase2Texts = new string[]
+        private readonly string[] _phase2Texts =
         {
             "???: IMPOSSIBLE! How can you defeat me? I am the most powerful being in this world.",
             "???: Let me show you my Real Power!",
             "Mage: Bring it on! I do not fear you. I will defeat you and escape from this nightmare.",
-            "Angel: Player you are Here! Here take my help And defeat this evil being.",
-            "Catulu: Perish!!!"
+            "Angel: Player, you are here! Take my help and defeat this evil being.",
+            "Cthulhu: Perish!!!"
         };
 
         private int currentIndex = 0;
-        private bool isPhase2 = false; // ตัวแปรบอกสถานะว่าอยู่เฟส 2 หรือยัง
-
-        // ตัวแปรสำหรับทำเอฟเฟกต์พิมพ์ดีด (Typewriter)
         private string displayedText = "";
         private float timer = 0f;
-        private float charInterval = 0.03f; // ความเร็วในการพิมพ์แต่ละตัวอักษร
+        private const float CharInterval = 0.03f;
         private int charIndex = 0;
         private bool isTypingFinished = false;
 
-        public void Initialize() { }
+        public BossScene(MapNode targetNode = null)
+        {
+            _targetNode = targetNode;
+            _dialogues = _bossTexts;
+        }
+
+        public BossScene(PlayerController player, BattleScene battleToResume)
+        {
+            _player = player;
+            _battleToResume = battleToResume;
+            _dialogues = _phase2Texts;
+            _isPhase2Dialogue = true;
+        }
+
+        public void Initialize()
+        {
+            _previousMouseState = Mouse.GetState();
+            _currentMouseState = _previousMouseState;
+        }
 
         public void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("File");
-            LoadCurrentDialogue(); // โหลดข้อความประโยคแรก
+            LoadCurrentDialogue();
         }
 
         private void LoadCurrentDialogue()
         {
-            string currentFullText = isPhase2 ? phase2Texts[currentIndex] : bossTexts[currentIndex];
             displayedText = "";
             charIndex = 0;
             timer = 0f;
@@ -70,13 +91,12 @@ namespace DreamSlayerV2.Scenes
 
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // 1. จัดการเอฟเฟกต์พิมพ์ทีละตัวอักษร
             if (!isTypingFinished)
             {
                 timer += dt;
-                string targetText = isPhase2 ? phase2Texts[currentIndex] : bossTexts[currentIndex];
+                string targetText = _dialogues[currentIndex];
 
-                if (timer >= charInterval)
+                if (timer >= CharInterval)
                 {
                     timer = 0f;
                     charIndex++;
@@ -90,41 +110,38 @@ namespace DreamSlayerV2.Scenes
                     }
                 }
 
-                // ถ้าผู้เล่นคลิกตอนกำลังพิมพ์อยู่ ให้แสดงข้อความทั้งหมดทันที
                 if (isMouseClicked)
                 {
                     displayedText = targetText;
                     charIndex = targetText.Length;
                     isTypingFinished = true;
-                    return; // ข้ามการเปลี่ยนบรรทัดรอบนี้ไปก่อน ให้ผู้เล่นคลิกอีกทีเพื่อไปประโยคถัดไป
+                    return;
                 }
             }
 
-            // 2. เมื่อพิมพ์เสร็จแล้ว และผู้เล่นคลิกเมาส์ -> ไปประโยคถัดไป หรือเปลี่ยนเฟส / เข้าสู่ฉากสู้จริง
             if (isTypingFinished && isMouseClicked)
             {
+                if (_isPhase2Dialogue && currentIndex == 3 && !_angelBuffGranted)
+                {
+                    _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + AngelHealAmount);
+                    _angelBuffGranted = true;
+                }
+
                 currentIndex++;
 
-                int maxIndex = isPhase2 ? phase2Texts.Length : bossTexts.Length;
-
-                if (currentIndex < maxIndex)
+                if (currentIndex < _dialogues.Length)
                 {
                     LoadCurrentDialogue();
                 }
                 else
                 {
-                    // จบบทสนทนาของชุดนั้นๆ
-                    if (!isPhase2)
+                    if (_isPhase2Dialogue)
                     {
-                        // จบเฟส 1 -> เปลี่ยนไปเริ่มเฟส 2
-                        isPhase2 = true;
-                        currentIndex = 0;
-                        LoadCurrentDialogue();
+                        SceneManager.ChangeScene(_battleToResume);
                     }
                     else
                     {
-                        // จบเฟส 2 ทุกประโยคแล้ว -> เข้าสู่หน้าจอต่อสู้บอสจริง (BattleScene ห้องบอส)
-                        // SceneManager.ChangeScene(new BattleScene(bossRoom: true, targetNode));
+                        SceneManager.ChangeScene(new BattleScene(bossRoom: true, nodeToComplete: _targetNode));
                     }
                 }
             }
