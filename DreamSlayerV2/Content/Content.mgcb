@@ -13,12 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../../../Documents/Audacity/Bad_effect_gain.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:../../../../../../Documents/Audacity/Bad_effect_gain.wav;Bad_effect_gain.wav
-
 #begin All16Card.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -92,11 +86,12 @@
 /processorParam:TextureFormat=Color
 /build:HorrorForestDreamV2.png
 
-#begin Montagem Celestial Esperanza [x90ocGRT6EE].mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Montagem Celestial Esperanza [x90ocGRT6EE].mp3
+#begin NatureFonts.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:NatureFonts.spritefont
 
 #begin Next_Floor_logo.png
 /importer:TextureImporter
@@ -139,6 +134,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TheDarkCave.png
+
+#begin TitleMusic.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:TitleMusic.wav
 
 #begin UnrealWolf.png
 /importer:TextureImporter

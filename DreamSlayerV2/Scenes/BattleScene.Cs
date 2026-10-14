@@ -19,6 +19,10 @@ namespace DreamSlayerV2.Scenes
         private Texture2D EnemyTexture;
         private Texture2D[] BgTexture = new Texture2D[3];
         private Texture2D CardTexture;
+
+        private List<ScaryFloatingText> _scaryTexts = new List<ScaryFloatingText>();
+        private float _scarySpawnTimer = 0f;
+        private Random _scaryRnd = new Random();
         
         // Audio Storage
         private List<SoundEffect> _soundEffects = new List<SoundEffect>();
@@ -166,6 +170,40 @@ namespace DreamSlayerV2.Scenes
                 SceneManager.ChangeScene(new PlayerStatsScene(_player, this));
                 return;
             }
+            if (_player.Sanity < 30)
+{
+    float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+    _scarySpawnTimer += dt;
+
+    // สุ่มเกิดข้อความใหม่ทุกๆ 1.2 วินาที (จำกัดไม่เกิน 4 ข้อความพร้อมกัน)
+    if (_scaryTexts.Count < 4 && _scarySpawnTimer > 1.2f)
+    {
+        _scarySpawnTimer = 0f;
+        SpawnScaryText();
+    }
+
+    // อัปเดตตำแหน่งและการจางหายของข้อความหลอน
+    for (int i = _scaryTexts.Count - 1; i >= 0; i--)
+    {
+        var item = _scaryTexts[i];
+        item.Position += item.Velocity * dt;
+        item.LifeSpan -= dt;
+
+        if (item.LifeSpan < 1.0f)
+        {
+            item.Alpha = item.LifeSpan;
+        }
+
+        if (item.LifeSpan <= 0f)
+        {
+            _scaryTexts.RemoveAt(i);
+        }
+    }
+}
+else
+{
+    _scaryTexts.Clear(); // เคลียร์ข้อความทิ้งถ้า Sanity กลับมา >= 30
+}
         }
 
         private void TryPlayCard(int cardIndex)
@@ -384,10 +422,58 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
 
             // 6. End Turn Prompt/Button
             spriteBatch.DrawString(_font, "Click or Press [E] to End Turn", new Vector2(1500, 900), Color.Yellow);
-
+            spriteBatch.DrawString(_font, "Press [P] to Pause / Player Stats", new Vector2(1500, 950), Color.LightBlue);
+            // 7. Draw Scary Floating Texts if Sanity < 30
+            if (_player.Sanity < 30)
+            {
+                foreach (var item in _scaryTexts)
+                {
+                    Color scaryColor = new Color(180, 0, 20) * item.Alpha;
+                    spriteBatch.DrawString(_font, item.Text, item.Position, scaryColor);
+                }
+            }
             spriteBatch.End();
         }
+        private void SpawnScaryText()
+{
+    string[] madnessQuotes = {
+        "THEY ARE WATCHING",
+        "CANNOT ESCAPE",
+        "MIND COLLAPSING",
+        "ENDLESS VOID",
+        "MADNESS AWAITS",
+        "WHO IS THERE?",
+        "FORGET YOUR NAME",
+        "DREAMS BLEEDING",
+        "IT HURTS",
+        "NO WAY OUT"
+    };
+
+    string selectedText = madnessQuotes[_scaryRnd.Next(madnessQuotes.Length)];
+
+    bool movingRight = _scaryRnd.Next(2) == 0;
+    float startX = movingRight ? -300f : 2100f;
+    float startY = _scaryRnd.Next(150, 1000); // สุ่มความสูงในจอ
+    // ความเร็วสูงและสั่นประสาท
+    float speedX = movingRight ? _scaryRnd.Next(250, 450) : _scaryRnd.Next(-450, -250);
+
+    _scaryTexts.Add(new ScaryFloatingText
+    {
+        Text = selectedText,
+        Position = new Vector2(startX, startY),
+        Velocity = new Vector2(speedX, 0),
+        LifeSpan = 5.0f
+    });
+}
 
         public void UnloadContent() { }
     }
+    public class ScaryFloatingText
+{
+    public string Text { get; set; }
+    public Vector2 Position { get; set; }
+    public Vector2 Velocity { get; set; }
+    public float Alpha { get; set; } = 1.0f; // แก้ไขตรงนี้ให้ถูกต้อง
+    public float LifeSpan { get; set; } = 5.0f;
+}
 }

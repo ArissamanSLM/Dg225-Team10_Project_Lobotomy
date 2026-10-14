@@ -16,6 +16,7 @@ namespace DreamSlayerV2.Scenes
         public void Initialize()
         {
             _previousMouseState = Mouse.GetState();
+            TitleScene._soundInstance.Pitch = -0.2f; // Adjust the pitch of the sound effect instance
         }
 
         public void LoadContent(ContentManager content)
