@@ -141,8 +141,10 @@ namespace DreamSlayerV2.Scenes
                                 case NodeType.Event:
                                     SceneManager.ChangeScene(EventSceneFactory.CreateRandomEvent());
                                     break;
-                                case NodeType.Encounter:
                                 case NodeType.Start:
+                                    SceneManager.ChangeScene(new NodeStartScene());
+                                    break;
+                                case NodeType.Encounter:
                                 default:
                                     SceneManager.ChangeScene(new BattleScene(false, null));
                                     break;
