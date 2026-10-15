@@ -25,18 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:All16Card.png
 
-#begin Bad_effect_gain.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Bad_effect_gain.wav
-
-#begin Bad_effect_gain.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Bad_effect_gain.wav
-
 #begin Boss_logo.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -92,12 +80,11 @@
 /processorParam:TextureFormat=Color
 /build:HorrorForestDreamV2.png
 
-#begin NatureFonts.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:NatureFonts.spritefont
+#begin Montagem Celestial Esperanza [x90ocGRT6EE].mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Montagem Celestial Esperanza [x90ocGRT6EE].mp3
 
 #begin Next_Floor_logo.png
 /importer:TextureImporter
@@ -140,12 +127,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TheDarkCave.png
-
-#begin TitleMusic.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:TitleMusic.wav
 
 #begin UnrealWolf.png
 /importer:TextureImporter

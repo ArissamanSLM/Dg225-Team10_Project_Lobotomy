@@ -15,13 +15,12 @@ namespace DreamSlayerV2.Scenes
         private Vector2 CameraPosition = Vector2.Zero;
         private Vector2 scroll_factor = new Vector2(1.0f, 1f);
         private Texture2D _pixelTexture;
-        private Texture2D _nodeCircleTexture;
 
         private Texture2D _shopTexture;
         private Texture2D _eliteTexture;
         private Texture2D _bossTexture;
-        private Texture2D _encounterTexture;
         private Texture2D _eventTexture;
+        private Texture2D _encounterTexture;
         
 
         private Song NodeMusic;
@@ -66,12 +65,10 @@ namespace DreamSlayerV2.Scenes
                 _shopTexture = content.Load<Texture2D>("Shop_logo");
                 _eliteTexture = content.Load<Texture2D>("E_enemy2");
                 _bossTexture = content.Load<Texture2D>("Boss_logo");
-                _encounterTexture = content.Load<Texture2D>("enemy_logo");
                 _eventTexture = content.Load<Texture2D>("EventIcon");
-                
+                _encounterTexture = content.Load<Texture2D>("enermy_logo");
             }
             catch { }
-            _nodeCircleTexture = CreateCircleTexture(graphicsDevice, 64);
         }
 
         public void Update(GameTime gameTime)
@@ -102,7 +99,7 @@ namespace DreamSlayerV2.Scenes
 
                 foreach (var node in allNodes)
                 {
-                    Rectangle nodeRect = new Rectangle((int)node.Position.X - 32, (int)node.Position.Y - 32, 64, 64);
+                    Rectangle nodeRect = new Rectangle((int)node.Position.X - 20, (int)node.Position.Y - 20, 40, 40);
 
                     if (nodeRect.Contains(mouseWorldPos))
                     {
@@ -125,18 +122,16 @@ namespace DreamSlayerV2.Scenes
                             }
 
                             // Scene Switching
-                            // Scene Switching ใน NodeSelectScene.Cs
                             switch (node.Type)
                             {
-                                case NodeType.Boss:
-                                    // เมื่อคลิกโดนโหนด Boss (Stage 13) ให้เปิดฉากคัตซีนสนทนาก่อนสู้
-                                    SceneManager.ChangeScene(new BossScene(node));
+                                case NodeType.Victory:
+                                    SceneManager.ChangeScene(new GameOverScene(13,3,5,true,false,1));
                                     break;
+                                case NodeType.Boss:
                                 case NodeType.Elite:
-                                    SceneManager.ChangeScene(new BattleScene(true, node));
+                                    SceneManager.ChangeScene(new BattleScene(true, null));
                                     break;
                                 case NodeType.Shop:
-                                case NodeType.Rest:
                                     SceneManager.ChangeScene(new ShopRestScene());
                                     break;
                                 case NodeType.Event:
@@ -148,15 +143,14 @@ namespace DreamSlayerV2.Scenes
                                     SceneManager.ChangeScene(new BattleScene(false, null));
                                     break;
                             }
+                            break;
                         }
                     }
                 }
             }
+
+            _previousMouseState = currentMouseState;
         }
-        
-            
-            
-        
 
         private void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, float thickness = 3f)
         {
@@ -166,46 +160,6 @@ namespace DreamSlayerV2.Scenes
 
             spriteBatch.Draw(_pixelTexture, start, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0f);
         }
-
-        private static Texture2D CreateCircleTexture(GraphicsDevice graphicsDevice, int diameter)
-        {
-            var texture = new Texture2D(graphicsDevice, diameter, diameter);
-            var pixels = new Color[diameter * diameter];
-            float center = (diameter - 1) / 2f;
-            float radius = diameter / 2f - 1f;
-
-            for (int y = 0; y < diameter; y++)
-            {
-                for (int x = 0; x < diameter; x++)
-                {
-                    float distance = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
-                    byte coverage = (byte)(MathHelper.Clamp(radius + 0.5f - distance, 0f, 1f) * 255f);
-                    pixels[y * diameter + x] = new Color(coverage, coverage, coverage, coverage);
-                }
-            }
-
-            texture.SetData(pixels);
-            return texture;
-        }
-
-        private static Color GetNodeColor(NodeType type) => type switch
-        {
-            NodeType.Start => Color.LightSkyBlue,
-            NodeType.Encounter => Color.Silver,
-            NodeType.Elite => Color.OrangeRed,
-            NodeType.Shop => Color.Gold,
-            NodeType.Rest => Color.MediumSeaGreen,
-            NodeType.Event => Color.MediumPurple,
-            NodeType.Boss => Color.Crimson,
-            _ => Color.White
-        };
-
-        private static string GetNodeGlyph(NodeType type) => type switch
-        {
-            NodeType.Start => "S",
-            NodeType.Rest => "+",
-            _ => "?"
-        };
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -222,8 +176,8 @@ namespace DreamSlayerV2.Scenes
                     Vector2 startPos = node.Position - CameraPosition * scroll_factor;
                     Vector2 endPos = nextNode.Position - CameraPosition * scroll_factor;
 
-                    Color lineCol = (node.IsVisited && nextNode.IsAvailable) ? Color.Gold : new Color(78, 88, 91);
-                    DrawLine(spriteBatch, startPos, endPos, lineCol, 3f);
+                    Color lineCol = (node.IsVisited && nextNode.IsAvailable) ? Color.Gold : Color.DarkSlateBlue;
+                    DrawLine(spriteBatch, startPos, endPos, lineCol, 2.5f);
                 }
             }
 
@@ -231,12 +185,9 @@ namespace DreamSlayerV2.Scenes
             foreach (var node in allNodes)
             {
                 Vector2 drawPos = node.Position - CameraPosition * scroll_factor;
-                Color nodeColor = GetNodeColor(node.Type);
-                Color ringColor = node.IsVisited
-                    ? Color.Lerp(nodeColor, Color.Black, 0.5f)
-                    : node.IsAvailable ? Color.White : nodeColor * 0.45f;
-                
-                Color tintColor = Color.LightGray; // Default locked/unreachable state
+                Rectangle nodeRect = new Rectangle((int)drawPos.X - 20, (int)drawPos.Y - 20, 40, 40);
+
+                Color tintColor = Color.DarkGray; // Default locked/unreachable state
                 if (node.IsVisited)
                 {
                     tintColor = Color.Gray;
@@ -255,43 +206,32 @@ namespace DreamSlayerV2.Scenes
                     NodeType.Shop => _shopTexture,
                     NodeType.Elite => _eliteTexture,
                     NodeType.Boss => _bossTexture,
-                    NodeType.Encounter => _encounterTexture,
                     NodeType.Event => _eventTexture,
+                    NodeType.Encounter => _encounterTexture,
                     _ => null
                 };
-                spriteBatch.Draw(
-    _nodeCircleTexture,
-    drawPos,
-    null,
-    ringColor,
-    0f,
-    new Vector2(_nodeCircleTexture.Width / 2f, _nodeCircleTexture.Height / 2f),
-    1f,
-    SpriteEffects.None,
-    0f);
-                if (currentTexture != null)
-                {
-                    float scale = Math.Min(30f / currentTexture.Width, 30f / currentTexture.Height);
-                    Vector2 iconSize = new Vector2(currentTexture.Width * scale, currentTexture.Height * scale);
-                    Vector2 iconPosition = drawPos - iconSize / 2f;
-                    Color iconTint = node.IsVisited ? Color.Gray : node.IsAvailable ? Color.White : Color.LightGray * 0.55f;
-                    spriteBatch.Draw(currentTexture, iconPosition, null, iconTint, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                }
-                else
-                {
-                    string glyph = GetNodeGlyph(node.Type);
-                    Vector2 glyphSize = _font.MeasureString(glyph);
-                    Vector2 glyphPosition = drawPos - glyphSize / 2f;
-                    Color glyphColor = node.IsAvailable ? nodeColor : node.IsVisited ? Color.Gray : Color.LightGray * 0.65f;
-                    spriteBatch.DrawString(_font, glyph, glyphPosition, glyphColor);
-                }
 
-                string label = node.GetArknightsLabel();
-                Vector2 textSize = _font.MeasureString(label);
-                Vector2 textPosition = new Vector2(drawPos.X - textSize.X / 2f, drawPos.Y + 36);
-                Color textColor = node.IsVisited ? Color.Gray : node.IsAvailable ? Color.Gold : Color.LightGray;
-                spriteBatch.DrawString(_font, label, textPosition + Vector2.One, Color.Black);
-                spriteBatch.DrawString(_font, label, textPosition, textColor);
+                if (currentTexture != null)
+                    spriteBatch.Draw(currentTexture, nodeRect, tintColor);
+                else
+                    spriteBatch.Draw(_pixelTexture, nodeRect, tintColor);
+
+                string alertText = node.Type switch
+                {
+                    NodeType.Shop => "[ REST / SHOP ]",
+                    NodeType.Elite => "!! WARNING: ELITE !!",
+                    NodeType.Boss => "*** FINAL BOSS ***",
+                    NodeType.Event => "? EVENT ?",
+                    NodeType.Start => "START",
+                    _ => node.Name
+                };
+
+                Color textColor = node.IsAvailable ? Color.Gold : Color.Gray;
+
+                Vector2 textSize = _font.MeasureString(alertText);
+                Vector2 textPosition = new Vector2(drawPos.X - (textSize.X / 2), drawPos.Y - 45);
+
+                spriteBatch.DrawString(_font, alertText, textPosition, textColor);
             }
 
             spriteBatch.End();

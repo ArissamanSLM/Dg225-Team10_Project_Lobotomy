@@ -22,7 +22,6 @@ namespace DreamSlayerV2.Scenes
         public void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("File");
-            
         }
 
         public void Update(GameTime gameTime)
@@ -39,10 +38,7 @@ namespace DreamSlayerV2.Scenes
             {
                 SceneManager.ChangeScene(new NodeSelectScene());
             }
-            
-            
-                TitleScene._soundInstance.Pitch -= 0.0008f; // Gradually decrease the pitch of the sound effect instance
-        
+
             _previousMouseState = currentMouseState;
         }
 
@@ -61,7 +57,7 @@ namespace DreamSlayerV2.Scenes
 
         public void UnloadContent() 
         {
-            TitleScene._soundInstance.Stop();
+            MediaPlayer.Stop();
         }
     }
 }

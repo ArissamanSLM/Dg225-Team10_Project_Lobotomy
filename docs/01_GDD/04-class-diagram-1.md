@@ -56,24 +56,12 @@ classDiagram
     }
 
     class BattleScene {
-        -BaseEnemy _enemy
+        -MonsterController _monster
         -PlayerController _player
         -MapNode targetNode
         -TryPlayCard(int)
-        -CompleteTurn()
+        -ExecuteEnemyTurn()
     }
-
-    class BossScene {
-        -MapNode _targetNode
-        -PlayerController _player
-        -BattleScene _battleToResume
-        -LoadCurrentDialogue()
-    }
-
-    BaseEnemy <|-- MonsterBattle
-    BaseEnemy <|-- BossBattle
-    BossScene --> BattleScene : Starts or resumes battle
-    BossScene --> PlayerController : Heals at Phase 2
 
     class ShopRestScene {
         -bool boughtHeal
@@ -418,7 +406,6 @@ graph TD
     IScene <|.. TitleScene
     IScene <|.. NodeSelectScene
     IScene <|.. BattleScene
-    IScene <|.. BossScene
     IScene <|.. ShopRestScene
     IScene <|.. RewardScene
     IScene <|.. GameOverScene
@@ -446,9 +433,8 @@ graph TD
     NodeSelectScene --> MapNode : Holds Nodes
   
     BattleScene --> PlayerController : Manages
-    BattleScene --> BaseEnemy : Owns Active Enemy
+    BattleScene --> MonsterController : Controls Encounter
     BattleScene --> MapNode : Completes Node
-    NodeSelectScene --> BossScene : Opens Note 13 dialogue
   
     MonsterController --> EnemyType : Uses
     MonsterController ..> PlayerController : Attacks & Adds Hazard Cards
