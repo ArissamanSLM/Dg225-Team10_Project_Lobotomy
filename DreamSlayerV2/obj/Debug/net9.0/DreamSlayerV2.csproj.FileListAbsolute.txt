@@ -57,7 +57,6 @@ C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\E_enemy2.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\File.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\HorrorForestDreamV2.xnb
-C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Montagem Celestial Esperanza [x90ocGRT6EE].ogg
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\NatureFonts.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Next_Floor_logo.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Shop_logo.xnb

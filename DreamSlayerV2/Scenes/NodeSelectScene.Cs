@@ -124,7 +124,6 @@ namespace DreamSlayerV2.Scenes
                                 connected.IsAvailable = true;
                             }
 
-                            // Scene Switching
                             // Scene Switching ใน NodeSelectScene.Cs
                             switch (node.Type)
                             {
