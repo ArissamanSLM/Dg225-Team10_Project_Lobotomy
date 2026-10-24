@@ -74,133 +74,128 @@ namespace DreamSlayerV2
         }
 
         public void CardReader()
-        {
-            switch (Type)
-            {
-                case CardType.Attack:
-                    switch (Name)
-                    {
-                        case "Strike":
-                            Rarity = CardRarity.Common;
-                            InHandDamage = 6;
-                            Description = "Basic attack standard strike.";
-                            Does = $"Deals {InHandDamage} damage. Cost: {Cost} Sanity.";
-                            break;
+{
+    // กำหนด CardID ตามพิกัด (Col, Row) บน Sprite Sheet 4x4 
+    // สูตรคำนวณตำแหน่ง: CardID = (Row - 1) * 4 + (Col - 1)
+    switch (Name)
+    {
+        // --- COLUMN 1 ---
+        case "Strike":
+            CardID = 0; // (Col 1, Row 1)
+            Rarity = CardRarity.Common;
+            InHandDamage = 6;
+            Description = "Basic attack standard strike.";
+            Does = $"Deals {InHandDamage} damage. Cost: {Cost} Sanity.";
+            break;
 
-                        case "Piece":
-                            Rarity = CardRarity.Uncommon;
-                            InHandDamage = 8;
-                            Description = "Target an enemy to expose weak points.";
-                            Does = $"Deals {InHandDamage} damage and applies 1 Valuable (+50% DMG taken). Cost: {Cost} Sanity.";
-                            break;
+        case "All in One":
+            CardID = 4; // (Col 1, Row 2)
+            Rarity = CardRarity.Rare;
+            Description = "Combines every Strike card in hand into a powerful burst.";
+            Does = $"Deals 6 damage for every Strike in hand, then discards all Strikes. Cost: {Cost} Sanity.";
+            break;
 
-                        case "All in One":
-                            Rarity = CardRarity.Rare;
-                            Description = "Combines every Strike card in hand into a powerful burst.";
-                            Does = $"Deals 6 damage for every Strike in hand, then discards all Strikes. Cost: {Cost} Sanity.";
-                            break;
+        case "Mighty Defend Attack":
+            CardID = 8; // (Col 1, Row 3)
+            Rarity = CardRarity.UltraRare;
+            Description = "Converts your remaining Defense into offensive force.";
+            Does = $"Deals damage equal to your current Shield. Sets your Sanity to 0.";
+            break;
 
-                        case "Mighty Defend Attack":
-                            Rarity = CardRarity.UltraRare;
-                            Description = "Converts your remaining Defense into offensive force.";
-                            Does = $"Deals damage equal to your current Shield. Sets your Sanity to 0.";
-                            break;
-                    }
-                    break;
+        case "Piece":
+            CardID = 12; // (Col 1, Row 4)
+            Rarity = CardRarity.Rare;
+            Description = "Target an enemy to expose weak points.";
+            Does = $"Deals 8 damage and applies 1 Valuable (+50% DMG taken). Cost: {Cost} Sanity.";
+            break;
 
-                case CardType.Defense:
-                    switch (Name)
-                    {
-                        case "Defend":
-                            Rarity = CardRarity.Common;
-                            Description = "Standard defensive stance.";
-                            Does = $"Gains 6 Defense. Cost: {Cost} Sanity.";
-                            break;
+        // --- COLUMN 2 ---
+        case "Defend":
+            CardID = 1; // (Col 2, Row 1)
+            Rarity = CardRarity.Common;
+            Description = "Standard defensive stance.";
+            Does = $"Gains 6 Defense. Cost: {Cost} Sanity.";
+            break;
 
-                        case "No Fight":
-                            Rarity = CardRarity.Rare;
-                            Description = "Consolidates all defensive maneuvers into one burst of armor.";
-                            Does = $"Gains 6 Defense for every Defend card in hand, then discards all Defends. Cost: {Cost} Sanity.";
-                            break;
+        case "No Fight":
+            CardID = 5; // (Col 2, Row 2)
+            Rarity = CardRarity.Rare;
+            Description = "Consolidates all defensive maneuvers into one burst of armor.";
+            Does = $"Gains 6 Defense for every Defend card in hand, then discards all Defends. Cost: {Cost} Sanity.";
+            break;
 
-                        case "Mirror Shield":
-                            Rarity = CardRarity.UltraRare;
-                            Description = "Doubles existing protection and adds a heavy bonus barrier.";
-                            Does = $"Doubles current Defense and adds +10 Defense. Cost: {Cost} Sanity.";
-                            break;
-                    }
-                    break;
+        case "Mirror Shield":
+            CardID = 9; // (Col 2, Row 3)
+            Rarity = CardRarity.UltraRare;
+            Description = "Doubles existing protection and adds a heavy bonus barrier.";
+            Does = $"Doubles current Defense and adds +10 Defense. Cost: {Cost} Sanity.";
+            break;
 
-                case CardType.Utility:
-                    switch (Name)
-                    {
-                        case "Inspection":
-                            Rarity = CardRarity.Common;
-                            Description = "Analyze the battle to draw new tactical options.";
-                            Does = $"Draw 1 Card. Cost: {Cost} Sanity.";
-                            break;
+        case "Omega":
+            CardID = 13; // (Col 2, Row 4) -> รูป Omega (Ω) อยู่ที่นี่!
+            Rarity = CardRarity.UltraRare;
+            Description = "Unleash the ultimate cosmic strike.";
+            Does = $"Deal 50 Damage to Enemy and Next Card do double Effects. Removes card. Cost: All Sanity.";
+            break;
 
-                        case "Powerup":
-                            Rarity = CardRarity.Rare;
-                            Description = "Empower all attack techniques for the rest of the encounter.";
-                            Does = $"Gain +1 Base Damage to all Attack cards permanently this battle. Cost: {Cost} Sanity.";
-                            break;
+        // --- COLUMN 3 ---
+        case "Inspection":
+            CardID = 2; // (Col 3, Row 1)
+            Rarity = CardRarity.Common;
+            Description = "Analyze the battle to draw new tactical options.";
+            Does = $"Draw 1 Card. Cost: {Cost} Sanity.";
+            break;
 
-                        case "Clock":
-                            Rarity = CardRarity.UltraRare;
-                            Description = "Store accumulated energy and unleash a multiplied strike.";
-                            Does = $"Stores turn damage and releases with 1.2x extra damage at turn end. Cost: {Cost} Sanity.";
-                            break;
-                    }
-                    break;
+        case "Powerup":
+            CardID = 6; // (Col 3, Row 2)
+            Rarity = CardRarity.Rare;
+            Description = "Empower all attack techniques for the rest of the encounter.";
+            Does = $"Gain +1 Base Damage to all Attack cards permanently this battle. Cost: {Cost} Sanity.";
+            break;
 
-                case CardType.Heal:
-                    switch (Name)
-                    {
-                        case "Restore":
-                            Rarity = CardRarity.Uncommon;
-                            Description = "Apply continuous mental recovery.";
-                            Does = $"Heals 4 HP per turn for 2 turns. Cost: {Cost} Sanity.";
-                            break;
+        case "Clock":
+            CardID = 10; // (Col 3, Row 3)
+            Rarity = CardRarity.Rare;
+            Description = "Store accumulated energy and unleash a multiplied strike.";
+            Does = $"Stores turn damage and releases with 1.2x extra damage at turn end. Cost: {Cost} Sanity.";
+            break;
 
-                        case "Focus":
-                            Rarity = CardRarity.UltraRare;
-                            Description = "Clear your mind and regain focused Sanity.";
-                            Does = $"Restore 20 Sanity. Exhausts (1 use per encounter). Cost: {Cost} Sanity.";
-                            break;
+        case "Alpha":
+            CardID = 14; // (Col 3, Row 4) -> รูป Alpha (α) อยู่ที่นี่!
+            Rarity = CardRarity.Rare;
+            Description = "The first step toward ancient cosmic knowledge.";
+            Does = $"Gain 1 Beta Card and remove from the deck. Cost: {Cost} Sanity.";
+            break;
 
-                        case "Aura Heal":
-                            Rarity = CardRarity.UltraRare;
-                            Description = "Channel powerful aura energy to restore body and mind.";
-                            Does = $"Restore 30 Sanity and 15 HP. Exhausts (1 use per encounter). Cost: {Cost} Sanity.";
-                            break;
-                    }
-                    break;
+        // --- COLUMN 4 ---
+        case "Restore":
+            CardID = 3; // (Col 4, Row 1)
+            Rarity = CardRarity.Common;
+            Description = "Apply continuous mental recovery.";
+            Does = $"Heal 4 for 2 turns. Cost: {Cost} Sanity.";
+            break;
 
-                case CardType.Special:
-                    switch (Name)
-                    {
+        case "Focus":
+            CardID = 7; // (Col 4, Row 2)
+            Rarity = CardRarity.UltraRare;
+            Description = "Clear your mind and regain focused Sanity.";
+            Does = $"Heal 20 Sanity (1 Use per Encounter) and remove from the deck. Cost: {Cost} Sanity.";
+            break;
 
-                        case "Alpha":
-                            Rarity = CardRarity.Rare;
-                            Description = "The first step toward ancient cosmic knowledge.";
-                            Does = $"Add 1 Beta card to hand. Exhausts. Cost: {Cost} Sanity.";
-                            break;
+        case "Aura Heal":
+            CardID = 11; // (Col 4, Row 3)
+            Rarity = CardRarity.Rare;
+            Description = "Channel powerful aura energy to restore body and mind.";
+            Does = $"Heal 30 sanity and 15 Hp (1 Use per Encounter) and remove from the deck. Cost: {Cost} Sanity.";
+            break;
 
-                        case "Beta":
-                            Rarity = CardRarity.UltraRare;
-                            Description = "Channel deep cosmic forces to replenish mind energy.";
-                            Does = $"Restore 100 Sanity and add 1 Omega card to hand. Exhausts. Cost: {Cost} Sanity.";
-                            break;
-
-                        case "Omega":
-                            Rarity = CardRarity.Special;
-                            Description = "Unleash the ultimate cosmic strike.";
-                            Does = $"Deal 50 Damage to ALL enemies and apply 3 Valuable. Exhausts. Cost: {Cost} Sanity.";
-                            break;
-                    }
-                    break;
-            }
-        }
+        case "Beta":
+            CardID = 15; // (Col 4, Row 4) -> รูป Beta (β) อยู่ที่นี่!
+            Rarity = CardRarity.UltraRare;
+            Description = "Channel deep cosmic forces to replenish mind energy.";
+            Does = $"Restore 100 Sanity And gain 1 Omega Card And Remove Beta Card from the deck. Cost: {Cost} Sanity.";
+            break;
+    }
+}
     }
 }

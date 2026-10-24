@@ -161,6 +161,8 @@ namespace DreamSlayerV2.Scenes
                     }
                 }
             }
+
+            _previousMouseState = currentMouseState;
         }
         
             
