@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace DreamSlayerV2.Scenes
 {
@@ -12,7 +13,8 @@ namespace DreamSlayerV2.Scenes
         private string promptText = "Click Here to Continue...";
         private Vector2 promptPos = new Vector2(100, 600);
         private MouseState _previousMouseState;
-
+        public static SoundEffect TitleMusic;
+        public static SoundEffectInstance _soundInstance; // <--- Add 'static' here
         public void Initialize()
         {
             _previousMouseState = Mouse.GetState();
@@ -21,6 +23,11 @@ namespace DreamSlayerV2.Scenes
         public void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("File");
+            SoundEffect badEffect = content.Load<SoundEffect>("TitleMusic");
+            _soundInstance = badEffect.CreateInstance();
+            _soundInstance.Volume = 1.0f;
+            _soundInstance.Pitch = 0.07f;
+            _soundInstance.IsLooped = true;
         }
 
         public void Update(GameTime gameTime)

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace DreamSlayerV2.Scenes
-{
+{   
     public class NodeStartScene : IScene
     {
         private const int CardChoiceCount = 3;

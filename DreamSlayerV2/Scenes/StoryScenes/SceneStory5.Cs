@@ -41,7 +41,7 @@ namespace DreamSlayerV2.Scenes
             }
             
             
-                TitleScene._soundInstance.Pitch -= 0.0008f; // Gradually decrease the pitch of the sound effect instance
+                SceneStory1._soundInstance.Pitch -= 0.0008f; // Gradually decrease the pitch of the sound effect instance
         
             _previousMouseState = currentMouseState;
         }
@@ -61,7 +61,7 @@ namespace DreamSlayerV2.Scenes
 
         public void UnloadContent() 
         {
-            TitleScene._soundInstance.Stop();
+            SceneStory1._soundInstance.Stop();
         }
     }
 }

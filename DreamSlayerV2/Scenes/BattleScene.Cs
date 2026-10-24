@@ -70,7 +70,7 @@ namespace DreamSlayerV2.Scenes
     BgTexture[0] = content.Load<Texture2D>("HorrorForestDreamV2");
     BgTexture[1] = content.Load<Texture2D>("HorrorForestDreamV2");
     BgTexture[2] = content.Load<Texture2D>("TheDarkCave");
-    CardTexture = content.Load<Texture2D>("All16Card");
+    CardTexture = content.Load<Texture2D>("All16Card (1)");
 
     // Load SFX (.wav)
     SoundEffect badEffect = content.Load<SoundEffect>("Bad_Effect_gain");
@@ -206,57 +206,143 @@ else
 }
         }
 
-        private void TryPlayCard(int cardIndex)
+private void TryPlayCard(int cardIndex)
+{
+    var selectedCard = _player.Hand[cardIndex];
+    if (selectedCard == null) return;
+
+    // ตรวจสอบการ์ดที่เล่นไม่ได้ (เช่น Curse / Hazard)
+    if (selectedCard.IsUnplayable) return;
+
+    int sanityCost = selectedCard.Cost; // Cost ใน CardManager คือค่า Sanity ที่ต้องจ่าย
+
+    // เงื่อนไขพิเศษ: Mighty Defend Attack เซ็ต Sanity เหลือ 0 ทันที
+    if (selectedCard.Name == "Mighty Defend Attack")
+    {
+        int damage = _player.Defense;
+        ApplyDamageToEnemy(damage);
+        _player.Sanity = 0; // จุดจบใน Dreamland (ความตาย)
+        _player.UseCard(cardIndex);
+        return;
+    }
+
+    // ตรวจสอบว่ามี Sanity พอจ่ายไหม
+    if (_player.Sanity >= sanityCost)
+    {
+        _player.Sanity -= sanityCost;
+
+        switch (selectedCard.Name)
         {
-            var selectedCard = _player.Hand[cardIndex];
-            if (selectedCard == null) return;
+            case "Strike":
+                ApplyDamageToEnemy(selectedCard.InHandDamage);
+                break;
 
-            int sanityCost = selectedCard.Cost * 10;
+            case "Piece":
+                ApplyDamageToEnemy(8);
+                // TODO: เพิ่มดีบัฟ Valuable ใส่ศัตรู
+                break;
 
-            if (_player.Sanity >= sanityCost)
-            {
-                _player.Sanity -= sanityCost;
-
-                if (selectedCard.Type == CardManager.CardType.Attack)
+            case "All in One":
+                int strikeCount = 0;
+                for (int i = 0; i < _player.Hand.Length; i++)
                 {
-                    int damage = selectedCard.InHandDamage;
-
-                    if (_enemy.Defense > 0)
+                    if (_player.Hand[i] != null && _player.Hand[i].Name == "Strike")
                     {
-                        if (damage <= _enemy.Defense)
-                        {
-                            _enemy.Defense -= damage;
-                        }
-                        else
-                        {
-                            damage -= _enemy.Defense;
-                            _enemy.Defense = 0;
-                            _enemy.HP -= damage;
-                        }
-                    }
-                    else
-                    {
-                        _enemy.HP -= damage;
+                        strikeCount++;
+                        _player.Hand[i] = null; // ทิ้งการ์ด Strike ในมือ
                     }
                 }
-                else if (selectedCard.Type == CardManager.CardType.Heal)
+                ApplyDamageToEnemy(6 * strikeCount);
+                break;
+
+            case "Defend":
+                _player.Defense += 6;
+                break;
+
+            case "No Fight":
+                int defendCount = 0;
+                for (int i = 0; i < _player.Hand.Length; i++)
                 {
-                    int healAmount = 8;
-                    _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + healAmount);
+                    if (_player.Hand[i] != null && _player.Hand[i].Name == "Defend")
+                    {
+                        defendCount++;
+                        _player.Hand[i] = null;
+                    }
+                }
+                _player.Defense += (6 * defendCount);
+                break;
+
+            case "Mirror Shield":
+                _player.Defense = (_player.Defense * 2) + 10;
+                break;
+
+            case "Inspection":
+                _player.DrawCard(); // เรียกจั่วการ์ด 1 ใบ
+                break;
+
+            case "Powerup":
+                // เพิ่มดาเมจถาวรให้การ์ดโจมตี (ถ้ามีฟังก์ชันรองรับ หรือเพิ่มตัวแปรโบนัสใน PlayerController)
+                break;
+
+            case "Restore":
+                _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + 8);
+                break;
+
+            case "Focus":
+                _player.Sanity = Math.Min(100, _player.Sanity + 20);
+                // ใช้เสร็จแล้วลบออกจากการต่อสู้รอบนี้ (Exhaust) แทนการลง Discard Pile
+                _player.Hand[cardIndex] = null; 
+                return;
+
+            case "Aura Heal":
+                _player.Sanity = Math.Min(100, _player.Sanity + 30);
+                _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + 15);
+                _player.Hand[cardIndex] = null;
+                return;
+
+            default:
+                // Fallback ตาม CardType พื้นฐาน
+                if (selectedCard.Type == CardManager.CardType.Attack)
+                {
+                    ApplyDamageToEnemy(selectedCard.InHandDamage);
                 }
                 else if (selectedCard.Type == CardManager.CardType.Defense)
                 {
-                    int increaseDefense = 6;
-                    _player.Defense += increaseDefense;
+                    _player.Defense += 6;
                 }
-                // else if (selectedCard.Type == CardManager.CardType.Utility)
-                // {
-                    
-                // }
-
-                _player.UseCard(cardIndex);
-            }
+                break;
         }
+
+        // ส่งการ์ดลง Discard Pile ปกติ (ยกเว้นกรณี Exhaust ที่จัดการ Hand[cardIndex] = null ไปแล้ว)
+        if (_player.Hand[cardIndex] != null)
+        {
+            _player.UseCard(cardIndex);
+        }
+    }
+}
+
+private void ApplyDamageToEnemy(int damage)
+{
+    // รองรับทั้งคลาส MonsterBattle และ BossBattle (ผ่าน BaseEnemy)
+    if (_enemy.Defense > 0)
+    {
+        if (damage <= _enemy.Defense)
+        {
+            _enemy.Defense -= damage;
+        }
+        else
+        {
+            damage -= _enemy.Defense;
+            _enemy.Defense = 0;
+            _enemy.HP -= damage;
+        }
+    }
+    else
+    {
+        _enemy.HP -= damage;
+    }
+}
+// ฟังก์ชันช่วยคำนวณการหักเกราะและเลือดของศัตรู
 
         private void CompleteTurn()
         {
@@ -343,6 +429,10 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
             int cardHeight = 200;
             CardManager hoveredCard = null;
 
+            // คำนวณขนาดของแต่ละช่องการ์ดใน Texture 4x4 Grid
+            int sourceWidth = CardTexture.Width / 4;
+            int sourceHeight = CardTexture.Height / 4;
+
             for (int i = 0; i < _player.Hand.Length; i++)
             {
                 if (_player.Hand[i] != null)
@@ -357,23 +447,29 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
                     if (isHovered)
                     {
                         hoveredCard = card;
-                        cardY -= 25;
+                        cardY -= 25; // ยกการ์ดขึ้นเมื่อเอาเมาส์ชี้
                     }
 
-                    int textureIndex = card.Type switch
-                    {
-                        CardManager.CardType.Attack => 0,
-                        CardManager.CardType.Defense => 1,
-                        CardManager.CardType.Utility => 2,
-                        CardManager.CardType.Heal => 3,
-                        _ => 3
-                    };
+                    // คำนวณพิกัด X และ Y บน Sprite Sheet (4x4 Grid)
+                    // สมมติว่า CardID มีค่าตั้งแต่ 0 ถึง 15 (เรียงตามลำดับในภาพ All16Card)
+                    int col = card.CardID % 4;
+                    int row = card.CardID / 4;
 
-                    int sourceWidth = CardTexture.Width / 4;
-                    Rectangle sourceRect = new Rectangle(textureIndex * sourceWidth, 0, sourceWidth, CardTexture.Height / 4);
+                    Rectangle sourceRect = new Rectangle(
+                        col * sourceWidth, 
+                        row * sourceHeight, 
+                        sourceWidth, 
+                        sourceHeight
+                    );
 
+                    // วาดรูปการ์ดจาก Sprite Sheet
                     spriteBatch.Draw(CardTexture, new Rectangle((int)cardX, (int)cardY, cardWidth, cardHeight), sourceRect, Color.White);
+                    
+                    // แสดงตัวเลขคีย์ลัด [1], [2], [3] บนการ์ด
                     spriteBatch.DrawString(_font, $"[{i + 1}]", new Vector2(cardX + 10, cardY + 10), Color.Gold);
+                    
+                    // แสดงชื่อการ์ดตัวย่อหรือ Cost Sanity บนการ์ด
+                    spriteBatch.DrawString(_font, $"{card.Cost * 10}", new Vector2(cardX + 10, cardY + 160), Color.Cyan);
                 }
             }
 

@@ -16,13 +16,14 @@ namespace DreamSlayerV2.Scenes
         private Texture2D BgTitle;
         private SpriteFont _font;
         private SpriteFont NatureFont;
-        public static SoundEffectInstance _soundInstance;
+        private Song NightmareSong;
+        
 
         private string titleText = "DREAM SLAYER";
         private string startText = "Start Game";
 
-        // รายการเก็บข้อความลอยไม่เกิน 4 ข้อความ
-        private List<FloatingHopeText> _floatingTexts = new List<FloatingHopeText>();
+        // รายการเก็บข้อความฝันร้ายลอย
+        private List<FloatingNightmareText> _floatingTexts = new List<FloatingNightmareText>();
         private float _spawnTimer = 0f;
 
         public void Initialize() { }
@@ -31,41 +32,37 @@ namespace DreamSlayerV2.Scenes
         {
             _font = content.Load<SpriteFont>("File");
             NatureFont = content.Load<SpriteFont>("NatureFonts");
-            SoundEffect badEffect = content.Load<SoundEffect>("TitleMusic");
-            _soundInstance = badEffect.CreateInstance();
-            _soundInstance.Volume = 1.0f;
-            _soundInstance.Pitch = 0.03f;
-            _soundInstance.IsLooped = true;
-            _soundInstance.Play();
+            NightmareSong = content.Load<Song>("leberch-nightmare-611631");
+            
             MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = 1.0f;
+            MediaPlayer.Play(NightmareSong);
         }
 
         public void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // 1. สุ่มสร้างข้อความใหม่เมื่อมีน้อยกว่า 4 ข้อความ
+            // 1. สุ่มสร้างข้อความใหม่
             _spawnTimer += dt;
             if (_floatingTexts.Count < 4 && _spawnTimer > 1.5f)
             {
                 _spawnTimer = 0f;
-                SpawnRandomHopeText();
+                SpawnRandomNightmareText();
             }
 
-            // 2. อัปเดตตำแหน่งและความโปร่งใส (Fade away) ของแต่ละข้อความ
+            // 2. อัปเดตตำแหน่งและความโปร่งใส (Fade away)
             for (int i = _floatingTexts.Count - 1; i >= 0; i--)
             {
                 var item = _floatingTexts[i];
                 item.Position += item.Velocity * dt;
                 item.LifeSpan -= dt;
 
-                // ค่อยๆ ลด Alpha ลงเมื่อใกล้หมดอายุ
                 if (item.LifeSpan < 1.0f)
                 {
                     item.Alpha = item.LifeSpan; 
                 }
 
-                // ลบออกเมื่อหมดเวลาหรือลอยออกนอกจอ
                 if (item.LifeSpan <= 0f)
                 {
                     _floatingTexts.RemoveAt(i);
@@ -80,31 +77,34 @@ namespace DreamSlayerV2.Scenes
 
             if (startButtonBounds.Contains(mouse.Position) && mouse.LeftButton == ButtonState.Pressed)
             {
-                
                 SceneManager.ChangeScene(new SceneStory1());
             }
         }
 
-        private void SpawnRandomHopeText()
+        private void SpawnRandomNightmareText()
         {
-            // ดึงค่าจาก Enum สุ่มมาแสดง
-            Array values = Enum.GetValues(typeof(StringScrollingText));
-            StringScrollingText randomEnum = (StringScrollingText)values.GetValue(_rnd.Next(values.Length));
+            // สุ่มข้อความ Nightmare
+            Array values = Enum.GetValues(typeof(StringNightmareText));
+            StringNightmareText randomEnum = (StringNightmareText)values.GetValue(_rnd.Next(values.Length));
             string selectedText = randomEnum.ToString();
 
-            // สุ่มฝั่งเกิด (ซ้ายไปขวา หรือ ขวาไปซ้าย)
-            bool movingRight = _rnd.Next(2) == 0;
-            float startX = movingRight ? -200f : 2100f;
-            float startY = _rnd.Next(200, 700); // สุ่มความสูงในจอ
+            // ตำแหน่งกึ่งกลางจอ (960, 540) ปรับแต่งด้วยช่วง +800 และ -80
+            float startX = 960f + _rnd.Next(-800, 800);
+            float startY = 540f + _rnd.Next(-80, 80);
 
-            // ** ปรับความเร็วตรงนี้ให้มากขึ้น (เช่น 300 ถึง 500) **
-            float speedX = movingRight ? _rnd.Next(200, 400) : _rnd.Next(-400, -200);
+            float speedX = _rnd.Next(-100, 100);
+            float speedY = _rnd.Next(-50, 50);
 
-            _floatingTexts.Add(new FloatingHopeText
+            // สุ่มมุมหมุนระหว่าง -40 ถึง +40องศา (แปลงเป็น เรเดียน)
+            float randomDegrees = _rnd.Next(-40, 41);
+            float rotationAngle = MathHelper.ToRadians(randomDegrees);
+
+            _floatingTexts.Add(new FloatingNightmareText
             {
                 Text = selectedText,
                 Position = new Vector2(startX, startY),
-                Velocity = new Vector2(speedX, 0),
+                Velocity = new Vector2(speedX, speedY),
+                Rotation = rotationAngle,
                 LifeSpan = 5.0f
             });
         }
@@ -113,11 +113,25 @@ namespace DreamSlayerV2.Scenes
         {
             spriteBatch.Begin();
 
-            // วาดข้อความลอยทั้งหมดด้วย foreach (สีเขียว และรองรับ Fade Alpha)
+            // วาดข้อความ Nightmare แบบหมุนรอบจุดศูนย์กลาง (Centered Origin)
             foreach (var item in _floatingTexts)
             {
-                Color Black = Color.Black * item.Alpha;
-                spriteBatch.DrawString(NatureFont, item.Text, item.Position, Black);
+                Color nightmareColor = Color.DarkRed * item.Alpha;
+                
+                // คำนวณจุดกึ่งกลางของข้อความเพื่อให้หมุนจากตรงกลาง
+                Vector2 origin = NatureFont.MeasureString(item.Text) / 2f;
+
+                spriteBatch.DrawString(
+                    NatureFont, 
+                    item.Text, 
+                    item.Position, 
+                    nightmareColor, 
+                    item.Rotation, 
+                    origin, 
+                    1.0f, 
+                    SpriteEffects.None, 
+                    0f
+                );
             }
 
             // วาดหัวข้อและปุ่ม Start
@@ -132,33 +146,38 @@ namespace DreamSlayerV2.Scenes
             spriteBatch.End();
         }
 
-        public void UnloadContent() { }
+        public void UnloadContent()
+        {
+            MediaPlayer.Stop();
+        }
     }
 
-    enum StringScrollingText
+    enum StringNightmareText
     {
-        Life,
-        Youcandoit,
-        DontGiveUp,
-        KeepGoing,
-        NeverSurrender,
-        StayStrong,
-        BelieveInYourself,
-        YouAreCapable,
-        Hope,
-        Courage,
-        Morale,
-        Determination,
-        JustKeepPushing,
-        ConquerTheDreamland,
-        DreamSlayer
+        Despair,
+        Nightmare,
+        Fear,
+        Hopeless,
+        Darkness,
+        Suffering,
+        Doom,
+        Trapped,
+        Pain,
+        Paralyzed,
+        Void,
+        Gloom,
+        Terror,
+        Collapse,
+        NoEscape
     }
-    public class FloatingHopeText
-{
-    public string Text { get; set; }
-    public Vector2 Position { get; set; }
-    public Vector2 Velocity { get; set; }
-    public float Alpha { get; set; } = 1.0f;
-    public float LifeSpan { get; set; } = 5.0f; // อยู่ได้กี่วินาทีก่อนจะจางหาย
-}
+
+    public class FloatingNightmareText
+    {
+        public string Text { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
+        public float Rotation { get; set; } // มุมหมุน
+        public float Alpha { get; set; } = 1.0f;
+        public float LifeSpan { get; set; } = 5.0f;
+    }
 }

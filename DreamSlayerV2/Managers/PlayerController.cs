@@ -143,7 +143,15 @@ namespace DreamSlayerV2
                 Shuffle();  
             }
         }
+                public void DrawCards(int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                DrawCard();
+            }
+        }
 
         private bool IsValidHandIndex(int index) => index >= 0 && index < Hand.Length && Hand[index] != null;
     }
+    
 }
