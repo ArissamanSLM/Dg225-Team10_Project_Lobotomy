@@ -17,6 +17,10 @@ namespace DreamSlayerV2.Scenes
         private SpriteFont _font;
         private SpriteFont NatureFont;
         private Song NightmareSong;
+        Texture2D menuTexture;
+        int currentMenu = 1;
+        bool keyActiveUp = false;
+        bool keyActiveDown = false;
         
 
         private string titleText = "DREAM SLAYER";
@@ -33,6 +37,8 @@ namespace DreamSlayerV2.Scenes
             _font = content.Load<SpriteFont>("File");
             NatureFont = content.Load<SpriteFont>("NatureFonts");
             NightmareSong = content.Load<Song>("leberch-nightmare-611631");
+            menuTexture = content.Load<Texture2D>("Blankmenu");
+
             
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 1.0f;
@@ -68,6 +74,38 @@ namespace DreamSlayerV2.Scenes
                     _floatingTexts.RemoveAt(i);
                 }
             }
+            KeyboardState keyboard = Keyboard.GetState();
+    if (keyboard.IsKeyDown(Keys.Up))
+    {
+        if (keyActiveUp == true)
+        {
+            if (currentMenu > 1)
+            {
+                currentMenu = currentMenu - 1;
+                keyActiveUp = false;
+            }
+        }
+    }
+    if (keyboard.IsKeyDown(Keys.Down))
+    {
+        if (keyActiveDown == true)
+        {
+            if (currentMenu < 3)
+            {
+                currentMenu = currentMenu + 1; 
+                keyActiveDown = false;
+            }
+        }
+    }
+    // check keyup
+    if (keyboard.IsKeyUp(Keys.Up))
+    {
+        keyActiveUp = true;
+    }
+    if (keyboard.IsKeyUp(Keys.Down))
+    {
+        keyActiveDown = true;
+    }
 
             // เช็คปุ่มเริ่มเกมปกติ
             Vector2 startSize = _font.MeasureString(startText);
@@ -77,6 +115,7 @@ namespace DreamSlayerV2.Scenes
 
             if (startButtonBounds.Contains(mouse.Position) && mouse.LeftButton == ButtonState.Pressed)
             {
+                NodeSelectScene.Reset();
                 SceneManager.ChangeScene(new SceneStory1());
             }
         }
@@ -137,11 +176,35 @@ namespace DreamSlayerV2.Scenes
             // วาดหัวข้อและปุ่ม Start
             Vector2 titleSize = _font.MeasureString(titleText);
             Vector2 titlePos = new Vector2(960f - (titleSize.X / 2f), 50f);
-            Vector2 startSize = _font.MeasureString(startText);
-            Vector2 startPos = new Vector2(960f - (startSize.X / 2f), 918f);
+            
 
             spriteBatch.DrawString(_font, titleText, titlePos, Color.White);
-            spriteBatch.DrawString(_font, startText, startPos, Color.White);
+            if (currentMenu == 1)
+    {
+        spriteBatch.Draw(menuTexture, new Vector2(300, 200), new Rectangle(192, 0, 192, 40), Color.White);
+    }
+    else
+    {
+    spriteBatch.Draw(menuTexture, new Vector2(300, 200), new Rectangle(0, 0, 192, 40), Color.White);
+    }
+    if (currentMenu == 2)
+    {
+        spriteBatch.Draw(menuTexture, new Vector2(300, 260), new Rectangle(192, 40, 192, 40), Color.White);
+    }
+    else
+    {
+        spriteBatch.Draw(menuTexture, new Vector2(300, 260), new Rectangle(0, 40, 192, 40), Color.White);
+    }
+    if (currentMenu == 3)
+    {
+        spriteBatch.Draw(menuTexture, new Vector2(300, 320), new Rectangle(192, 80, 192, 40), Color.White);
+    }
+    else
+    {
+        spriteBatch.Draw(menuTexture, new Vector2(300, 320), new Rectangle(0, 80, 192, 40), Color.White);
+    }
+    
+
 
             spriteBatch.End();
         }

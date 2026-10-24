@@ -30,6 +30,12 @@ namespace DreamSlayerV2.Scenes
         private static List<MapNode> allNodes = new List<MapNode>();
         private static MapNode _currentNode = null;
 
+        public static void Reset()
+        {
+            allNodes.Clear();
+            _currentNode = null;
+        }
+
         public void Initialize()
         {
             _previousMouseState = Mouse.GetState();
@@ -135,8 +141,10 @@ namespace DreamSlayerV2.Scenes
                                     SceneManager.ChangeScene(new BattleScene(true, node));
                                     break;
                                 case NodeType.Shop:
+                                    SceneManager.ChangeScene(new Shop());
+                                    break;
                                 case NodeType.Rest:
-                                    SceneManager.ChangeScene(new ShopRestScene());
+                                    SceneManager.ChangeScene(new Rest());
                                     break;
                                 case NodeType.Event:
                                     SceneManager.ChangeScene(EventSceneFactory.CreateRandomEvent());

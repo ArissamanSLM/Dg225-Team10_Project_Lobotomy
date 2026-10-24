@@ -8,7 +8,8 @@ namespace DreamSlayerV2
         Elite,
         Event,
         Shop,
-        Boss
+        Boss,
+        Rest
     }
 
     public class RoomManager

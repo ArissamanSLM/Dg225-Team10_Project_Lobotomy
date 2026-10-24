@@ -13,8 +13,16 @@ namespace DreamSlayerV2.Scenes
         private SpriteFont _font;
         private MouseState _prevMouse;
         private Texture2D _pixel;
+        private readonly bool _isRest;
         private bool boughtHeal = false;
         private bool boughtInspect = false;
+
+        public ShopRestScene() : this(false) { }
+
+        protected ShopRestScene(bool isRest)
+        {
+            _isRest = isRest;
+        }
 
         public void Initialize()
         {
@@ -45,8 +53,7 @@ namespace DreamSlayerV2.Scenes
             var player = GameState.CurrentPlayer;
             if (player == null) return;
 
-            // 1. BUY HEAL CARD ("Restore")
-            if (clicked && rHeal.Contains(ms.Position) && !boughtHeal)
+            if (!_isRest && clicked && rHeal.Contains(ms.Position) && !boughtHeal)
             {
                 if (player.SoulCoins >= 20)
                 {
@@ -59,8 +66,7 @@ namespace DreamSlayerV2.Scenes
                 }
             }
 
-            // 2. BUY INSPECTION CARD ("Utility")
-            if (clicked && rInspect.Contains(ms.Position) && !boughtInspect)
+            if (!_isRest && clicked && rInspect.Contains(ms.Position) && !boughtInspect)
             {
                 if (player.SoulCoins >= 50)
                 {
@@ -73,8 +79,7 @@ namespace DreamSlayerV2.Scenes
                 }
             }
 
-            // 3. REST (FREE HEAL & SANITY REFILL)
-            if (clicked && rRest.Contains(ms.Position))
+            if (_isRest && clicked && rRest.Contains(ms.Position))
             {
                 int heal = Math.Max(1, (int)(player.MaxHP * 0.15f));
                 player.PlayerHP = Math.Min(player.MaxHP, player.PlayerHP + heal);
@@ -94,16 +99,19 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "Shop / Rest", new Vector2(200, 240), Color.Yellow);
 
-            // Display Shop Items & Costs
-            spriteBatch.DrawString(_font, $"Buy Restore Card (20 Coins) {(boughtHeal ? "- Bought" : "")}", new Vector2(200, 300), boughtHeal ? Color.Gray : Color.White);
-            spriteBatch.DrawString(_font, $"Buy Inspection Card (50 Coins) {(boughtInspect ? "- Bought" : "")}", new Vector2(200, 360), boughtInspect ? Color.Gray : Color.White);
-
-            spriteBatch.DrawString(_font, "Rest (Free) - Heal 15% MaxHP and Restore Sanity", new Vector2(200, 420), Color.LightGreen);
+            spriteBatch.DrawString(_font, _isRest ? "Rest" : "Shop", new Vector2(200, 240), Color.Yellow);
+            if (_isRest)
+            {
+                spriteBatch.DrawString(_font, "Rest (Free) - Heal 15% MaxHP and Restore Sanity", new Vector2(200, 420), Color.LightGreen);
+            }
+            else
+            {
+                spriteBatch.DrawString(_font, $"Buy Restore Card (20 Coins) {(boughtHeal ? "- Bought" : "")}", new Vector2(200, 300), boughtHeal ? Color.Gray : Color.White);
+                spriteBatch.DrawString(_font, $"Buy Inspection Card (50 Coins) {(boughtInspect ? "- Bought" : "")}", new Vector2(200, 360), boughtInspect ? Color.Gray : Color.White);
+            }
             spriteBatch.DrawString(_font, "Right-click to leave", new Vector2(200, 520), Color.AntiqueWhite);
 
-            // Display Current Soul Coins
             var player = GameState.CurrentPlayer;
             if (player != null)
             {
@@ -115,5 +123,13 @@ namespace DreamSlayerV2.Scenes
         }
 
         public void UnloadContent() { }
+    }
+    public class Shop : ShopRestScene
+    {
+        public Shop() : base(false) { }
+    }
+    public class Rest : ShopRestScene
+    {
+        public Rest() : base(true) { }
     }
 }

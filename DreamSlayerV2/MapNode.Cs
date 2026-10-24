@@ -43,7 +43,7 @@ namespace DreamSlayerV2.Core
         {
             NodeType.Elite => RoomType.Elite,
             NodeType.Shop => RoomType.Shop,
-            NodeType.Rest => RoomType.Event, // Fallback placeholder since Rest isn't fully implemented
+            NodeType.Rest => RoomType.Rest,
             NodeType.Event => RoomType.Event,
             NodeType.Boss => RoomType.Boss,
             _ => RoomType.Encounter
@@ -102,14 +102,14 @@ namespace DreamSlayerV2.Core
                 }
                 else if (stage == 12)
                 {
-                    // Pre-Boss Shop
-                    MapNode shopNode2 = new MapNode 
+                    // Pre-Boss Rest
+                    MapNode restNode = new MapNode
                     { 
-                        Name = $"{stage}-Shop", 
+                        Name = $"{stage}-Rest",
                         Position = new Vector2(currentX, startY), 
-                        Type = NodeType.Shop 
+                        Type = NodeType.Rest
                     };
-                    currentColumn.Add(shopNode2);
+                    currentColumn.Add(restNode);
                 }
                 else
                 {
