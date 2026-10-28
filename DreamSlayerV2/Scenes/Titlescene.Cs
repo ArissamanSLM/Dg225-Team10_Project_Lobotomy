@@ -27,10 +27,15 @@ namespace DreamSlayerV2.Scenes
         private SpriteFont NatureFont;
         private Song NightmareSong;
         private Texture2D menuTexture;
-        
+
         private Texture2D[] Bgtitle = new Texture2D[2];
         private Texture2D[] BgScrollingtitle = new Texture2D[2];
+
+        // ระบบเลือกฉากหลังด้วยปุ่ม [1-4] และระบบเลื่อนกล้อง
+        private int _selectedBgIndex = 0; // 0=Forest, 1=Cave, 2=MapLeft, 3=MapRight
         private float _titleCameraX = 0f;
+        private float _cameraDirection = 1f;
+
         private string titleText = "DREAM SLAYER V2";
 
         private readonly string[] _mainMenuItems = { "New Game", "Continue", "Upgrades", "Options", "Exit" };
@@ -55,17 +60,18 @@ namespace DreamSlayerV2.Scenes
             NatureFont = content.Load<SpriteFont>("NatureFonts");
             NightmareSong = content.Load<Song>("leberch-nightmare-611631");
             menuTexture = content.Load<Texture2D>("Blankmenu");
+
+            // [1] Horror Forest, [2] Dark Cave
             Bgtitle[0] = content.Load<Texture2D>("HorrorForestDreamV2");
             Bgtitle[1] = content.Load<Texture2D>("TheDarkCave");
 
-
+            // [3] Map Left, [4] Map Right (Seamless 2500x1080)
             BgScrollingtitle[0] = content.Load<Texture2D>("MapLeft_DreamSlayer");
             BgScrollingtitle[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
 
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = _masterVolume;
             MediaPlayer.Play(NightmareSong);
-            
         }
 
         public void Update(GameTime gameTime)
@@ -80,6 +86,25 @@ namespace DreamSlayerV2.Scenes
 
             bool isLeftClicked = _currentMouse.LeftButton == ButtonState.Pressed &&
                                  _previousMouse.LeftButton == ButtonState.Released;
+
+            // 1. สลับฉากหลังด้วยปุ่ม [1], [2], [3], [4]
+            if (IsKeyPressed(Keys.D1)) _selectedBgIndex = 0;
+            if (IsKeyPressed(Keys.D2)) _selectedBgIndex = 1;
+            if (IsKeyPressed(Keys.D3)) _selectedBgIndex = 2;
+            if (IsKeyPressed(Keys.D4)) _selectedBgIndex = 3;
+
+            // 2. แอนิเมชันกล้องเลื่อนฉากหลังอัตโนมัติ (ขยับไปมาระหว่างช่วง 0 ถึง 580px เพื่อเกลี่ยภาพ 2500px ให้พอดีกับหน้าจอ 1920px)
+            _titleCameraX += _cameraDirection * 40f * dt;
+            if (_titleCameraX > 580f)
+            {
+                _titleCameraX = 580f;
+                _cameraDirection = -1f;
+            }
+            else if (_titleCameraX < 0f)
+            {
+                _titleCameraX = 0f;
+                _cameraDirection = 1f;
+            }
 
             UpdateNightmareTexts(dt);
 
@@ -343,6 +368,27 @@ namespace DreamSlayerV2.Scenes
         {
             spriteBatch.Begin();
 
+            // --- 1. DRAW DYNAMIC BACKGROUND (2500x1080 -> 1920x1080) ---
+            Texture2D currentBg = _selectedBgIndex switch
+            {
+                0 => Bgtitle[0],
+                1 => Bgtitle[1],
+                2 => BgScrollingtitle[0],
+                3 => BgScrollingtitle[1],
+                _ => Bgtitle[0]
+            };
+
+            if (currentBg != null)
+            {
+                // เลื่อน X จาก 0 ถึง -580px เพื่อให้เห็นภาพกว้าง 2500px ได้อย่างสมบูรณ์แบบ
+                spriteBatch.Draw(
+                    currentBg, 
+                    new Rectangle((int)(-_titleCameraX), 0, 2500, 1080), 
+                    Color.White
+                );
+            }
+
+            // --- 2. DRAW FLOATING NIGHTMARE TEXTS ---
             foreach (var item in _floatingTexts)
             {
                 Color nightmareColor = Color.DarkRed * item.Alpha;
@@ -361,10 +407,15 @@ namespace DreamSlayerV2.Scenes
                 );
             }
 
+            // --- 3. DRAW TITLE HEADER & BACKGROUND SELECTOR PROMPT ---
             Vector2 titleSize = _font.MeasureString(titleText);
             Vector2 titlePos = new Vector2(960f - (titleSize.X / 2f), 100f);
             spriteBatch.DrawString(_font, titleText, titlePos, Color.Crimson);
 
+            // แสดงคำแนะนำปุ่มกดเปลี่ยน Background ที่มุมซ้ายล่าง
+            spriteBatch.DrawString(_font, $"Theme: [{_selectedBgIndex + 1}] (Press 1-4 to change)", new Vector2(30, 1020), Color.Gold * 0.8f);
+
+            // --- 4. RENDER MENU STATES ---
             switch (_currentState)
             {
                 case MenuState.Main:
@@ -460,7 +511,7 @@ namespace DreamSlayerV2.Scenes
             string altarText = !UpgradeOrbPermanent.EnergyAltarUnlocked ? "Cost: 500 Coins" : (UpgradeOrbPermanent.CanUseEnergyAltar() ? "READY (Free Buff)" : "RECHARGING (24h Cooldown)");
             spriteBatch.DrawString(_font, $"4. Energy Altar - {altarText}", new Vector2(500, 610), UpgradeOrbPermanent.EnergyAltarUnlocked ? Color.DeepSkyBlue : Color.Yellow);
 
-            string charmText = UpgradeOrbPermanent.CharmsUnlocked ? "COMPLETED" : "Cost: 5000 Coins [BRAVE BUFF: +20 Max Sanity & +5 Regen/turn!]";
+            string charmText = UpgradeOrbPermanent.CharmsUnlocked ? "COMPLETED" : "Cost: 2500 Coins [BRAVE BUFF: +20 Max Sanity & +5 Regen/turn!]";
             spriteBatch.DrawString(_font, $"5. Unlock Charms (Challenge) - {charmText}", new Vector2(500, 680), UpgradeOrbPermanent.CharmsUnlocked ? Color.Magenta : Color.Orange);
 
             string nmText = UpgradeOrbPermanent.NightmareModeUnlocked ? "UNLOCKED" : "Cost: 1000 Coins (Req Depths 10)";
@@ -485,7 +536,6 @@ namespace DreamSlayerV2.Scenes
             MediaPlayer.Stop();
         }
     }
-
     public enum StringNightmareText
     {
         Despair,

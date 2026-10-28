@@ -241,7 +241,7 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
             
             // --- 1. Draw Parallax Backgrounds (2 ภาพ ขนาด 2500x1080) ---
             float bgWidth = 2500f;
-            float parallaxFactor = 0.5f; // ความเร็วการเลื่อนฉากหลัง    เทียบกับกล้อง
+            float parallaxFactor = 0.7f; // ความเร็วการเลื่อนฉากหลัง    เทียบกับกล้อง
 
             for (int i = 0;     i < BgNodeTexture.Length; i++)
             {
