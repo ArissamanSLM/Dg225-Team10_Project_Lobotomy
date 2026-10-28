@@ -57,8 +57,9 @@ namespace DreamSlayerV2.Scenes
         {
             _font = content.Load<SpriteFont>("File");
             NodeMusic = content.Load<Song>("Start_music (1)");
-            BgNodeTexture[1] = content.Load<Texture2D>("MapLeft_DreamSlayer");
-            BgNodeTexture[2] = content.Load<Texture2D>("MapRight_DreamSlayer");
+            BgNodeTexture = new Texture2D[2];
+BgNodeTexture[0] = content.Load<Texture2D>("MapLeft_DreamSlayer");
+BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
             if (MediaPlayer.State != MediaState.Playing)
             {
                 MediaPlayer.Play(NodeMusic);
@@ -237,7 +238,25 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            
+            // --- 1. Draw Parallax Backgrounds (2 ภาพ ขนาด 2500x1080) ---
+            float bgWidth = 2500f;
+            float parallaxFactor = 0.5f; // ความเร็วการเลื่อนฉากหลัง    เทียบกับกล้อง
 
+            for (int i = 0;     i < BgNodeTexture.Length; i++)
+            {
+                if (BgNodeTexture[i] != null)
+                {
+                    // คำนวณตำแหน่ง X ของภาพแต่ละแผ่นไม่ให้เกิดช่องว่างและเลื่อนตามกล้อง
+                    float drawX = (i * bgWidth) - (CameraPosition.X * scroll_factor.X * parallaxFactor);
+
+                    spriteBatch.Draw(
+                        BgNodeTexture[i], 
+                        new Rectangle((int)drawX, 0, (int)bgWidth, 1080), 
+                        Color.White
+                    );
+                }
+            }
             spriteBatch.DrawString(_font, "Tower Ascent Map", new Vector2(50, 50) - CameraPosition * scroll_factor, Color.White);
             spriteBatch.DrawString(_font, "Use Mouse Scroll Wheel to view full map!", new Vector2(50, 85) - CameraPosition * scroll_factor, Color.Yellow);
 
@@ -320,10 +339,7 @@ namespace DreamSlayerV2.Scenes
                 spriteBatch.DrawString(_font, label, textPosition + Vector2.One, Color.Black);
                 spriteBatch.DrawString(_font, label, textPosition, textColor);
             }
-            for (int i = 0; i < BgNodeTexture.Length; i++)
-            {
-                spriteBatch.Draw(BgNodeTexture[i],new Vector2((0+(i-1)*2500)-draw,0),Color.White)
-            }
+            
             
             spriteBatch.End();
         }

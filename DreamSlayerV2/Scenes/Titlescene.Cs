@@ -27,7 +27,10 @@ namespace DreamSlayerV2.Scenes
         private SpriteFont NatureFont;
         private Song NightmareSong;
         private Texture2D menuTexture;
-
+        
+        private Texture2D[] Bgtitle = new Texture2D[2];
+        private Texture2D[] BgScrollingtitle = new Texture2D[2];
+        private float _titleCameraX = 0f;
         private string titleText = "DREAM SLAYER V2";
 
         private readonly string[] _mainMenuItems = { "New Game", "Continue", "Upgrades", "Options", "Exit" };
@@ -52,10 +55,17 @@ namespace DreamSlayerV2.Scenes
             NatureFont = content.Load<SpriteFont>("NatureFonts");
             NightmareSong = content.Load<Song>("leberch-nightmare-611631");
             menuTexture = content.Load<Texture2D>("Blankmenu");
+            Bgtitle[0] = content.Load<Texture2D>("HorrorForestDreamV2");
+            Bgtitle[1] = content.Load<Texture2D>("TheDarkCave");
+
+
+            BgScrollingtitle[0] = content.Load<Texture2D>("MapLeft_DreamSlayer");
+            BgScrollingtitle[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
 
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = _masterVolume;
             MediaPlayer.Play(NightmareSong);
+            
         }
 
         public void Update(GameTime gameTime)

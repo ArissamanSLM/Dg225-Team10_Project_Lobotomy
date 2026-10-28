@@ -55,6 +55,18 @@
 /processorParam:TextureFormat=Color
 /build:Boss_logo.png
 
+#begin Dice Rolling.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Dice Rolling.jpg
+
 #begin E_enemy2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -104,6 +116,30 @@
 /processorParam:Quality=Best
 /build:leberch-nightmare-611631.mp3
 
+#begin MapLeft_DreamSlayer.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MapLeft_DreamSlayer.png
+
+#begin MapRight_DreamSlayer.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MapRight_DreamSlayer.png
+
 #begin NatureFonts.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -122,6 +158,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Next_Floor_logo.png
+
+#begin ScreenumberGenerator.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ScreenumberGenerator.png
 
 #begin Shop_logo.png
 /importer:TextureImporter
