@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Dice Rolling.jpg</SourceFile>
+  <SourceFile>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Dice Rolling.jpg</SourceFile>
   <SourceTime>2026-10-28T17:13:21.2327056+07:00</SourceTime>
-  <DestFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Dice Rolling.xnb</DestFile>
-  <DestTime>2026-10-28T18:09:23.5576327+07:00</DestTime>
+  <DestFile>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Dice Rolling.xnb</DestFile>
+  <DestTime>2026-10-28T21:23:54.7278515+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

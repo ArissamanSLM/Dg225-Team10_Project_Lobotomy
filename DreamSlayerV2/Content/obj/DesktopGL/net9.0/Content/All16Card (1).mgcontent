@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/All16Card (1).png</SourceFile>
+  <SourceFile>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/All16Card (1).png</SourceFile>
   <SourceTime>2026-10-16T14:05:04.9540962+07:00</SourceTime>
-  <DestFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/All16Card (1).xnb</DestFile>
-  <DestTime>2026-10-24T10:52:50.7595999+07:00</DestTime>
+  <DestFile>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/All16Card (1).xnb</DestFile>
+  <DestTime>2026-10-28T21:23:52.5828412+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
