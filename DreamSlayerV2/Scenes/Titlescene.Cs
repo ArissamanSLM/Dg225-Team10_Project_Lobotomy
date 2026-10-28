@@ -10,7 +10,6 @@ using System.Collections.Generic;
 
 namespace DreamSlayerV2.Scenes
 {
-    
     public class TitleScene : IScene
     {
         private enum MenuState
@@ -31,22 +30,17 @@ namespace DreamSlayerV2.Scenes
 
         private string titleText = "DREAM SLAYER V2";
 
-        // Menu items
         private readonly string[] _mainMenuItems = { "New Game", "Continue", "Upgrades", "Options", "Exit" };
         private int _selectedMenuIndex = 0;
 
-        // Input States
         private MouseState _currentMouse;
         private MouseState _previousMouse;
         private KeyboardState _currentKeyboard;
         private KeyboardState _previousKeyboard;
 
-        // Audio & Settings State
         private float _masterVolume = 1.0f;
         private bool _sfxEnabled = true;
-        private bool _isFullscreen = false;
 
-        // Nightmare Floating Texts
         private List<FloatingNightmareText> _floatingTexts = new List<FloatingNightmareText>();
         private float _spawnTimer = 0f;
 
@@ -57,7 +51,7 @@ namespace DreamSlayerV2.Scenes
             _font = content.Load<SpriteFont>("File");
             NatureFont = content.Load<SpriteFont>("NatureFonts");
             NightmareSong = content.Load<Song>("leberch-nightmare-611631");
-            menuTexture = content.Load<Texture2D>("Blankmenu"); // Blank menu background
+            menuTexture = content.Load<Texture2D>("Blankmenu");
 
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = _masterVolume;
@@ -77,10 +71,8 @@ namespace DreamSlayerV2.Scenes
             bool isLeftClicked = _currentMouse.LeftButton == ButtonState.Pressed &&
                                  _previousMouse.LeftButton == ButtonState.Released;
 
-            // 1. Floating Nightmare Text Animation
             UpdateNightmareTexts(dt);
 
-            // 2. State-Based Input Handling
             switch (_currentState)
             {
                 case MenuState.Main:
@@ -92,6 +84,9 @@ namespace DreamSlayerV2.Scenes
                     break;
 
                 case MenuState.Upgrades:
+                    HandleUpgradesInput(isLeftClicked);
+                    break;
+
                 case MenuState.Credits:
                     if (isLeftClicked || IsKeyPressed(Keys.Escape) || IsKeyPressed(Keys.Back))
                     {
@@ -103,7 +98,6 @@ namespace DreamSlayerV2.Scenes
 
         private void HandleMainMenuInput(bool isLeftClicked)
         {
-            // Keyboard Navigation
             if (IsKeyPressed(Keys.Up) || IsKeyPressed(Keys.W))
             {
                 _selectedMenuIndex = (_selectedMenuIndex - 1 + _mainMenuItems.Length) % _mainMenuItems.Length;
@@ -113,7 +107,6 @@ namespace DreamSlayerV2.Scenes
                 _selectedMenuIndex = (_selectedMenuIndex + 1) % _mainMenuItems.Length;
             }
 
-            // Mouse Navigation & Click Handling
             int menuStartX = 810;
             int menuStartY = 380;
             int buttonWidth = 300;
@@ -136,7 +129,6 @@ namespace DreamSlayerV2.Scenes
                 }
             }
 
-            // Confirm Selection with Enter/Space
             if (IsKeyPressed(Keys.Enter) || IsKeyPressed(Keys.Space))
             {
                 ExecuteMenuChoice(_selectedMenuIndex);
@@ -147,13 +139,12 @@ namespace DreamSlayerV2.Scenes
         {
             switch (index)
             {
-                case 0: // New Game
+                case 0:
                     NodeSelectScene.Reset();
                     SceneManager.ChangeScene(new SceneStory1());
                     break;
 
-                case 1: // Continue
-                    // If active player instance exists, resume game; otherwise start new run
+                case 1:
                     if (GameState.CurrentPlayer != null)
                     {
                         SceneManager.ChangeScene(new NodeSelectScene());
@@ -165,23 +156,22 @@ namespace DreamSlayerV2.Scenes
                     }
                     break;
 
-                case 2: // Upgrades
+                case 2:
                     _currentState = MenuState.Upgrades;
                     break;
 
-                case 3: // Options
+                case 3:
                     _currentState = MenuState.Options;
                     break;
 
-                case 4: // Exit
-                    System.Environment.Exit(0);
+                case 4:
+                    Environment.Exit(0);
                     break;
             }
         }
 
         private void HandleOptionsInput(bool isLeftClicked)
         {
-            // Back button or ESC
             Rectangle backButton = new Rectangle(810, 750, 300, 50);
             if ((backButton.Contains(_currentMouse.Position) && isLeftClicked) || IsKeyPressed(Keys.Escape))
             {
@@ -189,7 +179,6 @@ namespace DreamSlayerV2.Scenes
                 return;
             }
 
-            // Master Volume Slider Bounds
             Rectangle volDown = new Rectangle(1100, 420, 40, 40);
             Rectangle volUp = new Rectangle(1220, 420, 40, 40);
 
@@ -206,12 +195,80 @@ namespace DreamSlayerV2.Scenes
                     MediaPlayer.Volume = _masterVolume;
                 }
 
-                // SFX Toggle
                 Rectangle sfxBox = new Rectangle(1100, 480, 160, 40);
                 if (sfxBox.Contains(_currentMouse.Position))
                 {
                     _sfxEnabled = !_sfxEnabled;
                 }
+            }
+        }
+
+        private void HandleUpgradesInput(bool isLeftClicked)
+        {
+            Rectangle backRect = new Rectangle(810, 920, 300, 50);
+            if ((backRect.Contains(_currentMouse.Position) && isLeftClicked) || IsKeyPressed(Keys.Escape))
+            {
+                _currentState = MenuState.Main;
+                return;
+            }
+
+            if (!isLeftClicked) return;
+            Point mousePos = _currentMouse.Position;
+
+            // 1. Max HP
+            Rectangle hpRect = new Rectangle(500, 400, 900, 50);
+            if (hpRect.Contains(mousePos) && UpgradeOrbPermanent.MaxHPLevel < 12)
+            {
+                int cost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.MaxHPLevel);
+                if (UpgradeOrbPermanent.RebirthCoins >= cost)
+                {
+                    UpgradeOrbPermanent.RebirthCoins -= cost;
+                    UpgradeOrbPermanent.MaxHPLevel++;
+                }
+            }
+
+            // 2. Starting Coins
+            Rectangle coinsRect = new Rectangle(500, 470, 900, 50);
+            if (coinsRect.Contains(mousePos) && UpgradeOrbPermanent.StartCoinsLevel < 9)
+            {
+                int cost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.StartCoinsLevel);
+                if (UpgradeOrbPermanent.RebirthCoins >= cost)
+                {
+                    UpgradeOrbPermanent.RebirthCoins -= cost;
+                    UpgradeOrbPermanent.StartCoinsLevel++;
+                }
+            }
+
+            // 3. Dice Minigame
+            Rectangle diceRect = new Rectangle(500, 540, 900, 50);
+            if (diceRect.Contains(mousePos) && !UpgradeOrbPermanent.UnlockDiceMinigame && UpgradeOrbPermanent.RebirthCoins >= 300)
+            {
+                UpgradeOrbPermanent.RebirthCoins -= 300;
+                UpgradeOrbPermanent.UnlockDiceMinigame = true;
+            }
+
+            // 4. Energy Altar
+            Rectangle altarRect = new Rectangle(500, 610, 900, 50);
+            if (altarRect.Contains(mousePos) && !UpgradeOrbPermanent.EnergyAltarUnlocked && UpgradeOrbPermanent.RebirthCoins >= 500)
+            {
+                UpgradeOrbPermanent.RebirthCoins -= 500;
+                UpgradeOrbPermanent.EnergyAltarUnlocked = true;
+            }
+
+            // 5. Charms
+            Rectangle charmRect = new Rectangle(500, 680, 900, 50);
+            if (charmRect.Contains(mousePos) && !UpgradeOrbPermanent.CharmsUnlocked && UpgradeOrbPermanent.RebirthCoins >= 5000)
+            {
+                UpgradeOrbPermanent.RebirthCoins -= 5000;
+                UpgradeOrbPermanent.CharmsUnlocked = true;
+            }
+
+            // 6. Nightmare Mode
+            Rectangle nightmareRect = new Rectangle(500, 750, 900, 50);
+            if (nightmareRect.Contains(mousePos) && !UpgradeOrbPermanent.NightmareModeUnlocked && UpgradeOrbPermanent.RebirthCoins >= 1000)
+            {
+                UpgradeOrbPermanent.RebirthCoins -= 1000;
+                UpgradeOrbPermanent.NightmareModeUnlocked = true;
             }
         }
 
@@ -276,7 +333,6 @@ namespace DreamSlayerV2.Scenes
         {
             spriteBatch.Begin();
 
-            // 1. Draw Nightmare Texts
             foreach (var item in _floatingTexts)
             {
                 Color nightmareColor = Color.DarkRed * item.Alpha;
@@ -295,12 +351,10 @@ namespace DreamSlayerV2.Scenes
                 );
             }
 
-            // 2. Draw Game Title Header
             Vector2 titleSize = _font.MeasureString(titleText);
             Vector2 titlePos = new Vector2(960f - (titleSize.X / 2f), 100f);
             spriteBatch.DrawString(_font, titleText, titlePos, Color.Crimson);
 
-            // 3. Render Current View State
             switch (_currentState)
             {
                 case MenuState.Main:
@@ -339,7 +393,6 @@ namespace DreamSlayerV2.Scenes
                 Rectangle destRect = new Rectangle(menuStartX, menuStartY + i * (buttonHeight + buttonSpacing), buttonWidth, buttonHeight);
                 bool isSelected = (i == _selectedMenuIndex);
 
-                // Source Rectangle for Blank Texture 2-Column Split (Orange Active / Dark Inactive)
                 Rectangle srcRect = new Rectangle(
                     isSelected ? 0 : srcWidth,
                     i * srcHeight,
@@ -347,10 +400,8 @@ namespace DreamSlayerV2.Scenes
                     srcHeight
                 );
 
-                // Draw background slice from blank texture
                 spriteBatch.Draw(menuTexture, destRect, srcRect, Color.White);
 
-                // Overlay Text
                 string text = _mainMenuItems[i];
                 Vector2 textSize = _font.MeasureString(text);
                 Vector2 textPos = new Vector2(
@@ -367,17 +418,14 @@ namespace DreamSlayerV2.Scenes
         {
             spriteBatch.DrawString(_font, "--- OPTIONS ---", new Vector2(850, 320), Color.Gold);
 
-            // Master Volume
             spriteBatch.DrawString(_font, $"Master Volume: {(int)(_masterVolume * 100)}%", new Vector2(750, 420), Color.White);
             spriteBatch.DrawString(_font, "[ - ]", new Vector2(1100, 420), Color.Yellow);
             spriteBatch.DrawString(_font, "[ + ]", new Vector2(1220, 420), Color.Yellow);
 
-            // SFX Toggle
             string sfxText = _sfxEnabled ? "ON" : "OFF";
             Color sfxColor = _sfxEnabled ? Color.LightGreen : Color.Red;
             spriteBatch.DrawString(_font, $"Sound Effects: {sfxText}", new Vector2(750, 480), sfxColor);
 
-            // Back Button
             Rectangle backRect = new Rectangle(810, 750, 300, 50);
             bool isHovered = backRect.Contains(_currentMouse.Position);
             spriteBatch.DrawString(_font, "< BACK TO MENU >", new Vector2(810, 750), isHovered ? Color.Gold : Color.White);
@@ -385,12 +433,32 @@ namespace DreamSlayerV2.Scenes
 
         private void DrawUpgradesView(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_font, "--- PERMANENT UPGRADES ---", new Vector2(760, 320), Color.Gold);
-            spriteBatch.DrawString(_font, "Soul Coins Collected: 0", new Vector2(780, 400), Color.Cyan);
-            spriteBatch.DrawString(_font, "1. Max HP Boost (+10 Max HP) - 100 Coins", new Vector2(700, 480), Color.LightGray);
-            spriteBatch.DrawString(_font, "2. Starting Sanity (+15 Sanity) - 150 Coins", new Vector2(700, 540), Color.LightGray);
+            spriteBatch.DrawString(_font, "--- PERMANENT ORB UPGRADES ---", new Vector2(720, 260), Color.Gold);
+            spriteBatch.DrawString(_font, $"Rebirth Coins: {UpgradeOrbPermanent.RebirthCoins}", new Vector2(810, 320), Color.Cyan);
 
-            spriteBatch.DrawString(_font, "Click or Press ESC to Return", new Vector2(780, 750), Color.Yellow);
+            int hpCost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.MaxHPLevel);
+            string hpStatus = UpgradeOrbPermanent.MaxHPLevel >= 12 ? "MAX" : $"{hpCost} Coins";
+            spriteBatch.DrawString(_font, $"1. Max HP (+1 HP/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.MaxHPLevel)}] - Cost: {hpStatus}", new Vector2(500, 400), Color.White);
+
+            int coinCost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.StartCoinsLevel);
+            string coinStatus = UpgradeOrbPermanent.StartCoinsLevel >= 9 ? "MAX" : $"{coinCost} Coins";
+            spriteBatch.DrawString(_font, $"2. Starting Soul Coins (+10 Coins/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.StartCoinsLevel)}] - Cost: {coinStatus}", new Vector2(500, 470), Color.White);
+
+            string diceText = UpgradeOrbPermanent.UnlockDiceMinigame ? "UNLOCKED" : "Cost: 300 Coins";
+            spriteBatch.DrawString(_font, $"3. Dice Minigame Event - {diceText}", new Vector2(500, 540), UpgradeOrbPermanent.UnlockDiceMinigame ? Color.LightGreen : Color.Yellow);
+
+            string altarText = !UpgradeOrbPermanent.EnergyAltarUnlocked ? "Cost: 500 Coins" : (UpgradeOrbPermanent.CanUseEnergyAltar() ? "READY (Free Buff)" : "RECHARGING (24h Cooldown)");
+            spriteBatch.DrawString(_font, $"4. Energy Altar - {altarText}", new Vector2(500, 610), UpgradeOrbPermanent.EnergyAltarUnlocked ? Color.DeepSkyBlue : Color.Yellow);
+
+            string charmText = UpgradeOrbPermanent.CharmsUnlocked ? "COMPLETED" : "Cost: 5000 Coins [BRAVE BUFF: +20 Max Sanity & +5 Regen/turn!]";
+            spriteBatch.DrawString(_font, $"5. Unlock Charms (Challenge) - {charmText}", new Vector2(500, 680), UpgradeOrbPermanent.CharmsUnlocked ? Color.Magenta : Color.Orange);
+
+            string nmText = UpgradeOrbPermanent.NightmareModeUnlocked ? "UNLOCKED" : "Cost: 1000 Coins (Req Depths 10)";
+            spriteBatch.DrawString(_font, $"6. Unlock Nightmare Mode - {nmText}", new Vector2(500, 750), UpgradeOrbPermanent.NightmareModeUnlocked ? Color.Crimson : Color.Red);
+
+            Rectangle backRect = new Rectangle(810, 920, 300, 50);
+            bool isHovered = backRect.Contains(_currentMouse.Position);
+            spriteBatch.DrawString(_font, "< BACK TO MENU >", new Vector2(810, 920), isHovered ? Color.Gold : Color.White);
         }
 
         private void DrawCreditsView(SpriteBatch spriteBatch)
@@ -407,6 +475,7 @@ namespace DreamSlayerV2.Scenes
             MediaPlayer.Stop();
         }
     }
+
     public enum StringNightmareText
     {
         Despair,

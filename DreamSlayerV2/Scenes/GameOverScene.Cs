@@ -34,7 +34,12 @@ namespace DreamSlayerV2.Scenes
             // Calculate final score using your custom rules
             _finalScore = CalculateTotalScore();
         }
-
+                public static int CalculateRebirthCoins(int stagesCleared, int bossesDefeated, int soulCoinsEarned, bool isVictory)
+        {
+            int baseCoins = (stagesCleared * 15) + (bossesDefeated * 50) + (soulCoinsEarned / 10);
+            int victoryBonus = isVictory ? 250 : 0;
+            return baseCoins + victoryBonus;
+        }
         private int CalculateTotalScore()
         {
             int score = 0;

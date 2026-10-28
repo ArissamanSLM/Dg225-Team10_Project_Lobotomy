@@ -16,12 +16,13 @@ namespace DreamSlayerV2.Scenes
         private Vector2 scroll_factor = new Vector2(1.0f, 1f);
         private Texture2D _pixelTexture;
         private Texture2D _nodeCircleTexture;
-
+        private int _scrollAccumulator = 0;
         private Texture2D _shopTexture;
         private Texture2D _eliteTexture;
         private Texture2D _bossTexture;
         private Texture2D _encounterTexture;
         private Texture2D _eventTexture;
+        private Texture2D[] BgNodeTexture;
         
 
         private Song NodeMusic;
@@ -56,7 +57,8 @@ namespace DreamSlayerV2.Scenes
         {
             _font = content.Load<SpriteFont>("File");
             NodeMusic = content.Load<Song>("Start_music (1)");
-
+            BgNodeTexture[1] = content.Load<Texture2D>("MapLeft_DreamSlayer");
+            BgNodeTexture[2] = content.Load<Texture2D>("MapRight_DreamSlayer");
             if (MediaPlayer.State != MediaState.Playing)
             {
                 MediaPlayer.Play(NodeMusic);
@@ -94,9 +96,23 @@ namespace DreamSlayerV2.Scenes
             MouseState currentMouseState = Mouse.GetState();
 
             // Camera scroll
+            
+            
             int scrollDelta = currentMouseState.ScrollWheelValue - _previousMouseState.ScrollWheelValue;
-            if (scrollDelta > 0) CameraPosition.X -= 60f;
-            else if (scrollDelta < 0) CameraPosition.X += 60f;
+            _scrollAccumulator += scrollDelta;
+
+            const int ScrollThreshold = 120; // Standard mouse wheel notch value
+
+            if (_scrollAccumulator >= ScrollThreshold)
+            {
+                CameraPosition.X -= 60f;          // Moves exactly once per notch
+                _scrollAccumulator -= ScrollThreshold; // Keeps any leftover smooth-scroll momentum
+            }
+            else if (_scrollAccumulator <= -ScrollThreshold)
+            {
+                CameraPosition.X += 60f;          // Moves exactly once per notch
+                _scrollAccumulator += ScrollThreshold;
+            }
 
             CameraPosition.X = MathHelper.Clamp(CameraPosition.X, 0f, 4000f);
 
@@ -304,7 +320,11 @@ namespace DreamSlayerV2.Scenes
                 spriteBatch.DrawString(_font, label, textPosition + Vector2.One, Color.Black);
                 spriteBatch.DrawString(_font, label, textPosition, textColor);
             }
-
+            for (int i = 0; i < BgNodeTexture.Length; i++)
+            {
+                spriteBatch.Draw(BgNodeTexture[i],new Vector2((0+(i-1)*2500)-draw,0),Color.White)
+            }
+            
             spriteBatch.End();
         }
 
