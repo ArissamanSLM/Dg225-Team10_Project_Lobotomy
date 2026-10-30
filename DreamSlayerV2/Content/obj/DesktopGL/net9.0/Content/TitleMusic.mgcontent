@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/TitleMusic.wav</SourceFile>
+  <SourceFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/TitleMusic.wav</SourceFile>
   <SourceTime>2026-10-15T19:22:43.1914598+07:00</SourceTime>
-  <DestFile>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/TitleMusic.xnb</DestFile>
-  <DestTime>2026-10-28T21:24:04.2488314+07:00</DestTime>
+  <DestFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/TitleMusic.xnb</DestFile>
+  <DestTime>2026-10-30T20:15:46.6817355+07:00</DestTime>
   <Importer>WavImporter</Importer>
   <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
   <Processor>SoundEffectProcessor</Processor>

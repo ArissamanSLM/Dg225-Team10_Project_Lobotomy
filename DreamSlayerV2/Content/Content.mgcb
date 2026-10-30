@@ -25,6 +25,12 @@
 /processorParam:TextureFormat=Color
 /build:All16Card (1).png
 
+#begin attack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:attack.wav
+
 #begin Bad_effect_gain.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -43,6 +49,30 @@
 /processorParam:TextureFormat=Color
 /build:Blankmenu.png
 
+#begin BlankUI1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BlankUI1.png
+
+#begin BlankUI2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BlankUI2.png
+
 #begin Boss_logo.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -54,6 +84,24 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Boss_logo.png
+
+#begin buy shop.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:buy shop.wav
+
+#begin CONTINUE.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:CONTINUE.png
 
 #begin Dice Rolling.jpg
 /importer:TextureImporter
@@ -91,12 +139,66 @@
 /processorParam:TextureFormat=Color
 /build:enemy_logo.png
 
+#begin EXIT.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:EXIT.png
+
 #begin File.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:File.spritefont
+
+#begin Handing out cards.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Handing out cards.wav
+
+#begin Handing out cards(One Card).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Handing out cards(One Card).wav
+
+#begin HardReset.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HardReset.png
+
+#begin heal.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:heal.wav
+
+#begin HealthBar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HealthBar.png
 
 #begin HorrorForestDreamV2.png
 /importer:TextureImporter
@@ -159,6 +261,36 @@
 /processorParam:TextureFormat=Color
 /build:Next_Floor_logo.png
 
+#begin OPTIONS.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:OPTIONS.png
+
+#begin Play Card.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Play Card.wav
+
+#begin SanityOrb.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SanityOrb.png
+
 #begin ScreenumberGenerator.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -170,6 +302,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ScreenumberGenerator.png
+
+#begin sectionsound-shield-block-shortsword-143940.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sectionsound-shield-block-shortsword-143940.wav
 
 #begin Shop_logo.png
 /importer:TextureImporter
@@ -188,6 +326,18 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Start_music (1).mp3
+
+#begin START.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:START.png
 
 #begin TheDarkCave.png
 /importer:TextureImporter
@@ -218,4 +368,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UnrealWolf.png
+
+#begin UPGRADES.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UPGRADES.png
 
