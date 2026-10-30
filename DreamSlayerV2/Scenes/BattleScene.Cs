@@ -17,6 +17,8 @@ namespace DreamSlayerV2.Scenes
         private Texture2D EnemyTexture;
         private Texture2D[] BgTexture = new Texture2D[3];
         private Texture2D CardTexture;
+        private SoundEffect[] DrawcardEffect;
+        private Texture2D ScreenTexture;
 
         private List<ScaryFloatingText> _scaryTexts = new List<ScaryFloatingText>();
         private float _scarySpawnTimer = 0f;
@@ -64,7 +66,11 @@ namespace DreamSlayerV2.Scenes
         public void LoadContent(ContentManager content)
 {
     if (_contentLoaded) return;
+    var graphicsDevice = ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService))).GraphicsDevice;
 
+// สร้างแค่ 1x1 พิกเซลพอดคับ (ประหยัดแรมสุดๆ)
+    ScreenTexture = new Texture2D(graphicsDevice, 1, 1);
+    ScreenTexture.SetData(new[] { Color.White });
     _font = content.Load<SpriteFont>("File");
     EnemyTexture = content.Load<Texture2D>("UnrealWolf");
     BgTexture[0] = content.Load<Texture2D>("HorrorForestDreamV2");

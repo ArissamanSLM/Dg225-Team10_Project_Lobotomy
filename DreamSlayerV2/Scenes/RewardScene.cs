@@ -26,7 +26,7 @@ namespace DreamSlayerV2.Scenes
         {
             if (rewardTier == 0) // Normal Encounter (20-30 Soul Coins)
             {
-                _soulReward = _rand.Next(20, 31);
+                _soulReward = _rand.Next(30, 41);
                 _isEliteOrBoss = false;
                 _enemyTypeLabel = "Enemy";
                
