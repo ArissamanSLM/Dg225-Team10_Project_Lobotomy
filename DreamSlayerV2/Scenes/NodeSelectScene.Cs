@@ -23,10 +23,13 @@ namespace DreamSlayerV2.Scenes
         private Texture2D _encounterTexture;
         private Texture2D _eventTexture;
         private Texture2D[] BgNodeTexture;
-        
+        private Vector2 LockPosition;
+        private bool _isCameraLocked;
+        private int _viewportWidth;
 
         private Song NodeMusic;
         private MouseState _previousMouseState;
+        private KeyboardState _previousKeyboardState;
 
         private static List<MapNode> allNodes = new List<MapNode>();
         private static MapNode _currentNode = null;
@@ -40,6 +43,7 @@ namespace DreamSlayerV2.Scenes
         public void Initialize()
         {
             _previousMouseState = Mouse.GetState();
+            _previousKeyboardState = Keyboard.GetState();
 
             if (allNodes.Count == 0)
             {
@@ -67,6 +71,7 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
             }
 
             var graphicsDevice = ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService))).GraphicsDevice;
+            _viewportWidth = graphicsDevice.Viewport.Width;
             _pixelTexture = new Texture2D(graphicsDevice, 1, 1);
             _pixelTexture.SetData(new[] { Color.White });
 
@@ -85,11 +90,12 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
 
         public void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.G))
+            KeyboardState currentKeyboardState = Keyboard.GetState();
+            if (currentKeyboardState.IsKeyDown(Keys.G))
             {
                 SceneManager.ChangeScene(new GameOverScene(5, 3, 24, true, false ,0));
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.T))
+            if (currentKeyboardState.IsKeyDown(Keys.T))
             {
                 SceneManager.ChangeScene(new TitleScene());
             }
@@ -104,6 +110,11 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
 
             const int ScrollThreshold = 120; // Standard mouse wheel notch value
 
+            if (scrollDelta != 0)
+            {
+                _isCameraLocked = false;
+            }
+
             if (_scrollAccumulator >= ScrollThreshold)
             {
                 CameraPosition.X -= 60f;          // Moves exactly once per notch
@@ -116,6 +127,19 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
             }
 
             CameraPosition.X = MathHelper.Clamp(CameraPosition.X, 0f, 4000f);
+
+            if (currentKeyboardState.IsKeyDown(Keys.D5) && !_previousKeyboardState.IsKeyDown(Keys.D5))
+            {
+                LockCameraToStage(5);
+            }
+            else if (currentKeyboardState.IsKeyDown(Keys.D0) && !_previousKeyboardState.IsKeyDown(Keys.D0))
+            {
+                LockCameraToStage(10);
+            }
+            else if (_isCameraLocked)
+            {
+                CameraPosition = LockPosition;
+            }
 
             // Node Click Selection
             bool isClicked = currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
@@ -180,6 +204,27 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
             }
 
             _previousMouseState = currentMouseState;
+            _previousKeyboardState = currentKeyboardState;
+        }
+
+        private void LockCameraToStage(int stage)
+        {
+            var stageNodes = allNodes.FindAll(node => node.Stage == stage);
+            if (stageNodes.Count == 0)
+            {
+                throw new InvalidOperationException($"The map does not contain stage {stage}.");
+            }
+
+            float stageCenterX = 0f;
+            foreach (var node in stageNodes)
+            {
+                stageCenterX += node.Position.X;
+            }
+
+            stageCenterX /= stageNodes.Count;
+            CameraPosition.X = MathHelper.Clamp(stageCenterX - _viewportWidth / 2f, 0f, 4000f);
+            LockPosition = CameraPosition;
+            _isCameraLocked = true;
         }
         
             
@@ -258,7 +303,7 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
                 }
             }
             spriteBatch.DrawString(_font, "Tower Ascent Map", new Vector2(50, 50) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "Use Mouse Scroll Wheel to view full map!", new Vector2(50, 85) - CameraPosition * scroll_factor, Color.Yellow);
+            spriteBatch.DrawString(_font, "Use Mouse Scroll Wheel to view full map! Press 5/0 to lock on stages 5/10.", new Vector2(50, 85) - CameraPosition * scroll_factor, Color.Yellow);
 
             // Draw Paths
             foreach (var node in allNodes)

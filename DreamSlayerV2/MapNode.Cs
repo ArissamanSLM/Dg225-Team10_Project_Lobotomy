@@ -19,6 +19,7 @@ namespace DreamSlayerV2.Core
     public class MapNode
     {
         public string Name { get; set; } = "Node";
+        public int Stage { get; set; }
         public Vector2 Position;
         public NodeType Type;
         public List<MapNode> ConnectedNodes = new List<MapNode>();
@@ -63,6 +64,7 @@ namespace DreamSlayerV2.Core
             MapNode startNode = new MapNode
             {
                 Name = "1-Start",
+                Stage = 1,
                 Position = new Vector2(300, startY),
                 Type = NodeType.Start,
                 IsAvailable = true
@@ -84,6 +86,7 @@ namespace DreamSlayerV2.Core
                     MapNode shopNode = new MapNode 
                     { 
                         Name = $"{stage}-Shop", 
+                        Stage = stage,
                         Position = new Vector2(currentX, startY), 
                         Type = NodeType.Shop 
                     };
@@ -95,6 +98,7 @@ namespace DreamSlayerV2.Core
                     MapNode eliteNode = new MapNode 
                     { 
                         Name = $"{stage}-Elite", 
+                        Stage = stage,
                         Position = new Vector2(currentX, startY), 
                         Type = NodeType.Elite 
                     };
@@ -106,6 +110,7 @@ namespace DreamSlayerV2.Core
                     MapNode restNode = new MapNode
                     { 
                         Name = $"{stage}-Rest",
+                        Stage = stage,
                         Position = new Vector2(currentX, startY), 
                         Type = NodeType.Rest
                     };
@@ -125,6 +130,7 @@ namespace DreamSlayerV2.Core
                         MapNode node = new MapNode
                         {
                             Name = $"{stage}-{assignedType}",
+                            Stage = stage,
                             Position = new Vector2(currentX, chosenYs[i]),
                             Type = assignedType
                         };
@@ -145,6 +151,7 @@ namespace DreamSlayerV2.Core
             MapNode bossNode = new MapNode
             {
                 Name = "13-Boss",
+                Stage = 13,
                 Position = new Vector2(currentX, startY),
                 Type = NodeType.Boss
             };

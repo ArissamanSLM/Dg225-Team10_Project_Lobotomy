@@ -91,8 +91,8 @@ namespace DreamSlayerV2
         case "All in One":
             CardID = 4; // (Col 1, Row 2)
             Rarity = CardRarity.Rare;
-            Description = "Combines every Strike card in hand into a powerful burst.";
-            Does = $"Deals 6 damage for every Strike in hand, then discards all Strikes. Cost: {Cost * 10} Sanity.";
+            Description = "Combines this card and every Strike in hand into a powerful burst.";
+            Does = $"Deals 6 damage for every Strike in hand plus this card, then discards them all. Cost: {Cost * 10} Sanity.";
             break;
 
         case "Mighty Defend Attack":
@@ -120,8 +120,8 @@ namespace DreamSlayerV2
         case "No Fight":
             CardID = 5; // (Col 2, Row 2)
             Rarity = CardRarity.Rare;
-            Description = "Consolidates all defensive maneuvers into one burst of armor.";
-            Does = $"Gains 6 Defense for every Defend card in hand, then discards all Defends. Cost: {Cost * 10} Sanity.";
+            Description = "Consolidates this card and every Defend in hand into one burst of armor.";
+            Does = $"Gains 6 Defense for every Defend in hand plus this card, then discards them all. Cost: {Cost * 10} Sanity.";
             break;
 
         case "Mirror Shield":
@@ -186,21 +186,21 @@ namespace DreamSlayerV2
             CardID = 7; // (Col 4, Row 2)
             Rarity = CardRarity.UltraRare;
             Description = "Clear your mind and regain focused Sanity.";
-            Does = $"Heal 20 Sanity (1 Use per Encounter) and remove from the deck. Cost: {Cost * 10} Sanity.";
+            Does = $"Heal 20 Sanity (1 Use per Encounter) and remove from the deck. Cost: {Cost * 0} Sanity.";
             break;
 
         case "Aura Heal":
             CardID = 11; // (Col 4, Row 3)
             Rarity = CardRarity.Rare;
             Description = "Channel powerful aura energy to restore body and mind.";
-            Does = $"Heal 30 sanity and 15 Hp (1 Use per Encounter) and remove from the deck. Cost: {Cost * 10} Sanity.";
+            Does = $"Heal 30 sanity and 15 Hp (1 Use per Encounter) and remove from the deck. Cost: {Cost * 0} Sanity.";
             break;
 
         case "Beta":
             CardID = 15; // (Col 4, Row 4) -> รูป Beta (β) อยู่ที่นี่!
             Rarity = CardRarity.UltraRare;
             Description = "Channel deep cosmic forces to replenish mind energy.";
-            Does = $"Restore 100 Sanity And gain 1 Omega Card And Remove Beta Card from the deck. Cost: {Cost * 10} Sanity.";
+            Does = $"Restore 100 Sanity And gain 1 Omega Card And Remove Beta Card from the deck. Cost: {Cost * 0} Sanity.";
             break;
     }
 }

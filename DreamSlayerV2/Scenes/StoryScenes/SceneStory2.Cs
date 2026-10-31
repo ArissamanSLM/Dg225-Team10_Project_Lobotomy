@@ -13,8 +13,6 @@ namespace DreamSlayerV2.Scenes
         private string promptText = "Click Here to Continue...";
         private Vector2 promptPos = new Vector2(100, 600);
         private MouseState _previousMouseState;
-        private SoundEffectInstance _soundInstance;
-
         public void Initialize()
         {
             _previousMouseState = Mouse.GetState();

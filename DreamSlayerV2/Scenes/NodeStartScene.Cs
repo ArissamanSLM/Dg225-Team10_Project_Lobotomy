@@ -116,7 +116,7 @@ namespace DreamSlayerV2.Scenes
                 DrawBorder(spriteBatch, bounds, borderColor, 4);
 
                 spriteBatch.DrawString(_font, card.Name, new Vector2(bounds.X + 24, bounds.Y + 24), Color.White);
-                spriteBatch.DrawString(_font, "RARE  |  Cost: " + card.Cost, new Vector2(bounds.X + 24, bounds.Y + 76), Color.Gold);
+                spriteBatch.DrawString(_font, "RARE", new Vector2(bounds.X + 24, bounds.Y + 76), Color.Gold);
 
                 string description = card.Description + "\n" + card.Does;
                 DrawWrappedText(

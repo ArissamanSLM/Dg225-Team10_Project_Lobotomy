@@ -25,9 +25,13 @@ namespace DreamSlayerV2.Scenes
         private float _scarySpawnTimer = 0f;
         private Random _scaryRnd = new Random();
         private Texture2D _pixelTexture;
-        //UI Texture list 
+        
+        // UI Texture list (0: Sanity_bar, 1: Sheid_bar, 2: Enemies_health_bar)
+        private Texture2D[] UITexture = new Texture2D[3];
         private Texture2D Healthbar;
         private Texture2D BlankHealthBar;
+        private Texture2D HealthEffect;
+        
         // Audio Storage
         private List<SoundEffect> _soundEffects = new List<SoundEffect>();
         private SoundEffectInstance _debuffSoundInstance;
@@ -75,7 +79,7 @@ namespace DreamSlayerV2.Scenes
             ScreenTexture = new Texture2D(graphicsDevice, 1, 1);
             ScreenTexture.SetData(new[] { Color.White });
             _pixelTexture = ScreenTexture;
-            _font = content.Load<SpriteFont>("File");
+            _font = content.Load<SpriteFont>("BattleUIFont");   
             EnemyTexture = content.Load<Texture2D>("UnrealWolf");
             BgTexture[0] = content.Load<Texture2D>("HorrorForestDreamV2");
             BgTexture[1] = content.Load<Texture2D>("HorrorForestDreamV2");
@@ -83,6 +87,12 @@ namespace DreamSlayerV2.Scenes
             CardTexture = content.Load<Texture2D>("All16Card (1)");
             Healthbar = content.Load<Texture2D>("HealthBar");
             BlankHealthBar = content.Load<Texture2D>("HealthBar");
+
+            // โหลด UI Textures ตามลำดับ
+            UITexture[0] = content.Load<Texture2D>("Sanity_bar");       //[cite: 16]
+            UITexture[1] = content.Load<Texture2D>("Sheid_bar");     //IncludingEffect   //[cite: 15]
+            UITexture[2] = content.Load<Texture2D>("Enemies_health_bar"); //[cite: 14]
+            HealthEffect = content.Load<Texture2D>("HealthEffect"); //Including Effect //
 
             // Load SFX (.wav)
             SoundEffect badEffect = content.Load<SoundEffect>("Bad_Effect_gain");
@@ -265,13 +275,13 @@ namespace DreamSlayerV2.Scenes
                         break;
 
                     case "All in One":
-                        int strikeCount = 0;
+                        int strikeCount = 1;
                         for (int i = 0; i < _player.Hand.Length; i++)
                         {
                             if (_player.Hand[i] != null && _player.Hand[i].Name == "Strike")
                             {
                                 strikeCount++;
-                                _player.Hand[i] = null;
+                                _player.UseCard(i);
                             }
                         }
                         ApplyDamageToEnemy(6 * strikeCount);
@@ -282,13 +292,13 @@ namespace DreamSlayerV2.Scenes
                         break;
 
                     case "No Fight":
-                        int defendCount = 0;
+                        int defendCount = 1;
                         for (int i = 0; i < _player.Hand.Length; i++)
                         {
                             if (_player.Hand[i] != null && _player.Hand[i].Name == "Defend")
                             {
                                 defendCount++;
-                                _player.Hand[i] = null;
+                                _player.UseCard(i);
                             }
                         }
                         _player.Defense += (6 * defendCount);
@@ -404,8 +414,36 @@ namespace DreamSlayerV2.Scenes
             // 2. Enemy & Intent Display
             spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color.White);
 
-            string enemyDefenseText = _enemy.Defense > 0 ? $" (+{_enemy.Defense} DEF)" : "";
-            spriteBatch.DrawString(_font, $"Enemy HP: {_enemy.HP} / {_enemy.MaxHP}{enemyDefenseText}", new Vector2(1200, 240), Color.Red);
+            // --- RENDER ENEMY HEALTH BAR (Enemies_health_bar.png) ---
+            if (UITexture[2] != null)
+            {
+                float enemyBarX = 1200f;
+                float enemyBarY = 240f;
+                float enemyBarWidth = 300f;
+                int enemyBarHeight = 22;
+
+                // พื้นหลังหลอดเลือดศัตรู
+                spriteBatch.Draw(UITexture[2], new Rectangle((int)enemyBarX, (int)enemyBarY, (int)enemyBarWidth, enemyBarHeight), Color.DarkGray * 0.5f);
+
+                // สัดส่วนเลือดศัตรู
+                float enemyHpPercent = MathHelper.Clamp((float)_enemy.HP / _enemy.MaxHP, 0f, 1f);
+                int enemyFilledWidth = (int)(enemyBarWidth * enemyHpPercent);
+                Rectangle enemySourceRect = new Rectangle(0, 0, (int)(UITexture[2].Width * enemyHpPercent), UITexture[2].Height);
+                Rectangle enemyDestRect = new Rectangle((int)enemyBarX, (int)enemyBarY, enemyFilledWidth, enemyBarHeight);
+
+                spriteBatch.Draw(UITexture[2], enemyDestRect, enemySourceRect, Color.White);
+
+                // ข้อความเลือดศัตรูตรงกลางหลอด
+                string enemyHpText = $"HP: {_enemy.HP} / {_enemy.MaxHP}";
+                if (_enemy.Defense > 0) enemyHpText += $" (+{_enemy.Defense} DEF)";
+                Vector2 enemyTextSize = _font.MeasureString(enemyHpText);
+                Vector2 enemyTextPos = new Vector2(
+                    enemyBarX + (enemyBarWidth - enemyTextSize.X) / 2f,
+                    enemyBarY + (enemyBarHeight - enemyTextSize.Y) / 2f
+                );
+                spriteBatch.DrawString(_font, enemyHpText, enemyTextPos + Vector2.One, Color.Black);
+                spriteBatch.DrawString(_font, enemyHpText, enemyTextPos, Color.Red);
+            }
 
             string intentText = "INTENT: ";
             Color intentColor = Color.Yellow;
@@ -435,26 +473,30 @@ namespace DreamSlayerV2.Scenes
 
             spriteBatch.DrawString(_font, intentText, new Vector2(1200, 190), intentColor);
 
-            // 3. Player Stats UI
-            spriteBatch.DrawString(_font, $"HP: {_player.PlayerHP} / {_player.MaxHP}", new Vector2(80, 80), Color.White);
-            spriteBatch.DrawString(_font, $"Defense: {_player.Defense}", new Vector2(80, 130), Color.SkyBlue);
-            spriteBatch.DrawString(_font, $"Sanity: {_player.Sanity}", new Vector2(80, 180), Color.Cyan);
-            if (_player.Sanity <= 30)
+            // 3. Player Stats UI (ปรับตำแหน่ง Shield ซ้าย, Health Bar กลาง, Sanity ขวา)
+            
+            if (UITexture[1] != null) // Sheid_bar.png
             {
-                spriteBatch.DrawString(_font, "Sanity is critically low!", new Vector2(200, 180), Color.Red);
+                // ขนาดเดิม 45x45 คูณ 2 เป็น 90x90 พิกเซล
+                Rectangle shieldIconRect = new Rectangle(400, 715, 90, 90); 
+                spriteBatch.Draw(UITexture[1], shieldIconRect, Color.White);
+                
+                // ตัวเลข Defense (ปรับขนาดฟอนต์หรือตำแหน่งตามความเหมาะสม)
+                string defenseText = $"{_player.Defense}";
+                Vector2 defTextSize = _font.MeasureString(defenseText);
+                Vector2 defTextPos = new Vector2(
+                    shieldIconRect.Center.X - (defTextSize.X / 2f),
+                    shieldIconRect.Center.Y - (defTextSize.Y / 2f)
+                );
+                spriteBatch.DrawString(_font, defenseText, defTextPos + Vector2.One, Color.Black);
+                spriteBatch.DrawString(_font, defenseText, defTextPos, Color.White);
             }
-            else
-            {
-                spriteBatch.DrawString(_font, "Sanity is stable.", new Vector2(200, 180), Color.LightGreen);
-            }
-            spriteBatch.DrawString(_font, $"Energy: {_player.Energy}", new Vector2(80, 230), Color.Yellow);
-            spriteBatch.DrawString(_font, $"Deck: {_player.Deck.Count}  |  Discard: {_player.DiscardPile.Count}", new Vector2(80, 280), Color.LightGray);
 
-            // --- 4. LONG HEALTH BAR ACROSS 5 CARDS & CARDS IN HAND ---
+            // --- B. LONG HEALTH BAR (ตรงกลาง) ---
             if (Healthbar != null)
             {
                 float barX = 500f;
-                float barY = 740f;
+                float barY = 740f; 
                 float barWidth = 940f;
                 int barHeight = 22;
 
@@ -481,6 +523,37 @@ namespace DreamSlayerV2.Scenes
                 spriteBatch.DrawString(_font, hpText, textPos + Vector2.One, Color.Black);
                 spriteBatch.DrawString(_font, hpText, textPos, Color.White);
             }
+
+           if (UITexture[0] != null) // Sanity_bar.png
+            {
+                // ขนาดเดิม 48x48 คูณ 2 เป็น 96x96 พิกเซล
+                Rectangle sanityIconRect = new Rectangle(1500, 710, 96, 96); 
+                spriteBatch.Draw(UITexture[0], sanityIconRect, Color.White);
+
+                // ตัวเลข Sanity ตรงกลางไอคอนวงกลม
+                string sanityText = $"{_player.Sanity}";
+                Vector2 sanityTextSize = _font.MeasureString(sanityText);
+                Vector2 sanityTextPos = new Vector2(
+                    sanityIconRect.Center.X - (sanityTextSize.X / 2f),
+                    sanityIconRect.Center.Y - (sanityTextSize.Y / 2f)
+                );
+                spriteBatch.DrawString(_font, sanityText, sanityTextPos + Vector2.One, Color.Black);
+                spriteBatch.DrawString(_font, sanityText, sanityTextPos, Color.Cyan);
+            }
+
+            // สถานะเตือน Sanity ต่ำ
+            if (_player.Sanity <= 30)
+            {
+                spriteBatch.DrawString(_font, "Sanity is critically low!", new Vector2(810, 700), Color.Red);
+            }
+            else
+            {
+                spriteBatch.DrawString(_font, "Sanity is stable.", new Vector2(850, 700), Color.LightGreen);
+            }
+
+            // สถิติอื่นๆ ด้านบน (Energy, Deck, Discard)
+            spriteBatch.DrawString(_font, $"Energy: {_player.Energy}", new Vector2(80, 80), Color.Yellow);
+            spriteBatch.DrawString(_font, $"Deck: {_player.Deck.Count}  |  Discard: {_player.DiscardPile.Count}", new Vector2(80, 120), Color.LightGray);
 
             float startX = 500;
             int cardWidth = 140;

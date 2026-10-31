@@ -27,7 +27,7 @@ namespace DreamSlayerV2
         public List<CardManager> DiscardPile { get; set; } = new List<CardManager>(); // <-- ADD THIS
         public int Level { get; set; } = 1;
         public int SoulCoins { get; set; } = 0;
-
+        int TurnCount = 0;
         public int[] PassiveRelics { get; set; } = new int[5];
         private readonly Random _rand = new Random();
 
@@ -109,6 +109,7 @@ namespace DreamSlayerV2
 
         public void PlayerTurn()
         {
+            TurnCount++;
             Energy = Sanity >= 80 ? 5 : (Sanity >= 50 ? 3 : 2);
 
             for (int i = 0; i < Hand.Length; i++)
@@ -129,8 +130,7 @@ namespace DreamSlayerV2
                 }
             }
 
-            // FIXED: Moved outside the loop so it only happens once per turn end, not 5 times!
-            Sanity += 40;
+            Sanity += TurnCount % 2 == 1 ? 30 : 40;
 
             // Optional cap so Sanity doesn't go over max (assuming 100 max for HumanDemo)
             if (Sanity > 100) Sanity = 100;

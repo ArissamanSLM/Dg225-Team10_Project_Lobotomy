@@ -37,6 +37,13 @@
 /processorParam:Quality=Best
 /build:Bad_effect_gain.wav
 
+#begin BattleUIFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:BattleUIFont.spritefont
+
 #begin Blankmenu.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -211,6 +218,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:HealthBar.png
+
+#begin HealthEffect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HealthEffect.png
 
 #begin HorrorForestDreamV2.png
 /importer:TextureImporter
