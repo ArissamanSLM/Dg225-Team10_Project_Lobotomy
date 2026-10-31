@@ -109,3 +109,20 @@ c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy
 c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\MapLeft_DreamSlayer.xnb
 c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\MapRight_DreamSlayer.xnb
 c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\ScreenumberGenerator.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\attack.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\BlankUI1.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\BlankUI2.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\buy shop.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\CONTINUE.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\EXIT.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Handing out cards(One Card).xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Handing out cards.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\HardReset.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\heal.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\HealthBar.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\OPTIONS.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Play Card.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\SanityOrb.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\sectionsound-shield-block-shortsword-143940.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\START.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\UPGRADES.xnb

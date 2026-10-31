@@ -19,11 +19,14 @@ namespace DreamSlayerV2.Scenes
         private Texture2D CardTexture;
         private SoundEffect[] DrawcardEffect;
         private Texture2D ScreenTexture;
-
+        private float _redFlashAlpha = 0f;
+        private float _purpleFlashAlpha = 0f;
         private List<ScaryFloatingText> _scaryTexts = new List<ScaryFloatingText>();
         private float _scarySpawnTimer = 0f;
         private Random _scaryRnd = new Random();
-        
+        private Texture2D _pixelTexture;
+        private Texture2D Healthbar;
+        private Texture2D BlankHealthBar;
         // Audio Storage
         private List<SoundEffect> _soundEffects = new List<SoundEffect>();
         private SoundEffectInstance _debuffSoundInstance;
@@ -71,12 +74,15 @@ namespace DreamSlayerV2.Scenes
 // สร้างแค่ 1x1 พิกเซลพอดคับ (ประหยัดแรมสุดๆ)
     ScreenTexture = new Texture2D(graphicsDevice, 1, 1);
     ScreenTexture.SetData(new[] { Color.White });
+    _pixelTexture = ScreenTexture;
     _font = content.Load<SpriteFont>("File");
     EnemyTexture = content.Load<Texture2D>("UnrealWolf");
     BgTexture[0] = content.Load<Texture2D>("HorrorForestDreamV2");
     BgTexture[1] = content.Load<Texture2D>("HorrorForestDreamV2");
     BgTexture[2] = content.Load<Texture2D>("TheDarkCave");
     CardTexture = content.Load<Texture2D>("All16Card (1)");
+    Healthbar = content.Load<Texture2D>("HealthBar");
+    BlankHealthBar = content.Load<Texture2D>("HealthBar");
 
     // Load SFX (.wav)
     SoundEffect badEffect = content.Load<SoundEffect>("Bad_Effect_gain");
@@ -90,6 +96,21 @@ namespace DreamSlayerV2.Scenes
 }
         public void Update(GameTime gameTime)
         {
+            float ft = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+// Fade out Red Flash (สีแดงจางหายใน ~0.5 วินาที)
+if (_redFlashAlpha > 0f)
+{
+    _redFlashAlpha -= ft * 2.0f;
+    if (_redFlashAlpha < 0f) _redFlashAlpha = 0f;
+}
+
+// Fade out Purple Flash (สีม่วงจางหายใน ~0.5 วินาที)
+if (_purpleFlashAlpha > 0f)
+{
+    _purpleFlashAlpha -= ft * 2.0f;
+    if (_purpleFlashAlpha < 0f) _purpleFlashAlpha = 0f;
+}
             _previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
 
@@ -220,14 +241,21 @@ private void TryPlayCard(int cardIndex)
     // ตรวจสอบการ์ดที่เล่นไม่ได้ (เช่น Curse / Hazard)
     if (selectedCard.IsUnplayable) return;
 
-    int sanityCost = selectedCard.Cost; // Cost ใน CardManager คือค่า Sanity ที่ต้องจ่าย
+    int sanityCost = selectedCard.Cost * 10;
 
-    // เงื่อนไขพิเศษ: Mighty Defend Attack เซ็ต Sanity เหลือ 0 ทันที
-    if (selectedCard.Name == "Mighty Defend Attack")
+    // Omega and Mighty Defend Attack leave the player at 20 Sanity.
+    if (LeavesTwentySanity(selectedCard))
     {
-        int damage = _player.Defense;
-        ApplyDamageToEnemy(damage);
-        _player.Sanity = 0; // จุดจบใน Dreamland (ความตาย)
+        if (selectedCard.Name == "Mighty Defend Attack")
+        {
+            ApplyDamageToEnemy(_player.Defense);
+        }
+        else
+        {
+            ApplyDamageToEnemy(50);
+        }
+
+        _player.Sanity = 20;
         _player.UseCard(cardIndex);
         return;
     }
@@ -291,6 +319,7 @@ private void TryPlayCard(int cardIndex)
                 break;
 
             case "Restore":
+            case "Heal":
                 _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + 8);
                 break;
 
@@ -327,6 +356,11 @@ private void TryPlayCard(int cardIndex)
     }
 }
 
+private static bool LeavesTwentySanity(CardManager card)
+{
+    return card.Name == "Omega" || card.Name == "Mighty Defend Attack";
+}
+
 private void ApplyDamageToEnemy(int damage)
 {
     // รองรับทั้งคลาส MonsterBattle และ BossBattle (ผ่าน BaseEnemy)
@@ -351,25 +385,31 @@ private void ApplyDamageToEnemy(int damage)
 // ฟังก์ชันช่วยคำนวณการหักเกราะและเลือดของศัตรู
 
         private void CompleteTurn()
+{
+    _enemy.Defense = 0; //
+
+    // ตรวจสอบแอ็กชันถัดไปของศัตรูเพื่อเปิดเอฟเฟกต์กระพริบสี
+    foreach (EnemyAction action in _enemy.NextActions) //[cite: 22]
+    {
+        if (action.Type == EnemyActionType.Attack)
         {
-            _enemy.Defense = 0;
-            _enemy.ExecuteTurn(_player);
-
-            foreach (EnemyAction action in _enemy.NextActions)
-            {
-                if (action.Type == EnemyActionType.EldritchDebuff)
-                {
-                    _debuffSoundInstance.Volume = 1.0f;
-                    _debuffSoundInstance.Pitch = -0.509f;
-                    _debuffSoundInstance.Play();
-                    break;
-                }
-            }
-
-            _player.EndTurn();
-            _player.PlayerTurn();
-            _enemy.RollNextAction(_player.Sanity < 30);
+            _redFlashAlpha = 0.55f; // เปิด Red Flash ความเข้ม 55% เมื่อศัตรูโจมตี
         }
+        else if (action.Type == EnemyActionType.EldritchDebuff)
+        {
+            _purpleFlashAlpha = 0.65f; // เปิด Purple Flash ความเข้ม 65% เมื่อศัตรูแจก DeBuff/ลด Sanity
+            _debuffSoundInstance.Volume = 1.0f; //[cite: 22]
+            _debuffSoundInstance.Pitch = -0.509f; //[cite: 22]
+            _debuffSoundInstance.Play(); //[cite: 22]
+        }
+    }
+
+    _enemy.ExecuteTurn(_player); //[cite: 22]
+
+    _player.EndTurn(); //[cite: 22]
+    _player.PlayerTurn(); //[cite: 22]
+    _enemy.RollNextAction(_player.Sanity < 30); 
+}
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -475,21 +515,74 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
                     spriteBatch.DrawString(_font, $"[{i + 1}]", new Vector2(cardX + 10, cardY + 10), Color.Gold);
                     
                     // แสดงชื่อการ์ดตัวย่อหรือ Cost Sanity บนการ์ด
-                    spriteBatch.DrawString(_font, $"{card.Cost * 10}", new Vector2(cardX + 10, cardY + 160), Color.Cyan);
+                    bool leavesTwentySanity = LeavesTwentySanity(card);
+                    spriteBatch.DrawString(_font, leavesTwentySanity ? "20" : $"{card.Cost * 10}", new Vector2(cardX + 10, cardY + 160), Color.Cyan);
                 }
             }
 
             // 5. Tooltip Rendering
-            if (hoveredCard != null)
-            {
-                Vector2 tooltipPos = new Vector2(currentMouseState.X + 20, currentMouseState.Y - 80);
-                spriteBatch.DrawString(_font,
-                    $"--- {hoveredCard.Name} ---\n" +
-                    $"Description: {hoveredCard.Description}\n" +
-                    $"Effect: {hoveredCard.Does}\n" +
-                    $"Sanity Cost: {hoveredCard.Cost * 10}",
-                    tooltipPos, Color.Gold);
-            }
+            // 5. Tooltip Rendering (พร้อม Black Pixel Frame พื้นหลัง)
+if (hoveredCard != null && _pixelTexture != null)
+{
+    // 1. จัดเตรียมข้อความที่จะแสดงผล
+    string nameText = $"--- {hoveredCard.Name} ---";
+    string descText = $"Description: {hoveredCard.Description}";
+    string doesText = $"Effect: {hoveredCard.Does}";
+    
+    bool leavesTwentySanity = LeavesTwentySanity(hoveredCard);
+    string costText = leavesTwentySanity 
+        ? "Sanity Cost: 20 (Special)" 
+        : $"Sanity Cost: {hoveredCard.Cost * 10}";
+
+    string fullTooltipText = $"{nameText}\n{descText}\n{doesText}\n{costText}";
+
+    // 2. คำนวณขนาดพิกเซลของข้อความจริงเพื่อสร้างขนาดกรอบสีดำให้อัตโนมัติ
+    Vector2 textSize = _font.MeasureString(fullTooltipText);
+    
+    int padding = 12; // ระยะขอบด้านในกล่อง
+    Vector2 tooltipPos = new Vector2(currentMouseState.X + 20, currentMouseState.Y - 100);
+
+    // ป้องกันไม่ให้กล่อง Tooltip ตกขอบขวาหรือขอบล่างของหน้าจอ (1920x1080)
+    if (tooltipPos.X + textSize.X + (padding * 2) > 1920)
+    {
+        tooltipPos.X = 1920 - textSize.X - (padding * 2) - 10;
+    }
+    if (tooltipPos.Y < 10)
+    {
+        tooltipPos.Y = 10;
+    }
+
+    Rectangle frameRect = new Rectangle(
+        (int)tooltipPos.X - padding,
+        (int)tooltipPos.Y - padding,
+        (int)textSize.X + (padding * 2),
+        (int)textSize.Y + (padding * 2)
+    );
+
+    // 3. วาด Black Pixel Frame (กรอบดำโปร่งแสง 85% + ขอบสีทองบางๆ)
+    spriteBatch.Draw(_pixelTexture, frameRect, Color.Black * 0.85f);
+    
+    // (Optional) วาดเส้นขอบสีทองครอบกล่องดำเพิ่มความสวยงาม
+    
+    // 4. วาดตัวหนังสือแยกสีตามต้องการเพื่อความอ่านง่าย
+    float lineSpacing = _font.LineSpacing;
+    Vector2 textDrawPos = tooltipPos;
+
+    // Line 1: Name (สีทอง)
+    spriteBatch.DrawString(_font, nameText, textDrawPos, Color.Gold);
+    textDrawPos.Y += lineSpacing;
+
+    // Line 2: Description (สีขาว)
+    spriteBatch.DrawString(_font, descText, textDrawPos, Color.White);
+    textDrawPos.Y += lineSpacing;
+
+    // Line 3: Does / Effect (สีเขียวอ่อน/เหลือง)
+    spriteBatch.DrawString(_font, doesText, textDrawPos, Color.LightGreen);
+    textDrawPos.Y += lineSpacing;
+
+    // Line 4: Cost Sanity (สีฟ้า/ไซแอน)
+    spriteBatch.DrawString(_font, costText, textDrawPos, Color.Cyan);
+}
 
             // 6. End Turn Prompt/Button
             spriteBatch.DrawString(_font, "Click or Press [E] to End Turn", new Vector2(1500, 900), Color.Yellow);
@@ -503,6 +596,32 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
                     spriteBatch.DrawString(_font, item.Text, item.Position, scaryColor);
                 }
             }
+            // 8. Draw Screen Flash Overlay (Red & Purple Flash)
+            if (ScreenTexture != null) //[cite: 22]
+            {
+                // วาด Red Flash (เมื่อโดนโจมตี)
+                if (_redFlashAlpha > 0f)
+                {
+                    spriteBatch.Draw(
+                        ScreenTexture, 
+                        new Rectangle(0, 0, 1920, 1080), 
+                        Color.Red * _redFlashAlpha
+                    );
+                }
+
+                // วาด Purple Flash (เมื่อโดน DeBuff / เสีย Sanity)
+                if (_purpleFlashAlpha > 0f)
+                {
+                    spriteBatch.Draw(
+                        ScreenTexture, 
+                        new Rectangle(0, 0, 1920, 1080), 
+                        Color.Purple * _purpleFlashAlpha
+                    );
+                }
+            }
+
+            
+        
             spriteBatch.End();
         }
         private void SpawnScaryText()
