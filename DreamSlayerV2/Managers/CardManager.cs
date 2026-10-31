@@ -178,8 +178,8 @@ namespace DreamSlayerV2
         case "Heal":
             CardID = 3; // (Col 4, Row 1)
             Rarity = CardRarity.Common;
-            Description = "Common for magic use for this world to heal";
-            Does = $"Heal a wound of 6 Hp to yourself. Cost: {Cost * 10} Sanity.";
+            Description = "Comman healing magic in this Star";
+            Does = $"Heal 6 Hp to yourself. Cost: {Cost * 10} Sanity.";
             break;
 
         case "Focus":

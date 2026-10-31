@@ -25,9 +25,11 @@ namespace DreamSlayerV2.Scenes
             _font = content.Load<SpriteFont>("File");
             SoundEffect badEffect = content.Load<SoundEffect>("TitleMusic");
             _soundInstance = badEffect.CreateInstance();
+            
             _soundInstance.Volume = 1.0f;
             _soundInstance.Pitch = 0.07f;
             _soundInstance.IsLooped = true;
+            _soundInstance.Play();
         }
 
         public void Update(GameTime gameTime)

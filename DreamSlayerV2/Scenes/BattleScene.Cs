@@ -25,6 +25,7 @@ namespace DreamSlayerV2.Scenes
         private float _scarySpawnTimer = 0f;
         private Random _scaryRnd = new Random();
         private Texture2D _pixelTexture;
+        //UI Texture list 
         private Texture2D Healthbar;
         private Texture2D BlankHealthBar;
         // Audio Storage
@@ -67,57 +68,54 @@ namespace DreamSlayerV2.Scenes
         }
 
         public void LoadContent(ContentManager content)
-{
-    if (_contentLoaded) return;
-    var graphicsDevice = ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService))).GraphicsDevice;
+        {
+            if (_contentLoaded) return;
+            var graphicsDevice = ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService))).GraphicsDevice;
 
-// สร้างแค่ 1x1 พิกเซลพอดคับ (ประหยัดแรมสุดๆ)
-    ScreenTexture = new Texture2D(graphicsDevice, 1, 1);
-    ScreenTexture.SetData(new[] { Color.White });
-    _pixelTexture = ScreenTexture;
-    _font = content.Load<SpriteFont>("File");
-    EnemyTexture = content.Load<Texture2D>("UnrealWolf");
-    BgTexture[0] = content.Load<Texture2D>("HorrorForestDreamV2");
-    BgTexture[1] = content.Load<Texture2D>("HorrorForestDreamV2");
-    BgTexture[2] = content.Load<Texture2D>("TheDarkCave");
-    CardTexture = content.Load<Texture2D>("All16Card (1)");
-    Healthbar = content.Load<Texture2D>("HealthBar");
-    BlankHealthBar = content.Load<Texture2D>("HealthBar");
+            ScreenTexture = new Texture2D(graphicsDevice, 1, 1);
+            ScreenTexture.SetData(new[] { Color.White });
+            _pixelTexture = ScreenTexture;
+            _font = content.Load<SpriteFont>("File");
+            EnemyTexture = content.Load<Texture2D>("UnrealWolf");
+            BgTexture[0] = content.Load<Texture2D>("HorrorForestDreamV2");
+            BgTexture[1] = content.Load<Texture2D>("HorrorForestDreamV2");
+            BgTexture[2] = content.Load<Texture2D>("TheDarkCave");
+            CardTexture = content.Load<Texture2D>("All16Card (1)");
+            Healthbar = content.Load<Texture2D>("HealthBar");
+            BlankHealthBar = content.Load<Texture2D>("HealthBar");
 
-    // Load SFX (.wav)
-    SoundEffect badEffect = content.Load<SoundEffect>("Bad_Effect_gain");
-    _soundEffects.Add(badEffect);
+            // Load SFX (.wav)
+            SoundEffect badEffect = content.Load<SoundEffect>("Bad_Effect_gain");
+            _soundEffects.Add(badEffect);
 
-    // Create and configure the sound instance
-    _debuffSoundInstance = badEffect.CreateInstance();
-    _debuffSoundInstance.Volume = 1.0f;    // Max volume
-    _debuffSoundInstance.Pitch = -0.509f;  // ~0.491x pitch / speed lowering
-    _contentLoaded = true;
-}
+            _debuffSoundInstance = badEffect.CreateInstance();
+            _debuffSoundInstance.Volume = 1.0f;
+            _debuffSoundInstance.Pitch = -0.509f;
+            _contentLoaded = true;
+        }
+
         public void Update(GameTime gameTime)
         {
             float ft = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-// Fade out Red Flash (สีแดงจางหายใน ~0.5 วินาที)
-if (_redFlashAlpha > 0f)
-{
-    _redFlashAlpha -= ft * 2.0f;
-    if (_redFlashAlpha < 0f) _redFlashAlpha = 0f;
-}
+            if (_redFlashAlpha > 0f)
+            {
+                _redFlashAlpha -= ft * 2.0f;
+                if (_redFlashAlpha < 0f) _redFlashAlpha = 0f;
+            }
 
-// Fade out Purple Flash (สีม่วงจางหายใน ~0.5 วินาที)
-if (_purpleFlashAlpha > 0f)
-{
-    _purpleFlashAlpha -= ft * 2.0f;
-    if (_purpleFlashAlpha < 0f) _purpleFlashAlpha = 0f;
-}
+            if (_purpleFlashAlpha > 0f)
+            {
+                _purpleFlashAlpha -= ft * 2.0f;
+                if (_purpleFlashAlpha < 0f) _purpleFlashAlpha = 0f;
+            }
+
             _previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
 
             _previousMouseState = currentMouseState;
             currentMouseState = Mouse.GetState();
 
-            // Press 'I' to return to Title
             if (currentKeyboardState.IsKeyDown(Keys.I))
             {
                 SceneManager.ChangeScene(new TitleScene());
@@ -132,7 +130,6 @@ if (_purpleFlashAlpha > 0f)
                 return;
             }
 
-            // Check for Win Condition (Enemy HP <= 0)
             if (_enemy.HP <= 0)
             {
                 bool isFinalBossNode = targetNode != null &&
@@ -151,7 +148,6 @@ if (_purpleFlashAlpha > 0f)
                 return;
             }
 
-            // Check Defeat Condition
             if (_player.PlayerHP <= 0 || _player.Sanity <= 0)
             {
                 SceneManager.ChangeScene(new GameOverScene(0, 0, 0, false, true, 0));
@@ -161,7 +157,6 @@ if (_purpleFlashAlpha > 0f)
             bool isMouseClicked = currentMouseState.LeftButton == ButtonState.Pressed &&
                                   _previousMouseState.LeftButton == ButtonState.Released;
 
-            // 1. PLAY CARDS (Keyboard 1-5 OR Left Mouse Click)
             Keys[] cardKeys = { Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5 };
             float startX = 500;
             int cardWidth = 140;
@@ -184,232 +179,218 @@ if (_purpleFlashAlpha > 0f)
                 }
             }
 
-            // 2. END TURN (Keyboard [E] or Click End Turn Button)
             Rectangle endTurnButtonBounds = new Rectangle(1500, 890, 300, 50);
             bool endTurnClicked = isMouseClicked && endTurnButtonBounds.Contains(currentMouseState.Position);
             bool endTurnKeyPressed = currentKeyboardState.IsKeyDown(Keys.E) && _previousKeyboardState.IsKeyUp(Keys.E);
 
             if (endTurnKeyPressed || endTurnClicked) CompleteTurn();
-            // Check if 'P' key was pressed to open the Pause Scene
+
             if (currentKeyboardState.IsKeyDown(Keys.P) && _previousKeyboardState.IsKeyUp(Keys.P))
             {
-                // Passes the current active player instance and 'this' scene so it can resume seamlessly
                 SceneManager.ChangeScene(new PlayerStatsScene(_player, this));
                 return;
             }
+
             if (_player.Sanity < 30)
-{
-    float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-    _scarySpawnTimer += dt;
+            {
+                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _scarySpawnTimer += dt;
 
-    // สุ่มเกิดข้อความใหม่ทุกๆ 1.2 วินาที (จำกัดไม่เกิน 4 ข้อความพร้อมกัน)
-    if (_scaryTexts.Count < 4 && _scarySpawnTimer > 1.2f)
-    {
-        _scarySpawnTimer = 0f;
-        SpawnScaryText();
-    }
-
-    // อัปเดตตำแหน่งและการจางหายของข้อความหลอน
-    for (int i = _scaryTexts.Count - 1; i >= 0; i--)
-    {
-        var item = _scaryTexts[i];
-        item.Position += item.Velocity * dt;
-        item.LifeSpan -= dt;
-
-        if (item.LifeSpan < 1.0f)
-        {
-            item.Alpha = item.LifeSpan;
-        }
-
-        if (item.LifeSpan <= 0f)
-        {
-            _scaryTexts.RemoveAt(i);
-        }
-    }
-}
-else
-{
-    _scaryTexts.Clear(); // เคลียร์ข้อความทิ้งถ้า Sanity กลับมา >= 30
-}
-        }
-
-private void TryPlayCard(int cardIndex)
-{
-    var selectedCard = _player.Hand[cardIndex];
-    if (selectedCard == null) return;
-
-    // ตรวจสอบการ์ดที่เล่นไม่ได้ (เช่น Curse / Hazard)
-    if (selectedCard.IsUnplayable) return;
-
-    int sanityCost = selectedCard.Cost * 10;
-
-    // Omega and Mighty Defend Attack leave the player at 20 Sanity.
-    if (LeavesTwentySanity(selectedCard))
-    {
-        if (selectedCard.Name == "Mighty Defend Attack")
-        {
-            ApplyDamageToEnemy(_player.Defense);
-        }
-        else
-        {
-            ApplyDamageToEnemy(50);
-        }
-
-        _player.Sanity = 20;
-        _player.UseCard(cardIndex);
-        return;
-    }
-
-    // ตรวจสอบว่ามี Sanity พอจ่ายไหม
-    if (_player.Sanity >= sanityCost)
-    {
-        _player.Sanity -= sanityCost;
-
-        switch (selectedCard.Name)
-        {
-            case "Strike":
-                ApplyDamageToEnemy(selectedCard.InHandDamage);
-                break;
-
-            case "Piece":
-                ApplyDamageToEnemy(8);
-                // TODO: เพิ่มดีบัฟ Valuable ใส่ศัตรู
-                break;
-
-            case "All in One":
-                int strikeCount = 0;
-                for (int i = 0; i < _player.Hand.Length; i++)
+                if (_scaryTexts.Count < 4 && _scarySpawnTimer > 1.2f)
                 {
-                    if (_player.Hand[i] != null && _player.Hand[i].Name == "Strike")
+                    _scarySpawnTimer = 0f;
+                    SpawnScaryText();
+                }
+
+                for (int i = _scaryTexts.Count - 1; i >= 0; i--)
+                {
+                    var item = _scaryTexts[i];
+                    item.Position += item.Velocity * dt;
+                    item.LifeSpan -= dt;
+
+                    if (item.LifeSpan < 1.0f)
                     {
-                        strikeCount++;
-                        _player.Hand[i] = null; // ทิ้งการ์ด Strike ในมือ
+                        item.Alpha = item.LifeSpan;
+                    }
+
+                    if (item.LifeSpan <= 0f)
+                    {
+                        _scaryTexts.RemoveAt(i);
                     }
                 }
-                ApplyDamageToEnemy(6 * strikeCount);
-                break;
+            }
+            else
+            {
+                _scaryTexts.Clear();
+            }
+        }
 
-            case "Defend":
-                _player.Defense += 6;
-                break;
+        private void TryPlayCard(int cardIndex)
+        {
+            var selectedCard = _player.Hand[cardIndex];
+            if (selectedCard == null) return;
 
-            case "No Fight":
-                int defendCount = 0;
-                for (int i = 0; i < _player.Hand.Length; i++)
+            if (selectedCard.IsUnplayable) return;
+
+            int sanityCost = selectedCard.Cost * 10;
+
+            if (LeavesTwentySanity(selectedCard))
+            {
+                if (selectedCard.Name == "Mighty Defend Attack")
                 {
-                    if (_player.Hand[i] != null && _player.Hand[i].Name == "Defend")
-                    {
-                        defendCount++;
-                        _player.Hand[i] = null;
-                    }
+                    ApplyDamageToEnemy(_player.Defense);
                 }
-                _player.Defense += (6 * defendCount);
-                break;
+                else
+                {
+                    ApplyDamageToEnemy(50);
+                }
 
-            case "Mirror Shield":
-                _player.Defense = (_player.Defense * 2) + 10;
-                break;
-
-            case "Inspection":
-                _player.DrawCard(); // เรียกจั่วการ์ด 1 ใบ
-                break;
-
-            case "Powerup":
-                // เพิ่มดาเมจถาวรให้การ์ดโจมตี (ถ้ามีฟังก์ชันรองรับ หรือเพิ่มตัวแปรโบนัสใน PlayerController)
-                break;
-
-            case "Restore":
-            case "Heal":
-                _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + 8);
-                break;
-
-            case "Focus":
-                _player.Sanity = Math.Min(100, _player.Sanity + 20);
-                // ใช้เสร็จแล้วลบออกจากการต่อสู้รอบนี้ (Exhaust) แทนการลง Discard Pile
-                _player.Hand[cardIndex] = null; 
+                _player.Sanity = 20;
+                _player.UseCard(cardIndex);
                 return;
+            }
 
-            case "Aura Heal":
-                _player.Sanity = Math.Min(100, _player.Sanity + 30);
-                _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + 15);
-                _player.Hand[cardIndex] = null;
-                return;
+            if (_player.Sanity >= sanityCost)
+            {
+                _player.Sanity -= sanityCost;
 
-            default:
-                // Fallback ตาม CardType พื้นฐาน
-                if (selectedCard.Type == CardManager.CardType.Attack)
+                switch (selectedCard.Name)
                 {
-                    ApplyDamageToEnemy(selectedCard.InHandDamage);
+                    case "Strike":
+                        ApplyDamageToEnemy(selectedCard.InHandDamage);
+                        break;
+
+                    case "Piece":
+                        ApplyDamageToEnemy(8);
+                        break;
+
+                    case "All in One":
+                        int strikeCount = 0;
+                        for (int i = 0; i < _player.Hand.Length; i++)
+                        {
+                            if (_player.Hand[i] != null && _player.Hand[i].Name == "Strike")
+                            {
+                                strikeCount++;
+                                _player.Hand[i] = null;
+                            }
+                        }
+                        ApplyDamageToEnemy(6 * strikeCount);
+                        break;
+
+                    case "Defend":
+                        _player.Defense += 6;
+                        break;
+
+                    case "No Fight":
+                        int defendCount = 0;
+                        for (int i = 0; i < _player.Hand.Length; i++)
+                        {
+                            if (_player.Hand[i] != null && _player.Hand[i].Name == "Defend")
+                            {
+                                defendCount++;
+                                _player.Hand[i] = null;
+                            }
+                        }
+                        _player.Defense += (6 * defendCount);
+                        break;
+
+                    case "Mirror Shield":
+                        _player.Defense = (_player.Defense * 2) + 10;
+                        break;
+
+                    case "Inspection":
+                        _player.DrawCard();
+                        break;
+
+                    case "Powerup":
+                        break;
+
+                    case "Restore":
+                    case "Heal":
+                        _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + 8);
+                        break;
+
+                    case "Focus":
+                        _player.Sanity = Math.Min(100, _player.Sanity + 20);
+                        _player.Hand[cardIndex] = null; 
+                        return;
+
+                    case "Aura Heal":
+                        _player.Sanity = Math.Min(100, _player.Sanity + 30);
+                        _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + 15);
+                        _player.Hand[cardIndex] = null;
+                        return;
+
+                    default:
+                        if (selectedCard.Type == CardManager.CardType.Attack)
+                        {
+                            ApplyDamageToEnemy(selectedCard.InHandDamage);
+                        }
+                        else if (selectedCard.Type == CardManager.CardType.Defense)
+                        {
+                            _player.Defense += 6;
+                        }
+                        break;
                 }
-                else if (selectedCard.Type == CardManager.CardType.Defense)
+
+                if (_player.Hand[cardIndex] != null)
                 {
-                    _player.Defense += 6;
+                    _player.UseCard(cardIndex);
                 }
-                break;
+            }
         }
 
-        // ส่งการ์ดลง Discard Pile ปกติ (ยกเว้นกรณี Exhaust ที่จัดการ Hand[cardIndex] = null ไปแล้ว)
-        if (_player.Hand[cardIndex] != null)
+        private static bool LeavesTwentySanity(CardManager card)
         {
-            _player.UseCard(cardIndex);
+            return card.Name == "Omega" || card.Name == "Mighty Defend Attack";
         }
-    }
-}
 
-private static bool LeavesTwentySanity(CardManager card)
-{
-    return card.Name == "Omega" || card.Name == "Mighty Defend Attack";
-}
-
-private void ApplyDamageToEnemy(int damage)
-{
-    // รองรับทั้งคลาส MonsterBattle และ BossBattle (ผ่าน BaseEnemy)
-    if (_enemy.Defense > 0)
-    {
-        if (damage <= _enemy.Defense)
+        private void ApplyDamageToEnemy(int damage)
         {
-            _enemy.Defense -= damage;
+            if (_enemy.Defense > 0)
+            {
+                if (damage <= _enemy.Defense)
+                {
+                    _enemy.Defense -= damage;
+                }
+                else
+                {
+                    damage -= _enemy.Defense;
+                    _enemy.Defense = 0;
+                    _enemy.HP -= damage;
+                }
+            }
+            else
+            {
+                _enemy.HP -= damage;
+            }
         }
-        else
-        {
-            damage -= _enemy.Defense;
-            _enemy.Defense = 0;
-            _enemy.HP -= damage;
-        }
-    }
-    else
-    {
-        _enemy.HP -= damage;
-    }
-}
-// ฟังก์ชันช่วยคำนวณการหักเกราะและเลือดของศัตรู
 
         private void CompleteTurn()
-{
-    _enemy.Defense = 0; //
-
-    // ตรวจสอบแอ็กชันถัดไปของศัตรูเพื่อเปิดเอฟเฟกต์กระพริบสี
-    foreach (EnemyAction action in _enemy.NextActions) //[cite: 22]
-    {
-        if (action.Type == EnemyActionType.Attack)
         {
-            _redFlashAlpha = 0.55f; // เปิด Red Flash ความเข้ม 55% เมื่อศัตรูโจมตี
-        }
-        else if (action.Type == EnemyActionType.EldritchDebuff)
-        {
-            _purpleFlashAlpha = 0.65f; // เปิด Purple Flash ความเข้ม 65% เมื่อศัตรูแจก DeBuff/ลด Sanity
-            _debuffSoundInstance.Volume = 1.0f; //[cite: 22]
-            _debuffSoundInstance.Pitch = -0.509f; //[cite: 22]
-            _debuffSoundInstance.Play(); //[cite: 22]
-        }
-    }
+            _enemy.Defense = 0;
 
-    _enemy.ExecuteTurn(_player); //[cite: 22]
+            foreach (EnemyAction action in _enemy.NextActions)
+            {
+                if (action.Type == EnemyActionType.Attack)
+                {
+                    _redFlashAlpha = 0.55f;
+                }
+                else if (action.Type == EnemyActionType.EldritchDebuff)
+                {
+                    _purpleFlashAlpha = 0.65f;
+                    _debuffSoundInstance.Volume = 1.0f;
+                    _debuffSoundInstance.Pitch = -0.509f;
+                    _debuffSoundInstance.Play();
+                }
+            }
 
-    _player.EndTurn(); //[cite: 22]
-    _player.PlayerTurn(); //[cite: 22]
-    _enemy.RollNextAction(_player.Sanity < 30); 
-}
+            _enemy.ExecuteTurn(_player);
+
+            _player.EndTurn();
+            _player.PlayerTurn();
+            _enemy.RollNextAction(_player.Sanity < 30); 
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -420,8 +401,8 @@ private void ApplyDamageToEnemy(int damage)
             spriteBatch.Draw(BgTexture[bgIndex], new Rectangle(0, 0, 1920, 1080), Color.White);
             int MoveY = (int)(Math.Sin(DateTime.Now.TimeOfDay.TotalSeconds * 3.5) * 10);
 
-// 2. Enemy & Intent Display
-spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color.White);
+            // 2. Enemy & Intent Display
+            spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color.White);
 
             string enemyDefenseText = _enemy.Defense > 0 ? $" (+{_enemy.Defense} DEF)" : "";
             spriteBatch.DrawString(_font, $"Enemy HP: {_enemy.HP} / {_enemy.MaxHP}{enemyDefenseText}", new Vector2(1200, 240), Color.Red);
@@ -469,13 +450,43 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
             spriteBatch.DrawString(_font, $"Energy: {_player.Energy}", new Vector2(80, 230), Color.Yellow);
             spriteBatch.DrawString(_font, $"Deck: {_player.Deck.Count}  |  Discard: {_player.DiscardPile.Count}", new Vector2(80, 280), Color.LightGray);
 
-            // 4. Cards in Hand
+            // --- 4. LONG HEALTH BAR ACROSS 5 CARDS & CARDS IN HAND ---
+            if (Healthbar != null)
+            {
+                float barX = 500f;
+                float barY = 740f;
+                float barWidth = 940f;
+                int barHeight = 22;
+
+                if (BlankHealthBar != null)
+                {
+                    spriteBatch.Draw(BlankHealthBar, new Rectangle((int)barX, (int)barY, (int)barWidth, barHeight), Color.DarkGray * 0.8f);
+                }
+
+                float hpPercent = MathHelper.Clamp((float)_player.PlayerHP / _player.MaxHP, 0f, 1f);
+                int filledWidth = (int)(barWidth * hpPercent);
+
+                Rectangle sourceRectBar = new Rectangle(0, 0, (int)(Healthbar.Width * hpPercent), Healthbar.Height);
+                Rectangle destRectBar = new Rectangle((int)barX, (int)barY, filledWidth, barHeight);
+
+                spriteBatch.Draw(Healthbar, destRectBar, sourceRectBar, Color.White);
+
+                string hpText = $"HP: {_player.PlayerHP} / {_player.MaxHP}";
+                Vector2 textSize = _font.MeasureString(hpText);
+                Vector2 textPos = new Vector2(
+                    barX + (barWidth - textSize.X) / 2f,
+                    barY + (barHeight - textSize.Y) / 2f
+                );
+
+                spriteBatch.DrawString(_font, hpText, textPos + Vector2.One, Color.Black);
+                spriteBatch.DrawString(_font, hpText, textPos, Color.White);
+            }
+
             float startX = 500;
             int cardWidth = 140;
             int cardHeight = 200;
             CardManager hoveredCard = null;
 
-            // คำนวณขนาดของแต่ละช่องการ์ดใน Texture 4x4 Grid
             int sourceWidth = CardTexture.Width / 4;
             int sourceHeight = CardTexture.Height / 4;
 
@@ -493,11 +504,9 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
                     if (isHovered)
                     {
                         hoveredCard = card;
-                        cardY -= 25; // ยกการ์ดขึ้นเมื่อเอาเมาส์ชี้
+                        cardY -= 25; 
                     }
 
-                    // คำนวณพิกัด X และ Y บน Sprite Sheet (4x4 Grid)
-                    // สมมติว่า CardID มีค่าตั้งแต่ 0 ถึง 15 (เรียงตามลำดับในภาพ All16Card)
                     int col = card.CardID % 4;
                     int row = card.CardID / 4;
 
@@ -508,85 +517,71 @@ spriteBatch.Draw(EnemyTexture, new Rectangle(1200, 300 + MoveY, 300, 300), Color
                         sourceHeight
                     );
 
-                    // วาดรูปการ์ดจาก Sprite Sheet
                     spriteBatch.Draw(CardTexture, new Rectangle((int)cardX, (int)cardY, cardWidth, cardHeight), sourceRect, Color.White);
                     
-                    // แสดงตัวเลขคีย์ลัด [1], [2], [3] บนการ์ด
                     spriteBatch.DrawString(_font, $"[{i + 1}]", new Vector2(cardX + 10, cardY + 10), Color.Gold);
                     
-                    // แสดงชื่อการ์ดตัวย่อหรือ Cost Sanity บนการ์ด
                     bool leavesTwentySanity = LeavesTwentySanity(card);
                     spriteBatch.DrawString(_font, leavesTwentySanity ? "20" : $"{card.Cost * 10}", new Vector2(cardX + 10, cardY + 160), Color.Cyan);
                 }
             }
 
             // 5. Tooltip Rendering
-            // 5. Tooltip Rendering (พร้อม Black Pixel Frame พื้นหลัง)
-if (hoveredCard != null && _pixelTexture != null)
-{
-    // 1. จัดเตรียมข้อความที่จะแสดงผล
-    string nameText = $"--- {hoveredCard.Name} ---";
-    string descText = $"Description: {hoveredCard.Description}";
-    string doesText = $"Effect: {hoveredCard.Does}";
-    
-    bool leavesTwentySanity = LeavesTwentySanity(hoveredCard);
-    string costText = leavesTwentySanity 
-        ? "Sanity Cost: 20 (Special)" 
-        : $"Sanity Cost: {hoveredCard.Cost * 10}";
+            if (hoveredCard != null && _pixelTexture != null)
+            {
+                string nameText = $"--- {hoveredCard.Name} ---";
+                string descText = $"Description: {hoveredCard.Description}";
+                string doesText = $"Effect: {hoveredCard.Does}";
+                
+                bool leavesTwentySanity = LeavesTwentySanity(hoveredCard);
+                string costText = leavesTwentySanity 
+                    ? "Sanity Cost: 20 (Special)" 
+                    : $"Sanity Cost: {hoveredCard.Cost * 10}";
 
-    string fullTooltipText = $"{nameText}\n{descText}\n{doesText}\n{costText}";
+                string fullTooltipText = $"{nameText}\n{descText}\n{doesText}\n{costText}";
 
-    // 2. คำนวณขนาดพิกเซลของข้อความจริงเพื่อสร้างขนาดกรอบสีดำให้อัตโนมัติ
-    Vector2 textSize = _font.MeasureString(fullTooltipText);
-    
-    int padding = 12; // ระยะขอบด้านในกล่อง
-    Vector2 tooltipPos = new Vector2(currentMouseState.X + 20, currentMouseState.Y - 100);
+                Vector2 textSize = _font.MeasureString(fullTooltipText);
+                
+                int padding = 12;
+                Vector2 tooltipPos = new Vector2(currentMouseState.X + 20, currentMouseState.Y - 100);
 
-    // ป้องกันไม่ให้กล่อง Tooltip ตกขอบขวาหรือขอบล่างของหน้าจอ (1920x1080)
-    if (tooltipPos.X + textSize.X + (padding * 2) > 1920)
-    {
-        tooltipPos.X = 1920 - textSize.X - (padding * 2) - 10;
-    }
-    if (tooltipPos.Y < 10)
-    {
-        tooltipPos.Y = 10;
-    }
+                if (tooltipPos.X + textSize.X + (padding * 2) > 1920)
+                {
+                    tooltipPos.X = 1920 - textSize.X - (padding * 2) - 10;
+                }
+                if (tooltipPos.Y < 10)
+                {
+                    tooltipPos.Y = 10;
+                }
 
-    Rectangle frameRect = new Rectangle(
-        (int)tooltipPos.X - padding,
-        (int)tooltipPos.Y - padding,
-        (int)textSize.X + (padding * 2),
-        (int)textSize.Y + (padding * 2)
-    );
+                Rectangle frameRect = new Rectangle(
+                    (int)tooltipPos.X - padding,
+                    (int)tooltipPos.Y - padding,
+                    (int)textSize.X + (padding * 2),
+                    (int)textSize.Y + (padding * 2)
+                );
 
-    // 3. วาด Black Pixel Frame (กรอบดำโปร่งแสง 85% + ขอบสีทองบางๆ)
-    spriteBatch.Draw(_pixelTexture, frameRect, Color.Black * 0.85f);
-    
-    // (Optional) วาดเส้นขอบสีทองครอบกล่องดำเพิ่มความสวยงาม
-    
-    // 4. วาดตัวหนังสือแยกสีตามต้องการเพื่อความอ่านง่าย
-    float lineSpacing = _font.LineSpacing;
-    Vector2 textDrawPos = tooltipPos;
+                spriteBatch.Draw(_pixelTexture, frameRect, Color.Black * 0.85f);
+                
+                float lineSpacing = _font.LineSpacing;
+                Vector2 textDrawPos = tooltipPos;
 
-    // Line 1: Name (สีทอง)
-    spriteBatch.DrawString(_font, nameText, textDrawPos, Color.Gold);
-    textDrawPos.Y += lineSpacing;
+                spriteBatch.DrawString(_font, nameText, textDrawPos, Color.Gold);
+                textDrawPos.Y += lineSpacing;
 
-    // Line 2: Description (สีขาว)
-    spriteBatch.DrawString(_font, descText, textDrawPos, Color.White);
-    textDrawPos.Y += lineSpacing;
+                spriteBatch.DrawString(_font, descText, textDrawPos, Color.White);
+                textDrawPos.Y += lineSpacing;
 
-    // Line 3: Does / Effect (สีเขียวอ่อน/เหลือง)
-    spriteBatch.DrawString(_font, doesText, textDrawPos, Color.LightGreen);
-    textDrawPos.Y += lineSpacing;
+                spriteBatch.DrawString(_font, doesText, textDrawPos, Color.LightGreen);
+                textDrawPos.Y += lineSpacing;
 
-    // Line 4: Cost Sanity (สีฟ้า/ไซแอน)
-    spriteBatch.DrawString(_font, costText, textDrawPos, Color.Cyan);
-}
+                spriteBatch.DrawString(_font, costText, textDrawPos, Color.Cyan);
+            }
 
             // 6. End Turn Prompt/Button
             spriteBatch.DrawString(_font, "Click or Press [E] to End Turn", new Vector2(1500, 900), Color.Yellow);
             spriteBatch.DrawString(_font, "Press [P] to Pause / Player Stats", new Vector2(1500, 950), Color.LightBlue);
+
             // 7. Draw Scary Floating Texts if Sanity < 30
             if (_player.Sanity < 30)
             {
@@ -596,10 +591,10 @@ if (hoveredCard != null && _pixelTexture != null)
                     spriteBatch.DrawString(_font, item.Text, item.Position, scaryColor);
                 }
             }
+
             // 8. Draw Screen Flash Overlay (Red & Purple Flash)
-            if (ScreenTexture != null) //[cite: 22]
+            if (ScreenTexture != null)
             {
-                // วาด Red Flash (เมื่อโดนโจมตี)
                 if (_redFlashAlpha > 0f)
                 {
                     spriteBatch.Draw(
@@ -609,7 +604,6 @@ if (hoveredCard != null && _pixelTexture != null)
                     );
                 }
 
-                // วาด Purple Flash (เมื่อโดน DeBuff / เสีย Sanity)
                 if (_purpleFlashAlpha > 0f)
                 {
                     spriteBatch.Draw(
@@ -619,51 +613,50 @@ if (hoveredCard != null && _pixelTexture != null)
                     );
                 }
             }
-
-            
         
             spriteBatch.End();
         }
+
         private void SpawnScaryText()
-{
-    string[] madnessQuotes = {
-        "THEY ARE WATCHING",
-        "CANNOT ESCAPE",
-        "MIND COLLAPSING",
-        "ENDLESS VOID",
-        "MADNESS AWAITS",
-        "WHO IS THERE?",
-        "FORGET YOUR NAME",
-        "DREAMS BLEEDING",
-        "IT HURTS",
-        "NO WAY OUT"
-    };
+        {
+            string[] madnessQuotes = {
+                "THEY ARE WATCHING",
+                "CANNOT ESCAPE",
+                "MIND COLLAPSING",
+                "ENDLESS VOID",
+                "MADNESS AWAITS",
+                "WHO IS THERE?",
+                "FORGET YOUR NAME",
+                "DREAMS BLEEDING",
+                "IT HURTS",
+                "NO WAY OUT"
+            };
 
-    string selectedText = madnessQuotes[_scaryRnd.Next(madnessQuotes.Length)];
+            string selectedText = madnessQuotes[_scaryRnd.Next(madnessQuotes.Length)];
 
-    bool movingRight = _scaryRnd.Next(2) == 0;
-    float startX = movingRight ? -300f : 2100f;
-    float startY = _scaryRnd.Next(150, 1000); // สุ่มความสูงในจอ
-    // ความเร็วสูงและสั่นประสาท
-    float speedX = movingRight ? _scaryRnd.Next(250, 450) : _scaryRnd.Next(-450, -250);
+            bool movingRight = _scaryRnd.Next(2) == 0;
+            float startX = movingRight ? -300f : 2100f;
+            float startY = _scaryRnd.Next(150, 1000);
+            float speedX = movingRight ? _scaryRnd.Next(250, 450) : _scaryRnd.Next(-450, -250);
 
-    _scaryTexts.Add(new ScaryFloatingText
-    {
-        Text = selectedText,
-        Position = new Vector2(startX, startY),
-        Velocity = new Vector2(speedX, 0),
-        LifeSpan = 5.0f
-    });
-}
+            _scaryTexts.Add(new ScaryFloatingText
+            {
+                Text = selectedText,
+                Position = new Vector2(startX, startY),
+                Velocity = new Vector2(speedX, 0),
+                LifeSpan = 5.0f
+            });
+        }
 
         public void UnloadContent() { }
     }
+
     public class ScaryFloatingText
-{
-    public string Text { get; set; }
-    public Vector2 Position { get; set; }
-    public Vector2 Velocity { get; set; }
-    public float Alpha { get; set; } = 1.0f; // แก้ไขตรงนี้ให้ถูกต้อง
-    public float LifeSpan { get; set; } = 5.0f;
-}
+    {
+        public string Text { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
+        public float Alpha { get; set; } = 1.0f;
+        public float LifeSpan { get; set; } = 5.0f;
+    }
 }
