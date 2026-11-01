@@ -24,20 +24,11 @@ namespace DreamSlayerV2.Scenes
         protected readonly bool _isRest;
         protected StructureType _currentStructure;
         
-        // สถานะการกดใช้งานตัวเลือก (ป้องกันกดซ้ำ)
         protected bool _primaryUsed = false;
         protected bool _secondaryUsed = false;
         protected string _interactionMessage = "";
         protected float _messageTimer = 0f;
 
-        // สำหรับ Shop ปกติ
-        private bool boughtHeal = false;
-        private bool boughtInspect = false;
-
-        // Constructor สำหรับ Shop
-        public ShopRestScene() : this(false, StructureType.SafeHouse) { }
-
-        // Constructor หลักสำหรับ Rest ตามโครงสร้าง
         protected ShopRestScene(bool isRest, StructureType structure)
         {
             _isRest = isRest;
@@ -57,7 +48,7 @@ namespace DreamSlayerV2.Scenes
             _pixel.SetData(new[] { Color.White });
         }
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (_messageTimer > 0f) _messageTimer -= dt;
@@ -68,36 +59,13 @@ namespace DreamSlayerV2.Scenes
             var player = GameState.CurrentPlayer;
             if (player == null) return;
 
-            if (!_isRest)
+            if (_isRest)
             {
-                // --- SHOP LOGIC ---
-                Vector2 buyHealPos = new Vector2(200, 300);
-                Vector2 buyInspectPos = new Vector2(200, 360);
-                Rectangle rHeal = new Rectangle((int)buyHealPos.X, (int)buyHealPos.Y, 300, 40);
-                Rectangle rInspect = new Rectangle((int)buyInspectPos.X, (int)buyInspectPos.Y, 300, 40);
-
-                if (clicked && rHeal.Contains(ms.Position) && !boughtHeal && player.SoulCoins >= 20)
-                {
-                    player.SoulCoins -= 20;
-                    boughtHeal = true;
-                    player.Deck.Add(new CardManager(101, "Restore", 1, CardManager.CardType.Heal));
-                }
-                if (clicked && rInspect.Contains(ms.Position) && !boughtInspect && player.SoulCoins >= 50)
-                {
-                    player.SoulCoins -= 50;
-                    boughtInspect = true;
-                    player.Deck.Add(new CardManager(102, "Inspection", 1, CardManager.CardType.Utility));
-                }
-            }
-            else
-            {
-                // --- REST STRUCTURE LOGIC ---
                 Rectangle rPrimaryRest = new Rectangle(200, 420, 500, 40);
                 Rectangle rSecondaryAction = new Rectangle(200, 480, 500, 40);
 
                 if (clicked)
                 {
-                    // Choice 1: Rest (ทุกที่กดได้ แต่ Safe House กับ Hospital ได้ฟื้นฟูพิเศษจากเตียงนุ่มสบาย)
                     if (rPrimaryRest.Contains(ms.Position) && !_primaryUsed)
                     {
                         _primaryUsed = true;
@@ -110,7 +78,6 @@ namespace DreamSlayerV2.Scenes
                         _messageTimer = 3f;
                     }
 
-                    // Choice 2: Secondary Unique Action ตามโครงสร้าง
                     if (rSecondaryAction.Contains(ms.Position) && !_secondaryUsed)
                     {
                         switch (_currentStructure)
@@ -124,7 +91,6 @@ namespace DreamSlayerV2.Scenes
 
                             case StructureType.Blacksmith:
                                 _secondaryUsed = true;
-                                // TODO: ใส่ลอจิกอัปเกรดการ์ดที่นี่
                                 _interactionMessage = "Upgraded a card successfully at the anvil!";
                                 break;
 
@@ -137,7 +103,7 @@ namespace DreamSlayerV2.Scenes
 
                             case StructureType.Hospital:
                                 _secondaryUsed = true;
-                                player.MaxHP += 5; // บัฟเพิ่ม Max HP จากวัคซีน/ยา
+                                player.MaxHP += 5;
                                 player.PlayerHP += 5;
                                 _interactionMessage = "Injected Vaccine! Max HP permanently increased by 5.";
                                 break;
@@ -147,7 +113,6 @@ namespace DreamSlayerV2.Scenes
                 }
             }
 
-            // ออกจากฉากด้วยคลิกขวา
             if (ms.RightButton == ButtonState.Pressed && _prevMouse.RightButton == ButtonState.Released)
             {
                 SceneManager.ChangeScene(new NodeSelectScene());
@@ -156,27 +121,18 @@ namespace DreamSlayerV2.Scenes
             _prevMouse = ms;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
 
-            if (!_isRest)
+            if (_isRest)
             {
-                spriteBatch.DrawString(_font, "Shop", new Vector2(200, 240), Color.Yellow);
-                spriteBatch.DrawString(_font, $"Buy Restore Card (20 Coins) {(boughtHeal ? "- Bought" : "")}", new Vector2(200, 300), boughtHeal ? Color.Gray : Color.White);
-                spriteBatch.DrawString(_font, $"Buy Inspection Card (50 Coins) {(boughtInspect ? "- Bought" : "")}", new Vector2(200, 360), boughtInspect ? Color.Gray : Color.White);
-            }
-            else
-            {
-                // แสดงชื่อและ Dialog ประจำโครงสร้าง
                 spriteBatch.DrawString(_font, $"Rest Area: {_currentStructure}", new Vector2(200, 200), Color.Gold);
                 spriteBatch.DrawString(_font, GetStructureDialogue(), new Vector2(200, 250), Color.LightGray);
 
-                // Choice 1: Rest
                 string restLabel = _primaryUsed ? "Rest (Already Used)" : GetPrimaryRestLabel();
                 spriteBatch.DrawString(_font, restLabel, new Vector2(200, 420), _primaryUsed ? Color.Gray : Color.LightGreen);
 
-                // Choice 2: Secondary Action
                 string secondaryLabel = _secondaryUsed ? "Secondary Action (Already Used)" : GetSecondaryActionLabel();
                 spriteBatch.DrawString(_font, secondaryLabel, new Vector2(200, 480), _secondaryUsed ? Color.Gray : Color.Cyan);
 
@@ -223,8 +179,6 @@ namespace DreamSlayerV2.Scenes
         public void UnloadContent() { }
     }
 
-    // Subclasses สำหรับเรียกใช้งานแต่ละประเภทโครงสร้างในแมพ
-    public class Shop : ShopRestScene { public Shop() : base(false, StructureType.SafeHouse) { } }
     public class SafeHouseRest : ShopRestScene { public SafeHouseRest() : base(true, StructureType.SafeHouse) { } }
     public class BlacksmithRest : ShopRestScene { public BlacksmithRest() : base(true, StructureType.Blacksmith) { } }
     public class StorageRest : ShopRestScene { public StorageRest() : base(true, StructureType.StorageArea) { } }

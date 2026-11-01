@@ -176,6 +176,11 @@ namespace DreamSlayerV2.Scenes
             {
                 case 0:
                     NodeSelectScene.Reset();
+                    
+                    // สร้าง PlayerController พร้อมเช็คว่าเปิดโหมด Nightmare อยู่หรือไม่
+                    bool isNightmare = UpgradeOrbPermanent.NightmareModeUnlocked;
+                    GameState.CurrentPlayer = new PlayerController(CharacterClassV2.Human, isNightmare);
+
                     SceneManager.ChangeScene(new SceneStory1());
                     break;
 
@@ -187,6 +192,10 @@ namespace DreamSlayerV2.Scenes
                     else
                     {
                         NodeSelectScene.Reset();
+                        
+                        bool isNightmareFallback = UpgradeOrbPermanent.NightmareModeUnlocked;
+                        GameState.CurrentPlayer = new PlayerController(CharacterClassV2.Human, isNightmareFallback);
+
                         SceneManager.ChangeScene(new SceneStory1());
                     }
                     break;

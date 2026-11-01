@@ -13,7 +13,7 @@ namespace DreamSlayerV2.Scenes
         public CardManager Card { get; set; }
         public int Price { get; set; }
         public bool IsSold { get; set; }
-        public string Rarity { get; set; } // Common, Rare, Ultra Rare
+        public string Rarity { get; set; }
     }
 
     public class OrbItem
@@ -39,7 +39,6 @@ namespace DreamSlayerV2.Scenes
             GenerateOrbStock();
         }
 
-        // --- 1. STOCK GENERATION (สุ่มการ์ด 5 ใบ 48%/50%/2%) ---
         private void GenerateShopStock()
         {
             _shopCards.Clear();
@@ -49,17 +48,17 @@ namespace DreamSlayerV2.Scenes
                 string rarity;
                 int baseSellPrice;
 
-                if (roll < 0.48) // 48% Common
+                if (roll < 0.48)
                 {
                     rarity = "Common";
                     baseSellPrice = _rnd.Next(10, 21);
                 }
-                else if (roll < 0.98) // 50% Rare
+                else if (roll < 0.98)
                 {
                     rarity = "Rare";
                     baseSellPrice = _rnd.Next(30, 61);
                 }
-                else // 2% Ultra Rare
+                else
                 {
                     rarity = "Ultra Rare";
                     baseSellPrice = _rnd.Next(120, 201);
@@ -80,7 +79,6 @@ namespace DreamSlayerV2.Scenes
 
         private CardManager GenerateCardByRarity(string rarity, int index)
         {
-            // ตัวอย่างการสุ่มสร้างการ์ดตาม Rarity
             return rarity switch
             {
                 "Ultra Rare" => new CardManager(201 + index, "Omega Destruction", 3, CardManager.CardType.Attack),
@@ -89,7 +87,6 @@ namespace DreamSlayerV2.Scenes
             };
         }
 
-        // --- 2. ORB GENERATION ---
         private void GenerateOrbStock()
         {
             _availableOrbs = new List<OrbItem>
@@ -100,7 +97,6 @@ namespace DreamSlayerV2.Scenes
                     ApplyEffect = (p) => { p.MaxHP = (int)(p.MaxHP * 0.95f); } 
                 },
                 
-                
                 new OrbItem { 
                     Name = "Orb of Preservation", 
                     Description = "+5 Free Defense/Turn | -1 Attack Damage", 
@@ -109,30 +105,90 @@ namespace DreamSlayerV2.Scenes
             };
         }
 
-        // --- 3. SACRIFICE SYSTEM (3 Cards -> 1 Higher Rarity) ---
-        public void SacrificeCards(PlayerController player)
+        public override void Update(GameTime gameTime)
         {
-            if (_selectedForSacrifice.Count != 3) return;
+            base.Update(gameTime); // เรียกใช้งานลอจิกพื้นฐาน (เช่น คลิกขวาออกจากฉาก)
 
-            // ตรวจสอบว่าเป็น Rarity เดียวกันทั้ง 3 ใบหรือไม่
-            string type1 = _selectedForSacrifice[0].Name; 
-            
-            // ลบการ์ด 3 ใบออกจาก Deck ผู้เล่น
-            foreach (var card in _selectedForSacrifice)
+            var ms = Mouse.GetState();
+            bool clicked = ms.LeftButton == ButtonState.Pressed && _prevMouse.LeftButton == ButtonState.Released;
+
+            var player = GameState.CurrentPlayer;
+            if (player == null) return;
+
+            if (clicked)
             {
-                player.Deck.Remove(card);
+                // 1. ตรวจสอบคลิกซื้อการ์ด 5 ใบ
+                for (int i = 0; i < _shopCards.Count; i++)
+                {
+                    Rectangle cardBtn = new Rectangle(200, 250 + (i * 45), 450, 35);
+                    if (cardBtn.Contains(ms.Position))
+                    {
+                        BuyCard(player, i);
+                        break;
+                    }
+                }
+
+                // 2. ตรวจสอบคลิกรับ Orb (เลือกได้ฟรี 1 ชิ้น)
+                if (!_orbClaimedInThisShop)
+                {
+                    for (int i = 0; i < _availableOrbs.Count; i++)
+                    {
+                        Rectangle orbBtn = new Rectangle(700, 250 + (i * 50), 400, 40);
+                        if (orbBtn.Contains(ms.Position))
+                        {
+                            ClaimOrb(player, i);
+                            break;
+                        }
+                    }
+                }
             }
-
-            // สุ่มให้การ์ดใหม่ระดับสูงขึ้น (Common -> Rare, Rare -> UR)
-            CardManager upgradedCard = new CardManager(300, "Sacred Awakening", 2, CardManager.CardType.Special);
-            player.Deck.Add(upgradedCard);
-
-            _selectedForSacrifice.Clear();
-            _interactionMessage = "Sacrificed 3 Cards to synthesize a New High-Tier Card!";
-            _messageTimer = 3.0f;
         }
 
-        // --- 4. BUY & SELL LOGIC ---
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin();
+
+            spriteBatch.DrawString(_font, "--- WANDERING TRADER ---", new Vector2(200, 190), Color.Gold);
+
+            // --- Draw Cards Stock (5 Cards) ---
+            spriteBatch.DrawString(_font, "Cards for Sale:", new Vector2(200, 220), Color.Yellow);
+            for (int i = 0; i < _shopCards.Count; i++)
+            {
+                var item = _shopCards[i];
+                Color itemColor = item.IsSold ? Color.Gray : (item.Rarity == "Ultra Rare" ? Color.Purple : (item.Rarity == "Rare" ? Color.Cyan : Color.White));
+                string statusText = item.IsSold ? "[SOLD]" : $"[{item.Price} Coins]";
+                
+                spriteBatch.DrawString(_font, $"{i + 1}. {item.Card.Name} ({item.Rarity}) {statusText}", new Vector2(200, 250 + (i * 45)), itemColor);
+            }
+
+            // --- Draw Orb Shop ---
+            spriteBatch.DrawString(_font, "Free Relic Orbs (Pick 1):", new Vector2(700, 220), Color.Orange);
+            for (int i = 0; i < _availableOrbs.Count; i++)
+            {
+                var orb = _availableOrbs[i];
+                Color orbColor = orb.IsClaimed ? Color.Green : (_orbClaimedInThisShop ? Color.Gray : Color.LightBlue);
+                string claimStatus = orb.IsClaimed ? "[CLAIMED]" : "";
+
+                spriteBatch.DrawString(_font, $"{orb.Name} {claimStatus}\n  {orb.Description}", new Vector2(700, 250 + (i * 55)), orbColor);
+            }
+
+            if (_messageTimer > 0f)
+            {
+                spriteBatch.DrawString(_font, _interactionMessage, new Vector2(200, 520), Color.Orange);
+            }
+
+            spriteBatch.DrawString(_font, "Right-click to leave", new Vector2(200, 620), Color.AntiqueWhite);
+
+            var player = GameState.CurrentPlayer;
+            if (player != null)
+            {
+                spriteBatch.DrawString(_font, $"Soul Coins: {player.SoulCoins}", new Vector2(50, 50), Color.Cyan);
+                spriteBatch.DrawString(_font, $"Current HP: {player.PlayerHP}/{player.MaxHP}", new Vector2(50, 80), Color.LightGreen);
+            }
+
+            spriteBatch.End();
+        }
+
         public void BuyCard(PlayerController player, int index)
         {
             if (index < 0 || index >= _shopCards.Count) return;
@@ -152,12 +208,11 @@ namespace DreamSlayerV2.Scenes
         {
             if (!player.Deck.Contains(card)) return;
 
-            // คำนวณราคาขายตาม Rarity
             int sellReward = card.Cost switch
             {
-                3 => _rnd.Next(120, 201), // UR
-                2 => _rnd.Next(30, 61),   // Rare
-                _ => _rnd.Next(10, 21)    // Common
+                3 => _rnd.Next(120, 201),
+                2 => _rnd.Next(30, 61),
+                _ => _rnd.Next(10, 21)
             };
 
             player.SoulCoins += sellReward;

@@ -185,7 +185,15 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
                                     SceneManager.ChangeScene(new Shop());
                                     break;
                                 case NodeType.Rest:
-                                    SceneManager.ChangeScene(new Rest());
+                                    int structureRoll = Random.Shared.Next(100);
+                                    IScene restScene = structureRoll switch
+                                    {
+                                        < 40 => new SafeHouseRest(),
+                                        < 60 => new StorageRest(),
+                                        < 75 => new BlacksmithRest(),
+                                        _ => new HospitalRest()
+                                    };
+                                    SceneManager.ChangeScene(restScene);
                                     break;
                                 case NodeType.Event:
                                     SceneManager.ChangeScene(EventSceneFactory.CreateRandomEvent());

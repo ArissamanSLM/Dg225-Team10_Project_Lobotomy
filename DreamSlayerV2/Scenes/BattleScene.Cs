@@ -17,7 +17,7 @@ namespace DreamSlayerV2.Scenes
         private Texture2D EnemyTexture;
         private Texture2D[] BgTexture = new Texture2D[3];
         private Texture2D CardTexture;
-        private SoundEffect[] DrawcardEffect;
+        
         private Texture2D ScreenTexture;
         private float _redFlashAlpha = 0f;
         private float _purpleFlashAlpha = 0f;
@@ -33,8 +33,12 @@ namespace DreamSlayerV2.Scenes
         private Texture2D HealthEffect;
         
         // Audio Storage
+        private SoundEffect[] DrawcardEffects = new SoundEffect[3];
+        private SoundEffect[] EnemyAttackEffects = new SoundEffect[3];
+        private SoundEffect[] PlayerUsingCardEffects = new SoundEffect[3];
         private List<SoundEffect> _soundEffects = new List<SoundEffect>();
         private SoundEffectInstance _debuffSoundInstance;
+
 
         // Combat Stats
         private readonly BaseEnemy _enemy;
@@ -95,6 +99,10 @@ namespace DreamSlayerV2.Scenes
             HealthEffect = content.Load<Texture2D>("HealthEffect"); //Including Effect //
 
             // Load SFX (.wav)
+            DrawcardEffects[0] = content.Load<SoundEffect>("Handing out cards"); //Play when at the start of the turn
+            DrawcardEffects[1] = content.Load<SoundEffect>("Handing out cards(One Card)"); // play when Using a Card that Draws a Card
+            PlayerUsingCardEffects[0] = content.Load<SoundEffect>("Player Using Card"); //Play when Using a Card
+            EnemyAttackEffects[0] = content.Load<SoundEffect>("sectionsound-shield-block-shortsword-143940"); //Play when Enemy Attacks and Player Defense > 0 
             SoundEffect badEffect = content.Load<SoundEffect>("Bad_Effect_gain");
             _soundEffects.Add(badEffect);
 
@@ -313,6 +321,7 @@ namespace DreamSlayerV2.Scenes
                         break;
 
                     case "Powerup":
+                        _player.increaseInHandDamage(1);
                         break;
 
                     case "Restore":

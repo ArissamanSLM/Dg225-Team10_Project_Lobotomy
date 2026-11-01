@@ -1,5 +1,13 @@
-using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using DreamSlayerV2.Core;
+using DreamSlayerV2.Scenes;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace DreamSlayerV2
 {
@@ -9,7 +17,7 @@ namespace DreamSlayerV2
         public enum CardColorType { Red, Blue, Green, Yellow, Purple }
         public enum CardRarity { Common, Uncommon, Rare, UltraRare, Special }
         public enum HazardSubtype { None, Slime, Rock, Curse, Energy }
-
+        public Texture2D PlusSymbolTexture;
         public int CardID { get; set; }
         public string Name { get; set; }
         public int Cost { get; set; } // Orb amount; each Orb costs 10 Sanity.
@@ -57,7 +65,10 @@ namespace DreamSlayerV2
                     break;
             }
         }
-
+        public void loadContent(ContentManager content)
+        {
+            PlusSymbolTexture = content.Load<Texture2D>("Pluscard");
+        }
         private void ConfigureHazardRules()
         {
             switch (Hazard)
@@ -202,7 +213,43 @@ namespace DreamSlayerV2
             Description = "Channel deep cosmic forces to replenish mind energy.";
             Does = $"Restore 100 Sanity And gain 1 Omega Card And Remove Beta Card from the deck. Cost: {Cost * 0} Sanity.";
             break;
-    }
-}
+        }
+        }
+        public void increaseInHandDamage(int amount)
+        {
+            InHandDamage += amount;
+            Does = $"Deals {InHandDamage} damage. Cost: {Cost * 10} Sanity.";
+        }
+        public void CardReaderPlus()
+        {
+            switch (Name)
+            {
+                case "Strike+":
+                    CardID = 1;
+                    Rarity = CardRarity.Common;
+                    Description = "Upgraded of Strike making more damage.";
+                    Does = $"Deals 9 damage. Cost: {Cost * 10} Sanity.";
+                    break;
+                case "Defend+":
+                    CardID = 2; 
+                    Rarity = CardRarity.Common;
+                    Description = "Upgraded of Defend making more Defense.";
+                    Does = $"Gains 9 Defense. Cost: {Cost * 10} Sanity.";
+                    break;
+                case "Inspection+":
+                    CardID = 3;
+                    Rarity = CardRarity.Common;
+                    Description = "Upgraded of Inspection making more Draw without losing sanity.";
+                    Does = $"Draw 3 Cards. Cost: {Cost * 0} Sanity.";
+                    break;
+                case "Restore+":
+                case "Heal+":
+                    CardID = 4;
+                    Rarity = CardRarity.Common;
+                    Description = "Upgraded of Restore making more Heal.";
+                    Does = $"Heal 9 Hp to yourself. Cost: {Cost * 10} Sanity.";
+                    break;
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using DreamSlayerV2.Core;
 
 namespace DreamSlayerV2
 {
@@ -19,7 +20,7 @@ namespace DreamSlayerV2
         public int MaxHP { get; set; }
         public int Sanity { get; set; }
         public int Honor { get; set; } = 0;
-        public int Energy { get; private set; }
+        public int Energy { get; set; }
         public int Defense { get; set;} = 0;
         public CharacterClassV2 SelectedClass { get; set; }
         public List<CardManager> Deck { get; set; } = new List<CardManager>();
@@ -30,11 +31,17 @@ namespace DreamSlayerV2
         int TurnCount = 0;
         public int[] PassiveRelics { get; set; } = new int[5];
         private readonly Random _rand = new Random();
+        public bool IsNightmareMode { get; set; }
 
-        public PlayerController(CharacterClassV2 characterClass)
+        public PlayerController(CharacterClassV2 characterClass, bool isNightmareMode = false)
         {
             SelectedClass = characterClass;
+            IsNightmareMode = isNightmareMode;
             InitializeCharacterStats();
+            MaxHP += UpgradeOrbPermanent.GetMaxHPBonus();
+            PlayerHP += UpgradeOrbPermanent.GetMaxHPBonus();
+            SoulCoins = UpgradeOrbPermanent.GetStartingCoinsBonus();
+            Energy = IsNightmareMode ? 3 : 5;
             Deck = CardStarterDeck.GetStarterDeck(SelectedClass);
             Shuffle();
         }
