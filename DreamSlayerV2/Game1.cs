@@ -31,10 +31,8 @@ protected override void LoadContent()
 {
     _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-    // 1. Give the Content manager to SceneManager first
-    SceneManager.Initialize(Content);
+    GlobalContentManager.Initialize(Content, GraphicsDevice);
 
-    // 2. Then safely launch your starting scene
     SceneManager.ChangeScene(new TitleScene());
 }
 

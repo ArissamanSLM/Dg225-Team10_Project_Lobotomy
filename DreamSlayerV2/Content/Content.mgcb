@@ -134,6 +134,18 @@
 /processorParam:TextureFormat=Color
 /build:E_enemy2.png
 
+#begin Elite_Enemies_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Elite_Enemies_1.png
+
 #begin Enemies_health_bar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -243,6 +255,18 @@
 /processorParam:TextureFormat=Color
 /build:HorrorForestDreamV2.png
 
+#begin Kraken-BossPhase1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Kraken-BossPhase1.png
+
 #begin leberch-nightmare-611631.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
@@ -345,6 +369,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SanityOrb.png
+
+#begin Scene_1_20261101212247.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Scene_1_20261101212247.png
+
+#begin Scene_2_20261101212255.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Scene_2_20261101212255.png
 
 #begin ScreenumberGenerator.png
 /importer:TextureImporter

@@ -1,6 +1,5 @@
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -10,7 +9,6 @@ namespace DreamSlayerV2.Scenes
 {
     public class PlayerStatsScene : IScene
     {
-        private SpriteFont _font;
         private MouseState _previousMouseState;
         private KeyboardState _previousKeyboardState; // Track keyboard for 'P' toggle
 
@@ -31,9 +29,8 @@ namespace DreamSlayerV2.Scenes
             _previousKeyboardState = Keyboard.GetState();
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent()
         {
-            _font = content.Load<SpriteFont>("File");
         }
 
         public void Update(GameTime gameTime)
@@ -89,7 +86,7 @@ namespace DreamSlayerV2.Scenes
         {
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(_font, "--- PAUSED / PLAYER STATS ---", new Vector2(50, 40), Color.Gold);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "--- PAUSED / PLAYER STATS ---", new Vector2(50, 40), Color.Gold);
 
             if (_player != null)
             {
@@ -102,11 +99,11 @@ namespace DreamSlayerV2.Scenes
                     $"Cards in Deck: {_player.Deck.Count}\n" +
                     $"Current Energy: {_player.Energy}";
 
-                spriteBatch.DrawString(_font, statsText, new Vector2(50, 100), Color.White);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, statsText, new Vector2(50, 100), Color.White);
             }
             else
             {
-                spriteBatch.DrawString(_font, "No active player data found.", new Vector2(50, 100), Color.Red);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, "No active player data found.", new Vector2(50, 100), Color.Red);
             }
 
             // Draw Interactive Pause Menu Buttons with Hover Effects
@@ -119,8 +116,8 @@ namespace DreamSlayerV2.Scenes
             Color resumeColor = resumeButtonBounds.Contains(mousePoint) ? Color.LightGreen : Color.Green;
             Color quitColor = quitButtonBounds.Contains(mousePoint) ? Color.LightCoral : Color.IndianRed;
 
-            spriteBatch.DrawString(_font, "> Resume Game (Press [P])", new Vector2(resumeButtonBounds.X, resumeButtonBounds.Y), resumeColor);
-            spriteBatch.DrawString(_font, "> Quit to Title", new Vector2(quitButtonBounds.X, quitButtonBounds.Y), quitColor);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "> Resume Game (Press [P])", new Vector2(resumeButtonBounds.X, resumeButtonBounds.Y), resumeColor);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "> Quit to Title", new Vector2(quitButtonBounds.X, quitButtonBounds.Y), quitColor);
 
             spriteBatch.End();
         }

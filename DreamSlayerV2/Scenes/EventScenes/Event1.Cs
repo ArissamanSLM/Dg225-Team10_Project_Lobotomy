@@ -1,6 +1,5 @@
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -33,7 +32,6 @@ namespace DreamSlayerV2.Scenes
     public abstract class EventChoiceSceneBase : IEvent
     {
         private readonly List<string> _choices;
-        protected SpriteFont Font;
         protected MouseState PreviousMouseState;
         protected Vector2 DialogPos = new Vector2(50, 50);
         protected Vector2 ChoicesStartPos = new Vector2(50, 220);
@@ -47,15 +45,15 @@ namespace DreamSlayerV2.Scenes
 
         public EventTag Tag { get; }
         public string DialogText { get; }
+        private Rectangle GetChoiceBounds(int index) => new Rectangle(120, 420 + (index * 92), 1680, 72);
 
         public void Initialize()
         {
             PreviousMouseState = Mouse.GetState();
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent()
         {
-            Font = content.Load<SpriteFont>("File");
         }
 
         public void Update(GameTime gameTime)
@@ -64,9 +62,7 @@ namespace DreamSlayerV2.Scenes
 
             for (int i = 0; i < _choices.Count; i++)
             {
-                Vector2 choiceSize = Font.MeasureString(_choices[i]);
-                Vector2 choicePos = new Vector2(ChoicesStartPos.X, ChoicesStartPos.Y + (i * 60));
-                Rectangle choiceBounds = new Rectangle((int)choicePos.X, (int)choicePos.Y, (int)choiceSize.X, (int)choiceSize.Y);
+                Rectangle choiceBounds = GetChoiceBounds(i);
 
                 bool isHovered = choiceBounds.Contains(currentMouseState.Position);
                 bool isClicked = isHovered && currentMouseState.LeftButton == ButtonState.Pressed && PreviousMouseState.LeftButton == ButtonState.Released;
@@ -86,18 +82,25 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(Font, DialogText, DialogPos, Color.Red);
+            SceneUi.DrawBackground(spriteBatch);
+            SceneUi.DrawPanel(spriteBatch, new Rectangle(70, 145, 1780, 770), Tag switch
+            {
+                EventTag.Lucky => Color.Gold,
+                EventTag.Nightmare => Color.IndianRed,
+                _ => Color.MediumPurple
+            });
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"{Tag.ToString().ToUpperInvariant()} EVENT", new Vector2(120, 175), Color.Gold);
+            SceneUi.DrawWrappedText(spriteBatch, DialogText, new Vector2(120, 235), 1650, Color.White, 42f);
 
             MouseState currentMouseState = Mouse.GetState();
             for (int i = 0; i < _choices.Count; i++)
             {
-                Vector2 choicePos = new Vector2(ChoicesStartPos.X, ChoicesStartPos.Y + (i * 60));
-                Vector2 choiceSize = Font.MeasureString(_choices[i]);
-                Rectangle choiceBounds = new Rectangle((int)choicePos.X, (int)choicePos.Y, (int)choiceSize.X, (int)choiceSize.Y);
-                Color choiceColor = choiceBounds.Contains(currentMouseState.Position) ? Color.LightYellow : Color.Yellow;
-                spriteBatch.DrawString(Font, _choices[i], choicePos, choiceColor);
+                Rectangle choiceBounds = GetChoiceBounds(i);
+                SceneUi.DrawButton(spriteBatch, choiceBounds, _choices[i], choiceBounds.Contains(currentMouseState.Position));
             }
 
+            SceneUi.DrawPlayerStatus(spriteBatch, GameState.CurrentPlayer);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Choose an option to continue.", new Vector2(120, 850), Color.LightGray);
             spriteBatch.End();
         }
             

@@ -1,67 +1,45 @@
+using System;
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace DreamSlayerV2.Scenes
 {
     public class SceneStory5 : IScene
     {
-        private SpriteFont _font;
-        private string promptText = "Click Here to Enter the Tower...";
-        private Vector2 promptPos = new Vector2(100, 600);
-        private MouseState _previousMouseState;
+        private readonly StoryDialogue _dialogue = new StoryDialogue(
+            "Before I knew it, I was in the other world. I can tell this place is really dangerous. I need to get out as soon as possible... or maybe stay a bit longer and learn as many forbidden spells as I can.");
 
         public void Initialize()
         {
-            _previousMouseState = Mouse.GetState();
+            _dialogue.Initialize();
         }
 
-        public void LoadContent(ContentManager content)
-        {
-            _font = content.Load<SpriteFont>("File");
-            
-        }
+        public void LoadContent() { }
 
         public void Update(GameTime gameTime)
         {
-            MouseState currentMouseState = Mouse.GetState();
+            if (SceneStory1._soundInstance != null)
+            {
+                SceneStory1._soundInstance.Pitch = Math.Max(
+                    -1f,
+                    SceneStory1._soundInstance.Pitch - (float)gameTime.ElapsedGameTime.TotalSeconds * 0.048f);
+            }
 
-            Vector2 textSize = _font.MeasureString(promptText);
-            Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);
-
-            bool isHovered = promptBounds.Contains(currentMouseState.Position);
-            bool isClicked = isHovered && currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
-
-            if (isClicked)
+            if (_dialogue.Update(gameTime))
             {
                 SceneManager.ChangeScene(new NodeSelectScene());
             }
-            
-            
-                SceneStory1._soundInstance.Pitch -= 0.0008f; // Gradually decrease the pitch of the sound effect instance
-        
-            _previousMouseState = currentMouseState;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "Before I know it, I was in the other world. I can tell this place is really dangerous.\n I need to get out here as soon as possible... or maybe I could stay a bit longer and get as much forbidden spell.", new Vector2(50, 50), Color.Red);
-
-            Vector2 textSize = _font.MeasureString(promptText);
-            Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);
-            Color promptColor = promptBounds.Contains(Mouse.GetState().Position) ? Color.LightYellow : Color.Yellow;
-
-            spriteBatch.DrawString(_font, promptText, promptPos, promptColor);
-            spriteBatch.End();
+            _dialogue.Draw(spriteBatch, GlobalContentManager.CaveBackground);
         }
 
-        public void UnloadContent() 
+        public void UnloadContent()
         {
-            SceneStory1._soundInstance.Stop();
+            SceneStory1._soundInstance?.Stop();
         }
     }
 }

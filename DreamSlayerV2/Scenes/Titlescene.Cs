@@ -1,7 +1,6 @@
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -23,13 +22,6 @@ namespace DreamSlayerV2.Scenes
         private MenuState _currentState = MenuState.Main;
 
         private Random _rnd = new Random();
-        private SpriteFont _font;
-        private SpriteFont NatureFont;
-        private Song NightmareSong;
-        private Texture2D menuTexture;
-
-        private Texture2D[] Bgtitle = new Texture2D[2];
-        private Texture2D[] BgScrollingtitle = new Texture2D[2];
 
         // ระบบเลือกฉากหลังด้วยปุ่ม [1-4] และระบบเลื่อนกล้อง
         private int _selectedBgIndex = 0; // 0=Forest, 1=Cave, 2=MapLeft, 3=MapRight
@@ -48,30 +40,23 @@ namespace DreamSlayerV2.Scenes
 
         private float _masterVolume = 1.0f;
         private bool _sfxEnabled = true;
+        private string _menuStatusText = string.Empty;
 
         private List<FloatingNightmareText> _floatingTexts = new List<FloatingNightmareText>();
         private float _spawnTimer = 0f;
 
         public void Initialize() { }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent()
         {
-            _font = content.Load<SpriteFont>("File");
-            NatureFont = content.Load<SpriteFont>("NatureFonts");
-            NightmareSong = content.Load<Song>("leberch-nightmare-611631");
-            menuTexture = content.Load<Texture2D>("Blankmenu");
 
             // [1] Horror Forest, [2] Dark Cave
-            Bgtitle[0] = content.Load<Texture2D>("HorrorForestDreamV2");
-            Bgtitle[1] = content.Load<Texture2D>("TheDarkCave");
 
             // [3] Map Left, [4] Map Right (Seamless 2500x1080)
-            BgScrollingtitle[0] = content.Load<Texture2D>("MapLeft_DreamSlayer");
-            BgScrollingtitle[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
 
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = _masterVolume;
-            MediaPlayer.Play(NightmareSong);
+            MediaPlayer.Play(GlobalContentManager.NightmareSong);
         }
 
         public void Update(GameTime gameTime)
@@ -135,11 +120,11 @@ namespace DreamSlayerV2.Scenes
         {
             if (IsKeyPressed(Keys.Up) || IsKeyPressed(Keys.W))
             {
-                _selectedMenuIndex = (_selectedMenuIndex - 1 + _mainMenuItems.Length) % _mainMenuItems.Length;
+                MoveMenuSelection(-1);
             }
             if (IsKeyPressed(Keys.Down) || IsKeyPressed(Keys.S))
             {
-                _selectedMenuIndex = (_selectedMenuIndex + 1) % _mainMenuItems.Length;
+                MoveMenuSelection(1);
             }
 
             int menuStartX = 810;
@@ -150,6 +135,8 @@ namespace DreamSlayerV2.Scenes
 
             for (int i = 0; i < _mainMenuItems.Length; i++)
             {
+                if (!IsMenuItemEnabled(i)) continue;
+
                 Rectangle bounds = new Rectangle(menuStartX, menuStartY + i * (buttonHeight + buttonSpacing), buttonWidth, buttonHeight);
 
                 if (bounds.Contains(_currentMouse.Position))
@@ -166,8 +153,25 @@ namespace DreamSlayerV2.Scenes
 
             if (IsKeyPressed(Keys.Enter) || IsKeyPressed(Keys.Space))
             {
-                ExecuteMenuChoice(_selectedMenuIndex);
+                if (IsMenuItemEnabled(_selectedMenuIndex))
+                {
+                    ExecuteMenuChoice(_selectedMenuIndex);
+                }
             }
+        }
+
+        private void MoveMenuSelection(int direction)
+        {
+            for (int i = 0; i < _mainMenuItems.Length; i++)
+            {
+                _selectedMenuIndex = (_selectedMenuIndex + direction + _mainMenuItems.Length) % _mainMenuItems.Length;
+                if (IsMenuItemEnabled(_selectedMenuIndex)) return;
+            }
+        }
+
+        private static bool IsMenuItemEnabled(int index)
+        {
+            return index != 1 || GameSaveManager.HasSave;
         }
 
         private void ExecuteMenuChoice(int index)
@@ -176,6 +180,7 @@ namespace DreamSlayerV2.Scenes
             {
                 case 0:
                     NodeSelectScene.Reset();
+                    GameSaveManager.DeleteSave();
                     
                     // สร้าง PlayerController พร้อมเช็คว่าเปิดโหมด Nightmare อยู่หรือไม่
                     bool isNightmare = UpgradeOrbPermanent.NightmareModeUnlocked;
@@ -185,18 +190,18 @@ namespace DreamSlayerV2.Scenes
                     break;
 
                 case 1:
-                    if (GameState.CurrentPlayer != null)
+                    if (GameSaveManager.TryLoadRun(out SavedRunData savedRun, out string loadError))
                     {
-                        SceneManager.ChangeScene(new NodeSelectScene());
+                        GameState.CurrentPlayer = GameSaveManager.RestorePlayer(savedRun.Player);
+                        NodeSelectScene.RestoreRun(savedRun);
+                        _menuStatusText = string.Empty;
+                        SceneManager.ChangeScene(savedRun.PendingStartReward
+                            ? new NodeStartScene()
+                            : new NodeSelectScene());
                     }
                     else
                     {
-                        NodeSelectScene.Reset();
-                        
-                        bool isNightmareFallback = UpgradeOrbPermanent.NightmareModeUnlocked;
-                        GameState.CurrentPlayer = new PlayerController(CharacterClassV2.Human, isNightmareFallback);
-
-                        SceneManager.ChangeScene(new SceneStory1());
+                        _menuStatusText = loadError;
                     }
                     break;
 
@@ -212,6 +217,7 @@ namespace DreamSlayerV2.Scenes
                     Environment.Exit(0);
                     break;
             }
+
         }
 
         private void HandleOptionsInput(bool isLeftClicked)
@@ -380,11 +386,11 @@ namespace DreamSlayerV2.Scenes
             // --- 1. DRAW DYNAMIC BACKGROUND (2500x1080 -> 1920x1080) ---
             Texture2D currentBg = _selectedBgIndex switch
             {
-                0 => Bgtitle[0],
-                1 => Bgtitle[1],
-                2 => BgScrollingtitle[0],
-                3 => BgScrollingtitle[1],
-                _ => Bgtitle[0]
+                0 => GlobalContentManager.ForestBackground,
+                1 => GlobalContentManager.CaveBackground,
+                2 => GlobalContentManager.MapLeft,
+                3 => GlobalContentManager.MapRight,
+                _ => GlobalContentManager.ForestBackground
             };
 
             if (currentBg != null)
@@ -401,10 +407,10 @@ namespace DreamSlayerV2.Scenes
             foreach (var item in _floatingTexts)
             {
                 Color nightmareColor = Color.DarkRed * item.Alpha;
-                Vector2 origin = NatureFont.MeasureString(item.Text) / 2f;
+                Vector2 origin = GlobalContentManager.NatureFont.MeasureString(item.Text) / 2f;
 
                 spriteBatch.DrawString(
-                    NatureFont,
+                    GlobalContentManager.NatureFont,
                     item.Text,
                     item.Position,
                     nightmareColor,
@@ -417,12 +423,12 @@ namespace DreamSlayerV2.Scenes
             }
 
             // --- 3. DRAW TITLE HEADER & BACKGROUND SELECTOR PROMPT ---
-            Vector2 titleSize = _font.MeasureString(titleText);
+            Vector2 titleSize = GlobalContentManager.DefaultFont.MeasureString(titleText);
             Vector2 titlePos = new Vector2(960f - (titleSize.X / 2f), 100f);
-            spriteBatch.DrawString(_font, titleText, titlePos, Color.Crimson);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, titleText, titlePos, Color.Crimson);
 
             // แสดงคำแนะนำปุ่มกดเปลี่ยน Background ที่มุมซ้ายล่าง
-            spriteBatch.DrawString(_font, $"Theme: [{_selectedBgIndex + 1}] (Press 1-4 to change)", new Vector2(30, 1020), Color.Gold * 0.8f);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Theme: [{_selectedBgIndex + 1}] (Press 1-4 to change)", new Vector2(30, 1020), Color.Gold * 0.8f);
 
             // --- 4. RENDER MENU STATES ---
             switch (_currentState)
@@ -455,89 +461,121 @@ namespace DreamSlayerV2.Scenes
             int buttonHeight = 55;
             int buttonSpacing = 20;
 
-            int srcWidth = menuTexture.Width / 2;
-            int srcHeight = menuTexture.Height / 5;
+            // จับคู่ Index ของเมนูหลักเข้ากับ Texture เฉพาะตัวที่โหลดมาจาก GlobalContentManager
+            Texture2D[] menuTextures = new[]
+            {
+                GlobalContentManager.ThirdMenu,   // 0: START (New Game)
+                GlobalContentManager.FourthMenu,  // 1: CONTINUE
+                GlobalContentManager.SeventhMenu, // 2: UPGRADES
+                GlobalContentManager.SixthMenu,   // 3: OPTIONS
+                GlobalContentManager.FifthMenu    // 4: EXIT
+            };
 
             for (int i = 0; i < _mainMenuItems.Length; i++)
             {
                 Rectangle destRect = new Rectangle(menuStartX, menuStartY + i * (buttonHeight + buttonSpacing), buttonWidth, buttonHeight);
                 bool isSelected = (i == _selectedMenuIndex);
+                bool isEnabled = IsMenuItemEnabled(i);
 
-                Rectangle srcRect = new Rectangle(
-                    isSelected ? 0 : srcWidth,
-                    i * srcHeight,
-                    srcWidth,
-                    srcHeight
-                );
+                // ใช้ BlankUI2 เป็นพื้นหลังตอนเลือก (Hovered/Selected) และ BlankUI1 เป็นปุ่มปกติ
+                Texture2D buttonBg = isSelected ? GlobalContentManager.SecondMenu : GlobalContentManager.FirstMenu;
+                if (buttonBg != null)
+                {
+                    spriteBatch.Draw(buttonBg, destRect, Color.White);
+                }
 
-                spriteBatch.Draw(menuTexture, destRect, srcRect, Color.White);
+                // วาดรูปโลโก้/ข้อความของปุ่มนั้นๆ (เช่น START, OPTIONS) ทับลงไป
+                Texture2D itemTex = menuTextures[i];
+                if (itemTex != null)
+                {
+                    Color tint = !isEnabled ? Color.DimGray : isSelected ? Color.White : Color.LightGray;
+                    spriteBatch.Draw(itemTex, destRect, tint);
+                }
+                else
+                {
+                    // Fallback เผื่อรูปไหนยังโหลดไม่ขึ้น ให้แสดงตัวหนังสือแทน
+                    string text = _mainMenuItems[i];
+                    Vector2 textSize = GlobalContentManager.DefaultFont.MeasureString(text);
+                    Vector2 textPos = new Vector2(
+                        destRect.X + (destRect.Width - textSize.X) / 2f,
+                        destRect.Y + (destRect.Height - textSize.Y) / 2f
+                    );
+                    Color textColor = isSelected ? Color.Black : Color.Gold;
+                    spriteBatch.DrawString(GlobalContentManager.DefaultFont, text, textPos, textColor);
+                }
 
-                string text = _mainMenuItems[i];
-                Vector2 textSize = _font.MeasureString(text);
-                Vector2 textPos = new Vector2(
-                    destRect.X + (destRect.Width - textSize.X) / 2f,
-                    destRect.Y + (destRect.Height - textSize.Y) / 2f
-                );
+                if (!isEnabled)
+                {
+                    spriteBatch.Draw(GlobalContentManager.WhitePixel, destRect, Color.Black * 0.55f);
+                    Vector2 lockedSize = GlobalContentManager.DefaultFont.MeasureString("LOCKED");
+                    spriteBatch.DrawString(
+                        GlobalContentManager.DefaultFont,
+                        "LOCKED",
+                        new Vector2(destRect.Center.X - lockedSize.X / 2f, destRect.Center.Y - lockedSize.Y / 2f),
+                        Color.Gray);
+                }
+            }
 
-                Color textColor = isSelected ? Color.Black : Color.Gold;
-                spriteBatch.DrawString(_font, text, textPos, textColor);
+            if (!string.IsNullOrEmpty(_menuStatusText))
+            {
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, _menuStatusText, new Vector2(700, 800), Color.OrangeRed);
             }
         }
 
         private void DrawOptionsMenu(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_font, "--- OPTIONS ---", new Vector2(850, 320), Color.Gold);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "--- OPTIONS ---", new Vector2(850, 320), Color.Gold);
 
-            spriteBatch.DrawString(_font, $"Master Volume: {(int)(_masterVolume * 100)}%", new Vector2(750, 420), Color.White);
-            spriteBatch.DrawString(_font, "[ - ]", new Vector2(1100, 420), Color.Yellow);
-            spriteBatch.DrawString(_font, "[ + ]", new Vector2(1220, 420), Color.Yellow);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Master Volume: {(int)(_masterVolume * 100)}%", new Vector2(750, 420), Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "[ - ]", new Vector2(1100, 420), Color.Yellow);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "[ + ]", new Vector2(1220, 420), Color.Yellow);
 
             string sfxText = _sfxEnabled ? "ON" : "OFF";
             Color sfxColor = _sfxEnabled ? Color.LightGreen : Color.Red;
-            spriteBatch.DrawString(_font, $"Sound Effects: {sfxText}", new Vector2(750, 480), sfxColor);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Sound Effects: {sfxText}", new Vector2(750, 480), sfxColor);
 
             Rectangle backRect = new Rectangle(810, 750, 300, 50);
             bool isHovered = backRect.Contains(_currentMouse.Position);
-            spriteBatch.DrawString(_font, "< BACK TO MENU >", new Vector2(810, 750), isHovered ? Color.Gold : Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "< BACK TO MENU >", new Vector2(810, 750), isHovered ? Color.Gold : Color.White);
         }
 
         private void DrawUpgradesView(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_font, "--- PERMANENT ORB UPGRADES ---", new Vector2(720, 260), Color.Gold);
-            spriteBatch.DrawString(_font, $"Rebirth Coins: {UpgradeOrbPermanent.RebirthCoins}", new Vector2(810, 320), Color.Cyan);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "--- PERMANENT ORB UPGRADES ---", new Vector2(720, 260), Color.Gold);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Rebirth Coins: {UpgradeOrbPermanent.RebirthCoins}", new Vector2(810, 320), Color.Cyan);
 
             int hpCost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.MaxHPLevel);
             string hpStatus = UpgradeOrbPermanent.MaxHPLevel >= 12 ? "MAX" : $"{hpCost} Coins";
-            spriteBatch.DrawString(_font, $"1. Max HP (+1 HP/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.MaxHPLevel)}] - Cost: {hpStatus}", new Vector2(500, 400), Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"1. Max HP (+1 HP/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.MaxHPLevel)}] - Cost: {hpStatus}", new Vector2(500, 400), Color.White);
 
             int coinCost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.StartCoinsLevel);
             string coinStatus = UpgradeOrbPermanent.StartCoinsLevel >= 9 ? "MAX" : $"{coinCost} Coins";
-            spriteBatch.DrawString(_font, $"2. Starting Soul Coins (+10 Coins/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.StartCoinsLevel)}] - Cost: {coinStatus}", new Vector2(500, 470), Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"2. Starting Soul Coins (+10 Coins/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.StartCoinsLevel)}] - Cost: {coinStatus}", new Vector2(500, 470), Color.White);
 
             string diceText = UpgradeOrbPermanent.UnlockDiceMinigame ? "UNLOCKED" : "Cost: 300 Coins";
-            spriteBatch.DrawString(_font, $"3. Dice Minigame Event - {diceText}", new Vector2(500, 540), UpgradeOrbPermanent.UnlockDiceMinigame ? Color.LightGreen : Color.Yellow);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"3. Dice Minigame Event - {diceText}", new Vector2(500, 540), UpgradeOrbPermanent.UnlockDiceMinigame ? Color.LightGreen : Color.Yellow);
 
             string altarText = !UpgradeOrbPermanent.EnergyAltarUnlocked ? "Cost: 500 Coins" : (UpgradeOrbPermanent.CanUseEnergyAltar() ? "READY (Free Buff)" : "RECHARGING (24h Cooldown)");
-            spriteBatch.DrawString(_font, $"4. Energy Altar - {altarText}", new Vector2(500, 610), UpgradeOrbPermanent.EnergyAltarUnlocked ? Color.DeepSkyBlue : Color.Yellow);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"4. Energy Altar - {altarText}", new Vector2(500, 610), UpgradeOrbPermanent.EnergyAltarUnlocked ? Color.DeepSkyBlue : Color.Yellow);
 
             string charmText = UpgradeOrbPermanent.CharmsUnlocked ? "COMPLETED" : "Cost: 2500 Coins [BRAVE BUFF: +20 Max Sanity & +5 Regen/turn!]";
-            spriteBatch.DrawString(_font, $"5. Unlock Charms (Challenge) - {charmText}", new Vector2(500, 680), UpgradeOrbPermanent.CharmsUnlocked ? Color.Magenta : Color.Orange);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"5. Unlock Charms (Challenge) - {charmText}", new Vector2(500, 680), UpgradeOrbPermanent.CharmsUnlocked ? Color.Magenta : Color.Orange);
 
             string nmText = UpgradeOrbPermanent.NightmareModeUnlocked ? "UNLOCKED" : "Cost: 1000 Coins (Req Depths 10)";
-            spriteBatch.DrawString(_font, $"6. Unlock Nightmare Mode - {nmText}", new Vector2(500, 750), UpgradeOrbPermanent.NightmareModeUnlocked ? Color.Crimson : Color.Red);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"6. Unlock Nightmare Mode - {nmText}", new Vector2(500, 750), UpgradeOrbPermanent.NightmareModeUnlocked ? Color.Crimson : Color.Red);
 
             Rectangle backRect = new Rectangle(810, 920, 300, 50);
             bool isHovered = backRect.Contains(_currentMouse.Position);
-            spriteBatch.DrawString(_font, "< BACK TO MENU >", new Vector2(810, 920), isHovered ? Color.Gold : Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "< BACK TO MENU >", new Vector2(810, 920), isHovered ? Color.Gold : Color.White);
         }
 
         private void DrawCreditsView(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_font, "--- CREDITS ---", new Vector2(870, 320), Color.Gold);
-            spriteBatch.DrawString(_font, "Project Lobotomy Team 10", new Vector2(800, 420), Color.White);
-            spriteBatch.DrawString(_font, "Music: Leberch Nightmare", new Vector2(810, 480), Color.LightGray);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "--- CREDITS ---", new Vector2(870, 320), Color.Gold);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Project Lobotomy Team 10", new Vector2(800, 420), Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Music: Leberch Nightmare", new Vector2(810, 480), Color.LightGray);
 
-            spriteBatch.DrawString(_font, "Click or Press ESC to Return", new Vector2(780, 750), Color.Yellow);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Click or Press ESC to Return", new Vector2(780, 750), Color.Yellow);
         }
 
         public void UnloadContent()

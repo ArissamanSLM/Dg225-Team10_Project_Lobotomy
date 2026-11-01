@@ -1,66 +1,42 @@
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DreamSlayerV2.Scenes
 {
     public class SceneStory1 : IScene
     {
-        private SpriteFont _font;
-        private string promptText = "Click Here to Continue...";
-        private Vector2 promptPos = new Vector2(100, 600);
-        private MouseState _previousMouseState;
-        public static SoundEffect TitleMusic;
-        public static SoundEffectInstance _soundInstance; // <--- Add 'static' here
+        private readonly StoryDialogue _dialogue = new StoryDialogue(
+            "I was a newly mage accepted in this magic school. Cleaning in the library as I were punish for having the lowest score in the test. Very stupid punishment if you think.");
+
+        public static SoundEffectInstance _soundInstance;
+
         public void Initialize()
         {
-            _previousMouseState = Mouse.GetState();
+            _dialogue.Initialize();
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent()
         {
-            _font = content.Load<SpriteFont>("File");
-            SoundEffect badEffect = content.Load<SoundEffect>("TitleMusic");
-            _soundInstance = badEffect.CreateInstance();
-            
-            _soundInstance.Volume = 1.0f;
-            _soundInstance.Pitch = 0.07f;
+            _soundInstance = GlobalContentManager.TitleMusicEffect.CreateInstance();
+            _soundInstance.Volume = 0.4f;
+            _soundInstance.Pitch = 0.10f;
             _soundInstance.IsLooped = true;
             _soundInstance.Play();
         }
 
         public void Update(GameTime gameTime)
         {
-            MouseState currentMouseState = Mouse.GetState();
-
-            Vector2 textSize = _font.MeasureString(promptText);
-            Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);
-
-            bool isHovered = promptBounds.Contains(currentMouseState.Position);
-            bool isClicked = isHovered && currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
-
-            if (isClicked)
+            if (_dialogue.Update(gameTime))
             {
                 SceneManager.ChangeScene(new SceneStory2());
             }
-
-            _previousMouseState = currentMouseState;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "I was a newly mage accepted in this magic school.\nCleaning in the library as I were punish for having the lowest score in the test. Very stupid punishment if you think.", new Vector2(50, 50), Color.Red);
-
-            Vector2 textSize = _font.MeasureString(promptText);
-            Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);
-            Color promptColor = promptBounds.Contains(Mouse.GetState().Position) ? Color.LightYellow : Color.Yellow;
-
-            spriteBatch.DrawString(_font, promptText, promptPos, promptColor);
-            spriteBatch.End();
+            _dialogue.Draw(spriteBatch, GlobalContentManager.SceneStoryBackground1);
         }
 
         public void UnloadContent() { }

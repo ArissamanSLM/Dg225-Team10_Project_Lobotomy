@@ -39,6 +39,9 @@ namespace DreamSlayerV2.Scenes
             GenerateOrbStock();
         }
 
+        private Rectangle GetCardButtonBounds(int index) => new Rectangle(100, 290 + (index * 96), 850, 76);
+        private Rectangle GetOrbButtonBounds(int index) => new Rectangle(1030, 310 + (index * 190), 800, 150);
+
         private void GenerateShopStock()
         {
             _shopCards.Clear();
@@ -81,9 +84,9 @@ namespace DreamSlayerV2.Scenes
         {
             return rarity switch
             {
-                "Ultra Rare" => new CardManager(201 + index, "Omega Destruction", 3, CardManager.CardType.Attack),
+                "Ultra Rare" => new CardManager(201 + index, "Mighty Defend Attack", 3, CardManager.CardType.Attack),
                 "Rare" => new CardManager(150 + index, "Aura Shield", 2, CardManager.CardType.Defense),
-                _ => new CardManager(100 + index, "Quick Strike", 1, CardManager.CardType.Attack)
+                _ => new CardManager(100 + index, "Strike", 1, CardManager.CardType.Attack)
             };
         }
 
@@ -93,13 +96,17 @@ namespace DreamSlayerV2.Scenes
             {
                 new OrbItem { 
                     Name = "Orb of Midas", 
-                    Description = "+50% Soul Coins Gain | -5% Max HP", 
-                    ApplyEffect = (p) => { p.MaxHP = (int)(p.MaxHP * 0.95f); } 
+                    Description = "+50 Soul Coins | -5% Max HP",
+                    ApplyEffect = (p) => {
+                        p.SoulCoins += 50;
+                        p.MaxHP = Math.Max(1, (int)(p.MaxHP * 0.95f));
+                        p.PlayerHP = Math.Min(p.PlayerHP, p.MaxHP);
+                    }
                 },
                 
                 new OrbItem { 
                     Name = "Orb of Preservation", 
-                    Description = "+5 Free Defense/Turn | -1 Attack Damage", 
+                    Description = "+5 Defense",
                     ApplyEffect = (p) => { p.Defense += 5; } 
                 }
             };
@@ -107,10 +114,11 @@ namespace DreamSlayerV2.Scenes
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime); // เรียกใช้งานลอจิกพื้นฐาน (เช่น คลิกขวาออกจากฉาก)
+            MouseState previousMouseState = _prevMouse;
+            base.Update(gameTime);
 
             var ms = Mouse.GetState();
-            bool clicked = ms.LeftButton == ButtonState.Pressed && _prevMouse.LeftButton == ButtonState.Released;
+            bool clicked = ms.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released;
 
             var player = GameState.CurrentPlayer;
             if (player == null) return;
@@ -120,7 +128,7 @@ namespace DreamSlayerV2.Scenes
                 // 1. ตรวจสอบคลิกซื้อการ์ด 5 ใบ
                 for (int i = 0; i < _shopCards.Count; i++)
                 {
-                    Rectangle cardBtn = new Rectangle(200, 250 + (i * 45), 450, 35);
+                    Rectangle cardBtn = GetCardButtonBounds(i);
                     if (cardBtn.Contains(ms.Position))
                     {
                         BuyCard(player, i);
@@ -133,7 +141,7 @@ namespace DreamSlayerV2.Scenes
                 {
                     for (int i = 0; i < _availableOrbs.Count; i++)
                     {
-                        Rectangle orbBtn = new Rectangle(700, 250 + (i * 50), 400, 40);
+                        Rectangle orbBtn = GetOrbButtonBounds(i);
                         if (orbBtn.Contains(ms.Position))
                         {
                             ClaimOrb(player, i);
@@ -147,44 +155,40 @@ namespace DreamSlayerV2.Scenes
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            SceneUi.DrawBackground(spriteBatch);
+            SceneUi.DrawPanel(spriteBatch, new Rectangle(60, 160, 930, 675), Color.Gold);
+            SceneUi.DrawPanel(spriteBatch, new Rectangle(1010, 160, 850, 675), Color.Cyan);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "WANDERING TRADER", new Vector2(100, 190), Color.Gold);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Cards for Sale", new Vector2(100, 245), Color.Yellow);
 
-            spriteBatch.DrawString(_font, "--- WANDERING TRADER ---", new Vector2(200, 190), Color.Gold);
-
-            // --- Draw Cards Stock (5 Cards) ---
-            spriteBatch.DrawString(_font, "Cards for Sale:", new Vector2(200, 220), Color.Yellow);
+            MouseState mouse = Mouse.GetState();
             for (int i = 0; i < _shopCards.Count; i++)
             {
                 var item = _shopCards[i];
-                Color itemColor = item.IsSold ? Color.Gray : (item.Rarity == "Ultra Rare" ? Color.Purple : (item.Rarity == "Rare" ? Color.Cyan : Color.White));
-                string statusText = item.IsSold ? "[SOLD]" : $"[{item.Price} Coins]";
-                
-                spriteBatch.DrawString(_font, $"{i + 1}. {item.Card.Name} ({item.Rarity}) {statusText}", new Vector2(200, 250 + (i * 45)), itemColor);
+                string statusText = item.IsSold
+                    ? $"{i + 1}. {item.Card.Name} ({item.Rarity}) - SOLD"
+                    : $"{i + 1}. {item.Card.Name} ({item.Rarity}) - {item.Price} Coins";
+                SceneUi.DrawButton(spriteBatch, GetCardButtonBounds(i), statusText, GetCardButtonBounds(i).Contains(mouse.Position), !item.IsSold);
             }
 
-            // --- Draw Orb Shop ---
-            spriteBatch.DrawString(_font, "Free Relic Orbs (Pick 1):", new Vector2(700, 220), Color.Orange);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Free Relic Orbs - Choose One", new Vector2(1030, 245), Color.Orange);
             for (int i = 0; i < _availableOrbs.Count; i++)
             {
                 var orb = _availableOrbs[i];
-                Color orbColor = orb.IsClaimed ? Color.Green : (_orbClaimedInThisShop ? Color.Gray : Color.LightBlue);
-                string claimStatus = orb.IsClaimed ? "[CLAIMED]" : "";
-
-                spriteBatch.DrawString(_font, $"{orb.Name} {claimStatus}\n  {orb.Description}", new Vector2(700, 250 + (i * 55)), orbColor);
+                string claimStatus = orb.IsClaimed ? "CLAIMED" : orb.Name;
+                string orbLabel = $"{claimStatus}\n{orb.Description}";
+                bool enabled = !_orbClaimedInThisShop && !orb.IsClaimed;
+                Rectangle orbBounds = GetOrbButtonBounds(i);
+                SceneUi.DrawButton(spriteBatch, orbBounds, orbLabel, orbBounds.Contains(mouse.Position), enabled);
             }
 
             if (_messageTimer > 0f)
             {
-                spriteBatch.DrawString(_font, _interactionMessage, new Vector2(200, 520), Color.Orange);
+                SceneUi.DrawWrappedText(spriteBatch, _interactionMessage, new Vector2(90, 860), 1400, Color.Orange);
             }
 
-            spriteBatch.DrawString(_font, "Right-click to leave", new Vector2(200, 620), Color.AntiqueWhite);
-
-            var player = GameState.CurrentPlayer;
-            if (player != null)
-            {
-                spriteBatch.DrawString(_font, $"Soul Coins: {player.SoulCoins}", new Vector2(50, 50), Color.Cyan);
-                spriteBatch.DrawString(_font, $"Current HP: {player.PlayerHP}/{player.MaxHP}", new Vector2(50, 80), Color.LightGreen);
-            }
+            SceneUi.DrawPlayerStatus(spriteBatch, GameState.CurrentPlayer);
+            SceneUi.DrawButton(spriteBatch, LeaveBounds, "Return to Map", LeaveBounds.Contains(mouse.Position));
 
             spriteBatch.End();
         }
@@ -200,6 +204,16 @@ namespace DreamSlayerV2.Scenes
                 item.IsSold = true;
                 player.Deck.Add(item.Card);
                 _interactionMessage = $"Bought {item.Card.Name} ({item.Rarity})!";
+                _messageTimer = 2.5f;
+            }
+            else if (item.IsSold)
+            {
+                _interactionMessage = "That card has already been sold.";
+                _messageTimer = 2.5f;
+            }
+            else
+            {
+                _interactionMessage = $"Not enough Soul Coins. The card costs {item.Price}.";
                 _messageTimer = 2.5f;
             }
         }

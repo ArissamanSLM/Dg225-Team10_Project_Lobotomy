@@ -16,6 +16,7 @@
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/CONTINUE.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Dice Rolling.jpg</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/E_enemy2.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Elite_Enemies_1.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Enemies_health_bar.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/enemy_logo.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/EXIT.png</File>
@@ -27,6 +28,7 @@
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HealthBar.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HealthEffect.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/HorrorForestDreamV2.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Kraken-BossPhase1.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/leberch-nightmare-611631.mp3</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/MapLeft_DreamSlayer.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/MapRight_DreamSlayer.png</File>
@@ -34,8 +36,11 @@
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Next_Floor_logo.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/OPTIONS.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Play Card.wav</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Pluscard.webp</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Sanity_bar.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/SanityOrb.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Scene_1_20261101212247.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Scene_2_20261101212255.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/ScreenumberGenerator.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/sectionsound-shield-block-shortsword-143940.wav</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Sheid_bar.png</File>
@@ -45,9 +50,16 @@
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/TheDarkCave.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/TitleMusic.wav</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/UnrealWolf.png</File>
+    <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/UpgradeDowngrade.png</File>
     <File>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/UPGRADES.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

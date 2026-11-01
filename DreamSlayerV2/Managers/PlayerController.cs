@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using DreamSlayerV2.Core;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DreamSlayerV2
 {
@@ -28,10 +29,12 @@ namespace DreamSlayerV2
         public List<CardManager> DiscardPile { get; set; } = new List<CardManager>(); // <-- ADD THIS
         public int Level { get; set; } = 1;
         public int SoulCoins { get; set; } = 0;
-        int TurnCount = 0;
+        public int IncreaseInHandDamageValue { get; set; } = 0;
+        public int TurnCount { get; set; }
         public int[] PassiveRelics { get; set; } = new int[5];
         private readonly Random _rand = new Random();
         public bool IsNightmareMode { get; set; }
+        public bool HasStartBonus { get; set; }
 
         public PlayerController(CharacterClassV2 characterClass, bool isNightmareMode = false)
         {
@@ -157,7 +160,19 @@ namespace DreamSlayerV2
                 DrawCard();
             }
         }
+        public void increaseInHandDamage(int amount)
+        {
+            IncreaseInHandDamageValue += amount;
 
+            // วนลูปเพิ่มดาเมจให้กับการ์ดประเภท Attack ที่อยู่ในมือปัจจุบันทั้งหมดทันที (ถ้าต้องการ)
+            foreach (var card in Hand)
+            {
+                if (card != null && card.Type == CardManager.CardType.Attack)
+                {
+                    card.InHandDamage += amount;
+                }
+            }
+        }
         private bool IsValidHandIndex(int index) => index >= 0 && index < Hand.Length && Hand[index] != null;
     }
     

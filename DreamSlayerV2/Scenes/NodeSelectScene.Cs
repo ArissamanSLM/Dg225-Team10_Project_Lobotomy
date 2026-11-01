@@ -1,6 +1,5 @@
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -11,23 +10,12 @@ namespace DreamSlayerV2.Scenes
 {
     public class NodeSelectScene : IScene
     {
-        private SpriteFont _font;
         private Vector2 CameraPosition = Vector2.Zero;
         private Vector2 scroll_factor = new Vector2(1.0f, 1f);
-        private Texture2D _pixelTexture;
-        private Texture2D _nodeCircleTexture;
         private int _scrollAccumulator = 0;
-        private Texture2D _shopTexture;
-        private Texture2D _eliteTexture;
-        private Texture2D _bossTexture;
-        private Texture2D _encounterTexture;
-        private Texture2D _eventTexture;
-        private Texture2D[] BgNodeTexture;
         private Vector2 LockPosition;
         private bool _isCameraLocked;
         private int _viewportWidth;
-
-        private Song NodeMusic;
         private MouseState _previousMouseState;
         private KeyboardState _previousKeyboardState;
 
@@ -38,6 +26,18 @@ namespace DreamSlayerV2.Scenes
         {
             allNodes.Clear();
             _currentNode = null;
+        }
+
+        public static void SaveRun(bool pendingStartReward = false)
+        {
+            if (_currentNode == null || allNodes.Count == 0) return;
+            GameSaveManager.SaveRun(GameState.CurrentPlayer, allNodes, _currentNode, pendingStartReward);
+        }
+
+        public static void RestoreRun(SavedRunData run)
+        {
+            allNodes = GameSaveManager.RestoreNodes(run);
+            _currentNode = allNodes[run.CurrentNodeIndex];
         }
 
         public void Initialize()
@@ -55,37 +55,27 @@ namespace DreamSlayerV2.Scenes
                     _currentNode.IsAvailable = true;
                 }
             }
+
+            if (GameSaveManager.HasSave)
+            {
+                SaveRun();
+            }
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent()
         {
-            _font = content.Load<SpriteFont>("File");
-            NodeMusic = content.Load<Song>("Start_music (1)");
-            BgNodeTexture = new Texture2D[2];
-BgNodeTexture[0] = content.Load<Texture2D>("MapLeft_DreamSlayer");
-BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
             if (MediaPlayer.State != MediaState.Playing)
             {
-                MediaPlayer.Play(NodeMusic);
+                MediaPlayer.Play(GlobalContentManager.NodeSong);
                 MediaPlayer.IsRepeating = true;
             }
 
-            var graphicsDevice = ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService))).GraphicsDevice;
+            var graphicsDevice = GlobalContentManager.GraphicsDevice;
             _viewportWidth = graphicsDevice.Viewport.Width;
-            _pixelTexture = new Texture2D(graphicsDevice, 1, 1);
-            _pixelTexture.SetData(new[] { Color.White });
-
-            try
+            if (_currentNode != null)
             {
-                _shopTexture = content.Load<Texture2D>("Shop_logo");
-                _eliteTexture = content.Load<Texture2D>("E_enemy2");
-                _bossTexture = content.Load<Texture2D>("Boss_logo");
-                _encounterTexture = content.Load<Texture2D>("enemy_logo");
-                _eventTexture = content.Load<Texture2D>("EventIcon");
-                
+                CameraPosition.X = MathHelper.Clamp(_currentNode.Position.X - _viewportWidth / 2f, 0f, 4000f);
             }
-            catch { }
-            _nodeCircleTexture = CreateCircleTexture(graphicsDevice, 64);
         }
 
         public void Update(GameTime gameTime)
@@ -199,6 +189,7 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
                                     SceneManager.ChangeScene(EventSceneFactory.CreateRandomEvent());
                                     break;
                                 case NodeType.Start:
+                                    SaveRun(pendingStartReward: true);
                                     SceneManager.ChangeScene(new NodeStartScene());
                                     break;
                                 case NodeType.Encounter:
@@ -245,28 +236,7 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
             float angle = (float)Math.Atan2(edge.Y, edge.X);
             float length = edge.Length();
 
-            spriteBatch.Draw(_pixelTexture, start, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0f);
-        }
-
-        private static Texture2D CreateCircleTexture(GraphicsDevice graphicsDevice, int diameter)
-        {
-            var texture = new Texture2D(graphicsDevice, diameter, diameter);
-            var pixels = new Color[diameter * diameter];
-            float center = (diameter - 1) / 2f;
-            float radius = diameter / 2f - 1f;
-
-            for (int y = 0; y < diameter; y++)
-            {
-                for (int x = 0; x < diameter; x++)
-                {
-                    float distance = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
-                    byte coverage = (byte)(MathHelper.Clamp(radius + 0.5f - distance, 0f, 1f) * 255f);
-                    pixels[y * diameter + x] = new Color(coverage, coverage, coverage, coverage);
-                }
-            }
-
-            texture.SetData(pixels);
-            return texture;
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, start, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0f);
         }
 
         private static Color GetNodeColor(NodeType type) => type switch
@@ -296,22 +266,22 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
             float bgWidth = 2500f;
             float parallaxFactor = 0.7f; // ความเร็วการเลื่อนฉากหลัง    เทียบกับกล้อง
 
-            for (int i = 0;     i < BgNodeTexture.Length; i++)
+            for (int i = 0;     i < GlobalContentManager.MapBackgrounds.Length; i++)
             {
-                if (BgNodeTexture[i] != null)
+                if (GlobalContentManager.MapBackgrounds[i] != null)
                 {
                     // คำนวณตำแหน่ง X ของภาพแต่ละแผ่นไม่ให้เกิดช่องว่างและเลื่อนตามกล้อง
                     float drawX = (i * bgWidth) - (CameraPosition.X * scroll_factor.X * parallaxFactor);
 
                     spriteBatch.Draw(
-                        BgNodeTexture[i], 
-                        new Rectangle((int)drawX, 0, (int)bgWidth, 1080), 
+                        GlobalContentManager.MapBackgrounds[i],
+                        new Rectangle((int)drawX, 0, (int)bgWidth, 1080),
                         Color.White
                     );
                 }
             }
-            spriteBatch.DrawString(_font, "Tower Ascent Map", new Vector2(50, 50) - CameraPosition * scroll_factor, Color.White);
-            spriteBatch.DrawString(_font, "Use Mouse Scroll Wheel to view full map! Press 5/0 to lock on stages 5/10.", new Vector2(50, 85) - CameraPosition * scroll_factor, Color.Yellow);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Tower Ascent Map", new Vector2(50, 50) - CameraPosition * scroll_factor, Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Use Mouse Scroll Wheel to view full map! Press 5/0 to lock on stages 5/10.", new Vector2(50, 85) - CameraPosition * scroll_factor, Color.Yellow);
 
             // Draw Paths
             foreach (var node in allNodes)
@@ -351,20 +321,20 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
 
                 Texture2D currentTexture = node.Type switch
                 {
-                    NodeType.Shop => _shopTexture,
-                    NodeType.Elite => _eliteTexture,
-                    NodeType.Boss => _bossTexture,
-                    NodeType.Encounter => _encounterTexture,
-                    NodeType.Event => _eventTexture,
+                    NodeType.Shop => GlobalContentManager.ShopIcon,
+                    NodeType.Elite => GlobalContentManager.EliteIcon,
+                    NodeType.Boss => GlobalContentManager.BossIcon,
+                    NodeType.Encounter => GlobalContentManager.EncounterIcon,
+                    NodeType.Event => null,
                     _ => null
                 };
                 spriteBatch.Draw(
-    _nodeCircleTexture,
+    GlobalContentManager.NodeCircle,
     drawPos,
     null,
     ringColor,
     0f,
-    new Vector2(_nodeCircleTexture.Width / 2f, _nodeCircleTexture.Height / 2f),
+    new Vector2(GlobalContentManager.NodeCircle.Width / 2f, GlobalContentManager.NodeCircle.Height / 2f),
     1f,
     SpriteEffects.None,
     0f);
@@ -379,18 +349,18 @@ BgNodeTexture[1] = content.Load<Texture2D>("MapRight_DreamSlayer");
                 else
                 {
                     string glyph = GetNodeGlyph(node.Type);
-                    Vector2 glyphSize = _font.MeasureString(glyph);
+                    Vector2 glyphSize = GlobalContentManager.DefaultFont.MeasureString(glyph);
                     Vector2 glyphPosition = drawPos - glyphSize / 2f;
                     Color glyphColor = node.IsAvailable ? nodeColor : node.IsVisited ? Color.Gray : Color.LightGray * 0.65f;
-                    spriteBatch.DrawString(_font, glyph, glyphPosition, glyphColor);
+                    spriteBatch.DrawString(GlobalContentManager.DefaultFont, glyph, glyphPosition, glyphColor);
                 }
 
                 string label = node.GetArknightsLabel();
-                Vector2 textSize = _font.MeasureString(label);
+                Vector2 textSize = GlobalContentManager.DefaultFont.MeasureString(label);
                 Vector2 textPosition = new Vector2(drawPos.X - textSize.X / 2f, drawPos.Y + 36);
                 Color textColor = node.IsVisited ? Color.Gray : node.IsAvailable ? Color.Gold : Color.LightGray;
-                spriteBatch.DrawString(_font, label, textPosition + Vector2.One, Color.Black);
-                spriteBatch.DrawString(_font, label, textPosition, textColor);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, label, textPosition + Vector2.One, Color.Black);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, label, textPosition, textColor);
             }
             
             

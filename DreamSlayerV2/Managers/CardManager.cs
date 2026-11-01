@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using DreamSlayerV2.Core;
 using DreamSlayerV2.Scenes;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 
@@ -17,7 +16,7 @@ namespace DreamSlayerV2
         public enum CardColorType { Red, Blue, Green, Yellow, Purple }
         public enum CardRarity { Common, Uncommon, Rare, UltraRare, Special }
         public enum HazardSubtype { None, Slime, Rock, Curse, Energy }
-        public Texture2D PlusSymbolTexture;
+        public Texture2D PlusSymbolTexture => GlobalContentManager.PlusCard;
         public int CardID { get; set; }
         public string Name { get; set; }
         public int Cost { get; set; } // Orb amount; each Orb costs 10 Sanity.
@@ -40,7 +39,20 @@ namespace DreamSlayerV2
 
             SetCardVisuals();
             ConfigureHazardRules();
+
+            bool isPlusCard = Name.EndsWith("+", StringComparison.Ordinal);
+            if (isPlusCard)
+            {
+                Name = Name[..^1];
+            }
+
             CardReader();
+
+            if (isPlusCard)
+            {
+                Name += "+";
+                CardReaderPlus();
+            }
         }
 
         // Automatically assign card frame color based on type
@@ -64,10 +76,6 @@ namespace DreamSlayerV2
                     CardColor = CardColorType.Purple;
                     break;
             }
-        }
-        public void loadContent(ContentManager content)
-        {
-            PlusSymbolTexture = content.Load<Texture2D>("Pluscard");
         }
         private void ConfigureHazardRules()
         {
@@ -146,7 +154,7 @@ namespace DreamSlayerV2
             CardID = 13; // (Col 2, Row 4) -> รูป Omega (Ω) อยู่ที่นี่!
             Rarity = CardRarity.UltraRare;
             Description = "Unleash the ultimate cosmic strike.";
-            Does = $"Deal 50 Damage to Enemy and Next Card do double Effects. Removes card. Leaves your Sanity at 20.";
+            Does = $"Deal 50 damage, lock Alpha until the encounter ends, permanently remove Omega, and leave your Sanity at 20.";
             break;
 
         // --- COLUMN 3 ---
@@ -160,8 +168,8 @@ namespace DreamSlayerV2
         case "Powerup":
             CardID = 6; // (Col 3, Row 2)
             Rarity = CardRarity.Rare;
-            Description = "Empower all attack techniques for the rest of the encounter.";
-            Does = $"Gain +1 Base Damage to all Attack cards permanently this battle. Cost: {Cost * 10} Sanity.";
+            Description = "Empower your attacks for the current turn.";
+            Does = $"Gain +1 base damage to Attack cards until the end of this turn. Cost: {Cost * 10} Sanity.";
             break;
 
         case "Clock":
@@ -175,7 +183,7 @@ namespace DreamSlayerV2
             CardID = 14; // (Col 3, Row 4) -> รูป Alpha (α) อยู่ที่นี่!
             Rarity = CardRarity.Rare;
             Description = "The first step toward ancient cosmic knowledge.";
-            Does = $"Gain 1 Beta Card and remove from the deck. Cost: {Cost * 10} Sanity.";
+            Does = $"Add 1 Beta Card to your deck. Cost: {Cost * 10} Sanity.";
             break;
 
         // --- COLUMN 4 ---
@@ -211,7 +219,7 @@ namespace DreamSlayerV2
             CardID = 15; // (Col 4, Row 4) -> รูป Beta (β) อยู่ที่นี่!
             Rarity = CardRarity.UltraRare;
             Description = "Channel deep cosmic forces to replenish mind energy.";
-            Does = $"Restore 100 Sanity And gain 1 Omega Card And Remove Beta Card from the deck. Cost: {Cost * 0} Sanity.";
+            Does = $"Restore 100 Sanity, add 1 Omega Card to your deck, and permanently remove Beta. Cost: {Cost * 0} Sanity.";
             break;
         }
         }
@@ -225,29 +233,61 @@ namespace DreamSlayerV2
             switch (Name)
             {
                 case "Strike+":
-                    CardID = 1;
                     Rarity = CardRarity.Common;
                     Description = "Upgraded of Strike making more damage.";
                     Does = $"Deals 9 damage. Cost: {Cost * 10} Sanity.";
                     break;
                 case "Defend+":
-                    CardID = 2; 
                     Rarity = CardRarity.Common;
                     Description = "Upgraded of Defend making more Defense.";
-                    Does = $"Gains 9 Defense. Cost: {Cost * 10} Sanity.";
+                    Does = $"Gains 10 Defense. Cost: {Cost * 10} Sanity.";
                     break;
                 case "Inspection+":
-                    CardID = 3;
                     Rarity = CardRarity.Common;
                     Description = "Upgraded of Inspection making more Draw without losing sanity.";
                     Does = $"Draw 3 Cards. Cost: {Cost * 0} Sanity.";
                     break;
+                case "Piece+":
+                    Description = "An upgraded strike that hits a weak point.";
+                    Does = $"Deals 10 damage. Cost: {Cost * 10} Sanity.";
+                    break;
+                case "All in One+":
+                    Description = "Combines this card and every Strike or Strike+ in hand into a powerful burst.";
+                    Does = $"Deals 8 damage for every Strike or Strike+ in hand plus this card. Cost: {Cost * 10} Sanity.";
+                    break;
+                case "Mighty Defend Attack+":
+                    Description = "Converts your Defense into an even stronger attack.";
+                    Does = "Deals 120% of your current Defense. Leaves your Sanity at 35.";
+                    break;
+                case "No Fight+":
+                    Description = "Combines this card and every Defend or Defend+ in hand into a stronger burst of armor.";
+                    Does = $"Gains 10 Defense for every Defend or Defend+ in hand plus this card. Cost: {Cost * 10} Sanity.";
+                    break;
+                case "Mirror Shield+":
+                    Description = "Doubles your existing protection and adds an upgraded barrier.";
+                    Does = $"Doubles current Defense and adds 20 Defense. Cost: {Cost * 10} Sanity.";
+                    break;
+                case "Omega+":
+                    Description = "Unleashes an upgraded cosmic strike.";
+                    Does = "Deals 65 damage and leaves your Sanity at 35.";
+                    break;
+                case "Powerup+":
+                    Description = "Empower your attacks with a bonus that fades over time.";
+                    Does = $"Gain +3 base damage to Attack cards, decreasing by 1 at the end of each turn until it reaches 0. Cost: {Cost * 10} Sanity.";
+                    break;
                 case "Restore+":
                 case "Heal+":
-                    CardID = 4;
                     Rarity = CardRarity.Common;
                     Description = "Upgraded of Restore making more Heal.";
-                    Does = $"Heal 9 Hp to yourself. Cost: {Cost * 10} Sanity.";
+                    Does = $"Heal 12 HP and 10 Sanity. Cost: {Cost * 10} Sanity.";
+                    break;
+                case "Focus+":
+                    Description = "Restore more Sanity and draw a card.";
+                    Does = $"Restore 35 Sanity and draw 1 card. Cost: {Cost * 10} Sanity.";
+                    break;
+                case "Aura Heal+":
+                    Description = "Channel powerful aura energy to restore body and mind.";
+                    Does = "Restore 50 Sanity and heal 25 HP. Removes this card from the hand.";
                     break;
             }
         }

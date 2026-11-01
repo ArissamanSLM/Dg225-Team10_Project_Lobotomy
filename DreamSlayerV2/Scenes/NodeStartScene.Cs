@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -21,8 +20,6 @@ namespace DreamSlayerV2.Scenes
 
         private readonly Random _random = new Random();
         private readonly List<CardManager> _cardChoices = new List<CardManager>();
-        private SpriteFont _font;
-        private Texture2D _pixelTexture;
         private MouseState _previousMouseState;
         private PlayerController _player;
         private bool _initialized;
@@ -33,17 +30,18 @@ namespace DreamSlayerV2.Scenes
 
             _previousMouseState = Mouse.GetState();
             _player = GameState.CurrentPlayer;
-            _player.MaxHP += 5;
+            if (!_player.HasStartBonus)
+            {
+                _player.MaxHP += 5;
+                _player.HasStartBonus = true;
+            }
             CreateCardChoices();
             _initialized = true;
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent()
         {
-            _font = content.Load<SpriteFont>("File");
-            var graphicsDevice = ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService))).GraphicsDevice;
-            _pixelTexture = new Texture2D(graphicsDevice, 1, 1);
-            _pixelTexture.SetData(new[] { Color.White });
+            var graphicsDevice = GlobalContentManager.GraphicsDevice;
         }
 
         public void Update(GameTime gameTime)
@@ -59,6 +57,7 @@ namespace DreamSlayerV2.Scenes
                     if (!CardBounds[i].Contains(currentMouseState.Position)) continue;
 
                     _player.Deck.Add(_cardChoices[i]);
+                    NodeSelectScene.SaveRun();
                     SceneManager.ChangeScene(new NodeSelectScene());
                     break;
                 }
@@ -112,11 +111,11 @@ namespace DreamSlayerV2.Scenes
                 Color backgroundColor = isHovered ? new Color(70, 55, 95) : new Color(35, 35, 55);
                 Color borderColor = isHovered ? Color.Gold : Color.MediumPurple;
 
-                spriteBatch.Draw(_pixelTexture, bounds, backgroundColor);
+                spriteBatch.Draw(GlobalContentManager.WhitePixel, bounds, backgroundColor);
                 DrawBorder(spriteBatch, bounds, borderColor, 4);
 
-                spriteBatch.DrawString(_font, card.Name, new Vector2(bounds.X + 24, bounds.Y + 24), Color.White);
-                spriteBatch.DrawString(_font, "RARE", new Vector2(bounds.X + 24, bounds.Y + 76), Color.Gold);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, card.Name, new Vector2(bounds.X + 24, bounds.Y + 24), Color.White);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, "RARE", new Vector2(bounds.X + 24, bounds.Y + 76), Color.Gold);
 
                 string description = card.Description + "\n" + card.Does;
                 DrawWrappedText(
@@ -134,19 +133,19 @@ namespace DreamSlayerV2.Scenes
 
         private void DrawCenteredText(SpriteBatch spriteBatch, string text, int y, Color color)
         {
-            Vector2 size = _font.MeasureString(text);
-            spriteBatch.DrawString(_font, text, new Vector2((1920 - size.X) / 2f, y), color);
+            Vector2 size = GlobalContentManager.DefaultFont.MeasureString(text);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, text, new Vector2((1920 - size.X) / 2f, y), color);
         }
 
         private void DrawCenteredTextInBounds(SpriteBatch spriteBatch, string text, Rectangle bounds, int y, Color color)
         {
-            Vector2 size = _font.MeasureString(text);
-            spriteBatch.DrawString(_font, text, new Vector2(bounds.Center.X - size.X / 2f, y), color);
+            Vector2 size = GlobalContentManager.DefaultFont.MeasureString(text);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, text, new Vector2(bounds.Center.X - size.X / 2f, y), color);
         }
 
         private void DrawWrappedText(SpriteBatch spriteBatch, string text, Vector2 position, float maxWidth, Color color)
         {
-            float lineHeight = _font.LineSpacing;
+            float lineHeight = GlobalContentManager.DefaultFont.LineSpacing;
             float x = position.X;
             float y = position.Y;
 
@@ -156,9 +155,9 @@ namespace DreamSlayerV2.Scenes
                 foreach (string word in paragraph.Split(' '))
                 {
                     string candidate = line.Length == 0 ? word : line + " " + word;
-                    if (line.Length > 0 && _font.MeasureString(candidate).X > maxWidth)
+                    if (line.Length > 0 && GlobalContentManager.DefaultFont.MeasureString(candidate).X > maxWidth)
                     {
-                        spriteBatch.DrawString(_font, line, new Vector2(x, y), color);
+                        spriteBatch.DrawString(GlobalContentManager.DefaultFont, line, new Vector2(x, y), color);
                         y += lineHeight;
                         line = word;
                     }
@@ -170,7 +169,7 @@ namespace DreamSlayerV2.Scenes
 
                 if (line.Length > 0)
                 {
-                    spriteBatch.DrawString(_font, line, new Vector2(x, y), color);
+                    spriteBatch.DrawString(GlobalContentManager.DefaultFont, line, new Vector2(x, y), color);
                     y += lineHeight;
                 }
 
@@ -180,15 +179,14 @@ namespace DreamSlayerV2.Scenes
 
         private void DrawBorder(SpriteBatch spriteBatch, Rectangle bounds, Color color, int thickness)
         {
-            spriteBatch.Draw(_pixelTexture, new Rectangle(bounds.X, bounds.Y, bounds.Width, thickness), color);
-            spriteBatch.Draw(_pixelTexture, new Rectangle(bounds.X, bounds.Bottom - thickness, bounds.Width, thickness), color);
-            spriteBatch.Draw(_pixelTexture, new Rectangle(bounds.X, bounds.Y, thickness, bounds.Height), color);
-            spriteBatch.Draw(_pixelTexture, new Rectangle(bounds.Right - thickness, bounds.Y, thickness, bounds.Height), color);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, new Rectangle(bounds.X, bounds.Y, bounds.Width, thickness), color);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, new Rectangle(bounds.X, bounds.Bottom - thickness, bounds.Width, thickness), color);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, new Rectangle(bounds.X, bounds.Y, thickness, bounds.Height), color);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, new Rectangle(bounds.Right - thickness, bounds.Y, thickness, bounds.Height), color);
         }
 
         public void UnloadContent()
         {
-            _pixelTexture?.Dispose();
         }
     }
 }

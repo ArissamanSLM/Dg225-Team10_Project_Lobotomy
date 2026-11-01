@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DreamSlayerV2.Core
@@ -8,13 +7,6 @@ namespace DreamSlayerV2.Core
     {
         private static IScene _currentScene;
         private static IScene _nextScene;
-        private static ContentManager _content;
-
-        public static void Initialize(ContentManager content)
-        {
-            _content = content;
-        }
-
         // Queue a scene change to safely handle transitions outside tight loops
         public static void ChangeScene(IScene newScene)
         {
@@ -28,7 +20,7 @@ namespace DreamSlayerV2.Core
                 _currentScene?.UnloadContent();
                 _currentScene = _nextScene;
                 _currentScene.Initialize();
-                _currentScene.LoadContent(_content);
+                _currentScene.LoadContent();
                 _nextScene = null;
             }
 

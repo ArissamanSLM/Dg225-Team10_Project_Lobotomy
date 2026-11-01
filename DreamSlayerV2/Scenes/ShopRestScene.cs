@@ -1,10 +1,10 @@
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DreamSlayerV2.Scenes
 {
@@ -18,9 +18,7 @@ namespace DreamSlayerV2.Scenes
 
     public class ShopRestScene : IScene
     {
-        protected SpriteFont _font;
         protected MouseState _prevMouse;
-        protected Texture2D _pixel;
         protected readonly bool _isRest;
         protected StructureType _currentStructure;
         
@@ -28,6 +26,9 @@ namespace DreamSlayerV2.Scenes
         protected bool _secondaryUsed = false;
         protected string _interactionMessage = "";
         protected float _messageTimer = 0f;
+        protected static readonly Rectangle PrimaryActionBounds = new Rectangle(150, 425, 900, 72);
+        protected static readonly Rectangle SecondaryActionBounds = new Rectangle(150, 525, 900, 72);
+        protected static readonly Rectangle LeaveBounds = new Rectangle(1570, 940, 270, 72);
 
         protected ShopRestScene(bool isRest, StructureType structure)
         {
@@ -40,12 +41,9 @@ namespace DreamSlayerV2.Scenes
             _prevMouse = Mouse.GetState();
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent()
         {
-            _font = content.Load<SpriteFont>("File");
-            var graphicsDevice = ((IGraphicsDeviceService)content.ServiceProvider.GetService(typeof(IGraphicsDeviceService))).GraphicsDevice;
-            _pixel = new Texture2D(graphicsDevice, 1, 1);
-            _pixel.SetData(new[] { Color.White });
+            var graphicsDevice = GlobalContentManager.GraphicsDevice;
         }
 
         public virtual void Update(GameTime gameTime)
@@ -61,12 +59,9 @@ namespace DreamSlayerV2.Scenes
 
             if (_isRest)
             {
-                Rectangle rPrimaryRest = new Rectangle(200, 420, 500, 40);
-                Rectangle rSecondaryAction = new Rectangle(200, 480, 500, 40);
-
                 if (clicked)
                 {
-                    if (rPrimaryRest.Contains(ms.Position) && !_primaryUsed)
+                    if (PrimaryActionBounds.Contains(ms.Position) && !_primaryUsed)
                     {
                         _primaryUsed = true;
                         float healMultiplier = (_currentStructure == StructureType.SafeHouse || _currentStructure == StructureType.Hospital) ? 0.30f : 0.15f;
@@ -78,7 +73,7 @@ namespace DreamSlayerV2.Scenes
                         _messageTimer = 3f;
                     }
 
-                    if (rSecondaryAction.Contains(ms.Position) && !_secondaryUsed)
+                    if (SecondaryActionBounds.Contains(ms.Position) && !_secondaryUsed)
                     {
                         switch (_currentStructure)
                         {
@@ -90,21 +85,37 @@ namespace DreamSlayerV2.Scenes
                                 break;
 
                             case StructureType.Blacksmith:
-                                _secondaryUsed = true;
-                                _interactionMessage = "Upgraded a card successfully at the anvil!";
+                                int upgradeIndex = player.Deck.FindIndex(card =>
+                                    card.Name == "Strike" || card.Name == "Defend");
+                                if (upgradeIndex >= 0)
+                                {
+                                    CardManager card = player.Deck[upgradeIndex];
+                                    player.Deck[upgradeIndex] = new CardManager(
+                                        card.CardID,
+                                        card.Name + "+",
+                                        card.Cost,
+                                        card.Type,
+                                        card.Hazard);
+                                    _secondaryUsed = true;
+                                    _interactionMessage = $"Upgraded {card.Name} to {card.Name}+!";
+                                }
+                                else
+                                {
+                                    _interactionMessage = "No basic Strike or Defend card is available to upgrade.";
+                                }
                                 break;
 
                             case StructureType.StorageArea:
                                 _secondaryUsed = true;
-                                double roll = new Random().NextDouble();
-                                string cardRarity = roll < 0.05 ? "Ultra Rare (UR)" : "Rare";
-                                _interactionMessage = $"Scavenged the storage and found a {cardRarity} card!";
+                                int cardId = player.Deck.Count == 0 ? 1 : player.Deck.Max(card => card.CardID) + 1;
+                                player.Deck.Add(new CardManager(cardId, "Aura Shield", 2, CardManager.CardType.Defense));
+                                _interactionMessage = "Scavenged storage and added an Aura Shield to your deck!";
                                 break;
 
                             case StructureType.Hospital:
                                 _secondaryUsed = true;
                                 player.MaxHP += 5;
-                                player.PlayerHP += 5;
+                                player.PlayerHP = Math.Min(player.MaxHP, player.PlayerHP + 5);
                                 _interactionMessage = "Injected Vaccine! Max HP permanently increased by 5.";
                                 break;
                         }
@@ -113,7 +124,8 @@ namespace DreamSlayerV2.Scenes
                 }
             }
 
-            if (ms.RightButton == ButtonState.Pressed && _prevMouse.RightButton == ButtonState.Released)
+            if ((ms.RightButton == ButtonState.Pressed && _prevMouse.RightButton == ButtonState.Released) ||
+                (clicked && LeaveBounds.Contains(ms.Position)))
             {
                 SceneManager.ChangeScene(new NodeSelectScene());
             }
@@ -124,32 +136,29 @@ namespace DreamSlayerV2.Scenes
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            SceneUi.DrawBackground(spriteBatch);
+            SceneUi.DrawPanel(spriteBatch, new Rectangle(100, 150, 1120, 540), Color.MediumSeaGreen);
 
             if (_isRest)
             {
-                spriteBatch.DrawString(_font, $"Rest Area: {_currentStructure}", new Vector2(200, 200), Color.Gold);
-                spriteBatch.DrawString(_font, GetStructureDialogue(), new Vector2(200, 250), Color.LightGray);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"REST AREA: {_currentStructure}", new Vector2(150, 185), Color.Gold);
+                SceneUi.DrawWrappedText(spriteBatch, GetStructureDialogue(), new Vector2(150, 245), 1000, Color.LightGray);
 
                 string restLabel = _primaryUsed ? "Rest (Already Used)" : GetPrimaryRestLabel();
-                spriteBatch.DrawString(_font, restLabel, new Vector2(200, 420), _primaryUsed ? Color.Gray : Color.LightGreen);
-
                 string secondaryLabel = _secondaryUsed ? "Secondary Action (Already Used)" : GetSecondaryActionLabel();
-                spriteBatch.DrawString(_font, secondaryLabel, new Vector2(200, 480), _secondaryUsed ? Color.Gray : Color.Cyan);
+                MouseState mouse = Mouse.GetState();
+                SceneUi.DrawButton(spriteBatch, PrimaryActionBounds, restLabel, PrimaryActionBounds.Contains(mouse.Position), !_primaryUsed);
+                SceneUi.DrawButton(spriteBatch, SecondaryActionBounds, secondaryLabel, SecondaryActionBounds.Contains(mouse.Position), !_secondaryUsed);
 
                 if (_messageTimer > 0f)
                 {
-                    spriteBatch.DrawString(_font, _interactionMessage, new Vector2(200, 540), Color.Orange);
+                    SceneUi.DrawWrappedText(spriteBatch, _interactionMessage, new Vector2(150, 620), 1050, Color.Orange);
                 }
             }
 
-            spriteBatch.DrawString(_font, "Right-click to leave", new Vector2(200, 620), Color.AntiqueWhite);
-
             var player = GameState.CurrentPlayer;
-            if (player != null)
-            {
-                spriteBatch.DrawString(_font, $"Soul Coins: {player.SoulCoins}", new Vector2(50, 50), Color.Cyan);
-                spriteBatch.DrawString(_font, $"Current HP: {player.PlayerHP}/{player.MaxHP}", new Vector2(50, 80), Color.LightGreen);
-            }
+            SceneUi.DrawPlayerStatus(spriteBatch, player);
+            SceneUi.DrawButton(spriteBatch, LeaveBounds, "Return to Map", LeaveBounds.Contains(Mouse.GetState().Position), true);
 
             spriteBatch.End();
         }
@@ -170,8 +179,8 @@ namespace DreamSlayerV2.Scenes
         private string GetSecondaryActionLabel() => _currentStructure switch
         {
             StructureType.SafeHouse => "2. Explore the room for hidden Soul Coins",
-            StructureType.Blacksmith => "2. Use Anvil to Upgrade a Card",
-            StructureType.StorageArea => "2. Search Cargo (95% Rare, 5% UR Card)",
+            StructureType.Blacksmith => "2. Upgrade the first Strike or Defend in your deck",
+            StructureType.StorageArea => "2. Scavenge an Aura Shield card for your deck",
             StructureType.Hospital => "2. Search Medical Supply for Vaccine Buff (+5 Max HP)",
             _ => "2. Special Action"
         };

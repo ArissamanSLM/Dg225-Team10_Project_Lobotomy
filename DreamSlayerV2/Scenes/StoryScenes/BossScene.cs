@@ -1,7 +1,6 @@
 using System;
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -10,8 +9,6 @@ namespace DreamSlayerV2.Scenes
     public class BossScene : IScene
     {
         private const int AngelHealAmount = 30;
-
-        private SpriteFont _font;
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
         private readonly MapNode _targetNode;
@@ -67,9 +64,8 @@ namespace DreamSlayerV2.Scenes
             _currentMouseState = _previousMouseState;
         }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent()
         {
-            _font = content.Load<SpriteFont>("File");
             LoadCurrentDialogue();
         }
 
@@ -151,12 +147,28 @@ namespace DreamSlayerV2.Scenes
         {
             spriteBatch.Begin();
 
-            // วาดกล่องข้อความหรือตัวหนังสือบทสนทนา (มีเอฟเฟกต์พิมพ์ดีด)
-            spriteBatch.DrawString(_font, displayedText, new Vector2(200, 800), Color.White);
+            spriteBatch.Draw(GlobalContentManager.CaveBackground, new Vector2(0, 0), Color.White);
+            float approach = _dialogues.Length <= 1
+                ? 1f
+                : (float)currentIndex / (_dialogues.Length - 1);
+            int bossSize = (int)MathHelper.Lerp(180f, 520f, approach);
+            int bossX = (int)MathHelper.Lerp(1540f, 1180f, approach);
+            int bossY = (int)MathHelper.Lerp(180f, 70f, approach);
+            spriteBatch.Draw(GlobalContentManager.BossEnemy, new Rectangle(bossX, bossY, bossSize, bossSize), Color.White);
+
+            Vector2 dialoguePosition = new Vector2(200, 800);
+            Vector2 dialogueSize = GlobalContentManager.DefaultFont.MeasureString(displayedText);
+            Rectangle dialogueBounds = new Rectangle(
+                (int)dialoguePosition.X - 20,
+                (int)dialoguePosition.Y - 20,
+                Math.Min((int)dialogueSize.X + 40, 1500),
+                (int)dialogueSize.Y + 40);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, dialogueBounds, Color.Black * 0.7f);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, displayedText, dialoguePosition, Color.White);
 
             if (isTypingFinished)
             {
-                spriteBatch.DrawString(_font, "▼ Click to Continue...", new Vector2(1500, 1000), Color.Yellow);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, "[Click to Continue]", new Vector2(1500, 1000), Color.Yellow);
             }
 
             spriteBatch.End();

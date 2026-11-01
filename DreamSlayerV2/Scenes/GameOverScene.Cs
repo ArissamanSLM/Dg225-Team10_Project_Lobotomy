@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework.Input;
@@ -9,7 +8,6 @@ namespace DreamSlayerV2.Scenes
 {
     public class GameOverScene : IScene
     {
-        private SpriteFont _font;
 
         // Run stats passed from the battle or final node
         private int _nodesPassed;
@@ -64,9 +62,8 @@ namespace DreamSlayerV2.Scenes
 
         public void Initialize() { }
 
-        public void LoadContent(ContentManager content)
+        public void LoadContent()
         {
-            _font = content.Load<SpriteFont>("File");
         }
 
         public void Update(GameTime gameTime)
@@ -86,7 +83,7 @@ namespace DreamSlayerV2.Scenes
             Color titleColor = _isVictory ? Color.Gold : Color.Red;
 
             // Draw header
-            spriteBatch.DrawString(_font, titleText, new Vector2(50, 40), titleColor);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, titleText, new Vector2(50, 40), titleColor);
 
             string breakdown =
                 $"Nodes Passed ({_nodesPassed}): +{_nodesPassed * 200}\n" +
@@ -98,10 +95,10 @@ namespace DreamSlayerV2.Scenes
                 $"----------------------------------\n" +
                 $"FINAL SCORE: {_finalScore}";
 
-            spriteBatch.DrawString(_font, breakdown, new Vector2(50, 100), Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, breakdown, new Vector2(50, 100), Color.White);
 
             // Prompt to restart/exit
-            spriteBatch.DrawString(_font, "Press 'I' to return to Title Screen", new Vector2(50, 420), Color.Yellow);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Press 'I' to return to Title Screen", new Vector2(50, 420), Color.Yellow);
 
             spriteBatch.End();
         }

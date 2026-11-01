@@ -131,3 +131,64 @@ C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Sheid_bar.xnb
 c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\HealthEffect.xnb
 c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\BattleUIFont.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Pluscard.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\UpgradeDowngrade.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Scene_1_20261101212247.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Scene_2_20261101212255.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\All16Card (1).xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\attack.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Bad_effect_gain.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\BattleUIFont.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Blankmenu.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\BlankUI1.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\BlankUI2.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Boss_logo.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\buy shop.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\CONTINUE.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Dice Rolling.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Enemies_health_bar.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\enemy_logo.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\EXIT.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\E_enemy2.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\File.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Handing out cards(One Card).xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Handing out cards.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\HardReset.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\heal.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\HealthBar.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\HealthEffect.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\HorrorForestDreamV2.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\leberch-nightmare-611631.ogg
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\leberch-nightmare-611631.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\MapLeft_DreamSlayer.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\MapRight_DreamSlayer.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\NatureFonts.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Next_Floor_logo.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\OPTIONS.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Play Card.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Pluscard.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\SanityOrb.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Sanity_bar.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Scene_1_20261101212247.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Scene_2_20261101212255.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\ScreenumberGenerator.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\sectionsound-shield-block-shortsword-143940.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Sheid_bar.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Shop_logo.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\START.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Start_music (1).ogg
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Start_music (1).xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\TheDarkCave.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\TitleMusic.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\UnrealWolf.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\UpgradeDowngrade.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\UPGRADES.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\DreamSlayerV2.exe
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\DreamSlayerV2.deps.json
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\DreamSlayerV2.runtimeconfig.json
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\DreamSlayerV2.dll
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\DreamSlayerV2.pdb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Elite_Enemies_1.xnb
+C:\Users\ASUS\AppData\Local\Temp\DreamSlayerV2-verify\Content\Kraken-BossPhase1.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Elite_Enemies_1.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Kraken-BossPhase1.xnb

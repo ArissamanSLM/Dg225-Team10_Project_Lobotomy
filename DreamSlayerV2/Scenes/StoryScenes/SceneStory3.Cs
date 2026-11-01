@@ -1,57 +1,32 @@
 using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace DreamSlayerV2.Scenes
 {
     public class SceneStory3 : IScene
     {
-        private SpriteFont _font;
-        private string promptText = "Click Here to Continue...";
-        private Vector2 promptPos = new Vector2(100, 600);
-        private MouseState _previousMouseState;
+        private readonly StoryDialogue _dialogue = new StoryDialogue(
+            "As you look at the book that dropped onto you, the cover sure is interesting. I'm sure hope there's no \"DO NOT OPEN\" tape on it.");
 
         public void Initialize()
         {
-            _previousMouseState = Mouse.GetState();
+            _dialogue.Initialize();
         }
 
-        public void LoadContent(ContentManager content)
-        {
-            _font = content.Load<SpriteFont>("File");
-        }
+        public void LoadContent() { }
 
         public void Update(GameTime gameTime)
         {
-            MouseState currentMouseState = Mouse.GetState();
-
-            Vector2 textSize = _font.MeasureString(promptText);
-            Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);
-
-            bool isHovered = promptBounds.Contains(currentMouseState.Position);
-            bool isClicked = isHovered && currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
-
-            if (isClicked)
+            if (_dialogue.Update(gameTime))
             {
                 SceneManager.ChangeScene(new SceneStory4());
             }
-
-            _previousMouseState = currentMouseState;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "As you look at the book that drop onto you, the cover sure is interesting.\n I'm sure hope there's no \"DO NOT OPEN\" tape on it.", new Vector2(50, 50), Color.Red);
-
-            Vector2 textSize = _font.MeasureString(promptText);
-            Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);
-            Color promptColor = promptBounds.Contains(Mouse.GetState().Position) ? Color.LightYellow : Color.Yellow;
-
-            spriteBatch.DrawString(_font, promptText, promptPos, promptColor);
-            spriteBatch.End();
+            _dialogue.Draw(spriteBatch, GlobalContentManager.SceneStoryBackground2);
         }
 
         public void UnloadContent() { }
