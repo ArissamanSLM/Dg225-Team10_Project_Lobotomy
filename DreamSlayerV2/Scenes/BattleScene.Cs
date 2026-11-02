@@ -31,6 +31,11 @@ private float _shieldEffectTimer = 0f;
         private int _baseAttackDamageBonus;
         private int _oneTurnPowerupBonus;
         private readonly List<int> _decayingPowerupBonuses = new List<int>();
+        private bool _clockArmed;
+        private float _clockBonusMultiplier;
+        private int _clockStoredDamage;
+        private int _damageDealtThisTurn;
+        private bool _isReleasingClockDamage;
 
         // Input States
         private KeyboardState currentKeyboardState;
@@ -46,8 +51,8 @@ private float _shieldEffectTimer = 0f;
         {
             isBossRoom = bossRoom;
             _enemy = nodeToComplete != null && nodeToComplete.Type == NodeType.Boss
-                ? new BossBattle()
-                : new MonsterBattle(bossRoom);
+                ? new BossBattle(GameState.CurrentDepth, GameState.CurrentPlayer.IsNightmareMode)
+                : new MonsterBattle(bossRoom, GameState.CurrentDepth, GameState.CurrentPlayer.IsNightmareMode);
             targetNode = nodeToComplete;
         }
 
@@ -57,7 +62,7 @@ private float _shieldEffectTimer = 0f;
 
             _player = DreamSlayerV2.Core.GameState.CurrentPlayer ?? new PlayerController(CharacterClassV2.Human);
             _baseAttackDamageBonus = _player.IncreaseInHandDamageValue;
-            _player.PlayerTurn();
+            _player.StartEncounterTurn();
             if (_player.Hand[0] != null)
             {
                 GlobalContentManager.DrawCardsSound.Play();
@@ -119,26 +124,19 @@ if (_shieldEffectTimer > 0f) _shieldEffectTimer -= ft;
             if (_enemy.HP <= 0)
             {
                 ClearPowerupEffects();
-                bool isFinalBossNode = targetNode != null &&
-                                       targetNode.Name == "13-Boss" &&
-                                       targetNode.Type == NodeType.Boss;
+                GameState.RecordEnemyDefeated();
+                bool isBossNode = targetNode?.Type == NodeType.Boss;
+                if (isBossNode) GameState.CompleteDepth();
 
-                if (isFinalBossNode)
-                {
-                    SceneManager.ChangeScene(new GameOverScene(5, 3, 24, true, false, 6));
-                }
-                else
-                {
-                    int rewardTier = (targetNode != null && targetNode.Type == NodeType.Elite) ? 1 : 0;
-                    SceneManager.ChangeScene(new RewardScene(rewardTier));
-                }
+                int rewardTier = isBossNode ? 2 : targetNode?.Type == NodeType.Elite ? 1 : 0;
+                SceneManager.ChangeScene(new RewardScene(rewardTier, _player.IsNightmareMode, GameState.CurrentDepth));
                 return;
             }
 
             if (_player.PlayerHP <= 0 || _player.Sanity <= 0)
             {
                 ClearPowerupEffects();
-                SceneManager.ChangeScene(new GameOverScene(0, 0, 0, false, true, 0));
+                SceneManager.ChangeScene(new GameOverScene(false, true));
                 return;
             }
 
@@ -239,6 +237,7 @@ if (_shieldEffectTimer > 0f) _shieldEffectTimer -= ft;
 
             if (LeavesTwentySanity(selectedCard))
             {
+                GameState.RecordCardPlayed();
                 PlayCardSound();
                 PlayCardEffectSound(isAttack: true);
 
@@ -273,20 +272,21 @@ if (_shieldEffectTimer > 0f) _shieldEffectTimer -= ft;
 
             if (_player.Sanity >= sanityCost)
             {
+                GameState.RecordCardPlayed();
                 _player.Sanity -= sanityCost;
                 PlayCardSound();
 
                 switch (selectedCard.Name)
                 {
                     case "Alpha":
-                        _player.Deck.Add(new CardManager(0, "Beta", 0, CardManager.CardType.Special));
+                        _player.TryAddCard(new CardManager(0, "Beta", 0, CardManager.CardType.Special), out _);
                         _player.UseCard(cardIndex);
                         GlobalContentManager.DrawCardSound.Play();
                         return;
 
                     case "Beta":
                         _player.Sanity = Math.Min(100, _player.Sanity + 100);
-                        _player.Deck.Add(new CardManager(0, "Omega", 0, CardManager.CardType.Special));
+                        _player.TryAddCard(new CardManager(0, "Omega", 0, CardManager.CardType.Special), out _);
                         _player.Hand[cardIndex] = null;
                         _healEffectTimer = 0.4f;
                         GlobalContentManager.HealSound.Play();
@@ -358,6 +358,12 @@ if (_shieldEffectTimer > 0f) _shieldEffectTimer -= ft;
                         UpdatePowerupDamageBonus();
                         break;
 
+                    case "Clock":
+                        _clockArmed = true;
+                        _clockBonusMultiplier = 0.2f;
+                        _clockStoredDamage = _damageDealtThisTurn;
+                        break;
+
                     case "Restore":
                     case "Heal":
                         _player.PlayerHP = Math.Min(_player.MaxHP, _player.PlayerHP + 8);
@@ -411,6 +417,7 @@ if (_shieldEffectTimer > 0f) _shieldEffectTimer -= ft;
     // กรณีการ์ดพิเศษที่เหลือ Sanity ไว้ 35 (เช่น Mighty Defend Attack+ หรือ Omega+)
     if (LeavesThirtyFiveSanity(selectedCard))
     {
+        GameState.RecordCardPlayed();
         PlayCardSound();
         if (selectedCard.Name == "Mighty Defend Attack+")
         {
@@ -431,6 +438,7 @@ if (_shieldEffectTimer > 0f) _shieldEffectTimer -= ft;
 
     if (_player.Sanity >= sanityCost)
     {
+        GameState.RecordCardPlayed();
         _player.Sanity -= sanityCost;
         PlayCardSound();
 
@@ -499,6 +507,12 @@ if (_shieldEffectTimer > 0f) _shieldEffectTimer -= ft;
             case "Powerup+":
                 _decayingPowerupBonuses.Add(3);
                 UpdatePowerupDamageBonus();
+                break;
+
+            case "Clock+":
+                _clockArmed = true;
+                _clockBonusMultiplier = 0.5f;
+                _clockStoredDamage = _damageDealtThisTurn;
                 break;
 
             case "Restore+":
@@ -604,6 +618,7 @@ private static bool LeavesThirtyFiveSanity(CardManager card)
 
         private void ApplyDamageToEnemy(int damage)
         {
+            int startingHp = _enemy.HP;
             if (_enemy.Defense > 0)
             {
                 if (damage <= _enemy.Defense)
@@ -621,10 +636,36 @@ private static bool LeavesThirtyFiveSanity(CardManager card)
             {
                 _enemy.HP -= damage;
             }
+
+            int hpDamage = Math.Max(0, startingHp - _enemy.HP);
+            _damageDealtThisTurn += hpDamage;
+            if (_clockArmed && !_isReleasingClockDamage)
+            {
+                _clockStoredDamage += hpDamage;
+            }
         }
 
         private void CompleteTurn()
         {
+            if (_enemy.HP <= 0) return;
+
+            if (_clockArmed)
+            {
+                int releaseDamage = (int)Math.Ceiling(_clockStoredDamage * _clockBonusMultiplier);
+                _clockArmed = false;
+                _clockStoredDamage = 0;
+                if (releaseDamage > 0)
+                {
+                    _isReleasingClockDamage = true;
+                    ApplyDamageToEnemy(releaseDamage);
+                    _isReleasingClockDamage = false;
+                    _enemyFlashTimer = 0.4f;
+                }
+
+                if (_enemy.HP <= 0) return;
+            }
+
+            _damageDealtThisTurn = 0;
             _enemy.Defense = 0;
 
             foreach (EnemyAction action in _enemy.NextActions)

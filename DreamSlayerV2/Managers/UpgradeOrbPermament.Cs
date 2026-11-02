@@ -14,6 +14,9 @@ namespace DreamSlayerV2.Core
     public static class UpgradeOrbPermanent
     {
         public static int RebirthCoins { get; set; } = 0;
+        public static int AscendedCoins { get; set; } = 0;
+        public static int TotalDepthsCleared { get; set; } = 0;
+        public static int BestScore { get; set; } = 0;
 
         // Upgrade Levels (Total Orbs Level)
         public static int MaxHPLevel { get; set; } = 0;      // Max 12 (Star 3, Orb 3)
@@ -27,6 +30,20 @@ namespace DreamSlayerV2.Core
         // Special Charms Challenge & Nightmare Mode
         public static bool CharmsUnlocked { get; set; } = false; // Cost: 5,000 Coins (Super Expensive!)
         public static bool NightmareModeUnlocked { get; set; } = false; // Cost: 1,000 Coins (Req Depths 10)
+
+        // Ascended Coin upgrades
+        public static bool ClockPlusUnlocked { get; set; }
+        public static bool PlusBasicCardsUnlocked { get; set; }
+        public static bool PlusBasicCardsEnabled { get; set; }
+        public static int StartingHpUpgradeLevel { get; set; }
+        public static bool StartingCoinsUpgradeUnlocked { get; set; }
+        public static int SoulRewardUpgradeLevel { get; set; }
+        public static bool StartingEnergyUpgradeUnlocked { get; set; }
+
+        public static int GetAscendedUpgradeCost(int baseCost, int level = 0)
+        {
+            return baseCost + (level * 5);
+        }
 
         // Calculate Cost based on level
         public static int GetUpgradeCost(int currentLevel)
@@ -46,6 +63,10 @@ namespace DreamSlayerV2.Core
         // --- Bonus Calculation Methods ---
         public static int GetMaxHPBonus() => MaxHPLevel; // +1 HP per Orb
         public static int GetStartingCoinsBonus() => StartCoinsLevel * 10; // +10 Coins per Orb
+        public static int GetAscendedStartingHpBonus() => StartingHpUpgradeLevel * 5;
+        public static int GetAscendedStartingCoinsBonus() => StartingCoinsUpgradeUnlocked ? 25 : 0;
+        public static int GetStartingEnergyBonus() => StartingEnergyUpgradeUnlocked ? 1 : 0;
+        public static float GetSoulRewardMultiplier() => 1f + (SoulRewardUpgradeLevel * 0.1f);
 
         // Altar Cooldown check (24 Hours)
         public static bool CanUseEnergyAltar()

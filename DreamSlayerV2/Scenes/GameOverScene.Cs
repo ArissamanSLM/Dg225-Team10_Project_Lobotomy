@@ -9,7 +9,6 @@ namespace DreamSlayerV2.Scenes
     public class GameOverScene : IScene
     {
 
-        // Run stats passed from the battle or final node
         private int _nodesPassed;
         private int _enemiesCleared;
         private int _cardsPlayed;
@@ -17,20 +16,31 @@ namespace DreamSlayerV2.Scenes
         private int _floorsPassed;
         private int _finalScore;
         private bool _isdefeat;
+        private int _rebirthCoinsEarned;
 
-        // Constructor to accept run statistics
-        public GameOverScene(int nodesPassed, int enemiesCleared, int cardsPlayed, bool isVictory  , bool isDefeat,  int floorsPassed)
+        public GameOverScene(bool isVictory, bool isDefeat)
         {
-            _nodesPassed = nodesPassed;
-            _enemiesCleared = enemiesCleared;
-            _cardsPlayed = cardsPlayed;
+            _nodesPassed = GameState.NodesVisited;
+            _enemiesCleared = GameState.EnemiesDefeated;
+            _cardsPlayed = GameState.CardsPlayed;
             _isVictory = isVictory; 
             _isdefeat = isDefeat;
-           
-            _floorsPassed = floorsPassed;
 
-            // Calculate final score using your custom rules
-            _finalScore = CalculateTotalScore();
+            _floorsPassed = GameState.DepthsCleared;
+            _finalScore = GameState.CalculateScore(_isVictory);
+            if (_finalScore > UpgradeOrbPermanent.BestScore)
+            {
+                UpgradeOrbPermanent.BestScore = _finalScore;
+            }
+
+            _rebirthCoinsEarned = CalculateRebirthCoins(
+                _nodesPassed,
+                _floorsPassed,
+                GameState.CurrentPlayer.SoulCoins,
+                _isVictory);
+            UpgradeOrbPermanent.RebirthCoins += _rebirthCoinsEarned;
+            GameSaveManager.SavePermanentProgress();
+            GameSaveManager.DeleteSave();
         }
                 public static int CalculateRebirthCoins(int stagesCleared, int bossesDefeated, int soulCoinsEarned, bool isVictory)
         {
@@ -38,28 +48,6 @@ namespace DreamSlayerV2.Scenes
             int victoryBonus = isVictory ? 250 : 0;
             return baseCoins + victoryBonus;
         }
-        private int CalculateTotalScore()
-        {
-            int score = 0;
-            score += _nodesPassed * 200;
-            score += _enemiesCleared * 100;
-            score += _cardsPlayed * 5;
-
-            if (_isVictory)
-            {
-                score += 1000;
-            }
-
-            if (_isdefeat)
-            {
-                score -= 100;
-            }
-
-            score += _floorsPassed * 250;
-
-            return score;
-        }
-
         public void Initialize() { }
 
         public void LoadContent()
@@ -78,27 +66,38 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            SceneUi.DrawBackground(spriteBatch);
+            SceneUi.DrawPanel(spriteBatch, new Rectangle(300, 120, 1320, 660), Color.MediumPurple);
 
-            string titleText = _isVictory ? "Demo Victory" : "Game Over";
+            string titleText = _isVictory ? "Depth Escaped" : "Game Over";
             Color titleColor = _isVictory ? Color.Gold : Color.Red;
+            Vector2 titleSize = GlobalContentManager.DefaultFont.MeasureString(titleText);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, titleText, new Vector2((1920 - titleSize.X) / 2f, 145), titleColor);
 
-            // Draw header
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, titleText, new Vector2(50, 40), titleColor);
-
+            int baseScore = (_nodesPassed * 100) + (_enemiesCleared * 250) +
+                (_cardsPlayed * 10) + (_floorsPassed * 1000);
+            int survivalScore = _isVictory
+                ? (Math.Max(0, GameState.CurrentPlayer.PlayerHP) * 20) +
+                  (Math.Max(0, GameState.CurrentPlayer.Sanity) * 10)
+                : 0;
+            int defeatPenalty = _isdefeat ? 100 : 0;
+            bool nightmare = GameState.CurrentPlayer.IsNightmareMode;
             string breakdown =
-                $"Nodes Passed ({_nodesPassed}): +{_nodesPassed * 200}\n" +
-                $"Enemies Cleared ({_enemiesCleared}): +{_enemiesCleared * 100}\n" +
-                $"Cards Used ({_cardsPlayed}): +{_cardsPlayed * 5}\n" +
-                $"Floor Bonus ({_floorsPassed}): +{_floorsPassed * 250}\n" +
-                (_isVictory ? "Boss Cleared / Demo End: +1000\n" : "") +
-                (_isdefeat ? "Death Penalty: -100\n" : "") +
-                $"----------------------------------\n" +
-                $"FINAL SCORE: {_finalScore}";
+                $"Nodes visited ({_nodesPassed}): +{_nodesPassed * 100}\n" +
+                $"Enemies defeated ({_enemiesCleared}): +{_enemiesCleared * 250}\n" +
+                $"Cards played ({_cardsPlayed}): +{_cardsPlayed * 10}\n" +
+                $"Depths cleared ({_floorsPassed}): +{_floorsPassed * 1000}\n" +
+                (_isVictory ? $"Escape bonus (HP + Sanity): +{survivalScore}\n" : "") +
+                (_isdefeat ? "Defeat penalty: -100\n" : "") +
+                (nightmare ? $"Nightmare multiplier: x2 ({baseScore + survivalScore - defeatPenalty} x 2)\n" : "") +
+                $"FINAL SCORE: {_finalScore}\n" +
+                $"Best Score: {UpgradeOrbPermanent.BestScore}\n" +
+                $"Ascended Coins: {UpgradeOrbPermanent.AscendedCoins}\n" +
+                $"Rebirth Coins earned: +{_rebirthCoinsEarned}";
 
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, breakdown, new Vector2(50, 100), Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, breakdown, new Vector2(420, 230), Color.White);
 
-            // Prompt to restart/exit
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Press 'I' to return to Title Screen", new Vector2(50, 420), Color.Yellow);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Press 'I' to return to Title Screen", new Vector2(760, 850), Color.Yellow);
 
             spriteBatch.End();
         }

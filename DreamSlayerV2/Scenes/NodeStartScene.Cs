@@ -56,7 +56,7 @@ namespace DreamSlayerV2.Scenes
                 {
                     if (!CardBounds[i].Contains(currentMouseState.Position)) continue;
 
-                    _player.Deck.Add(_cardChoices[i]);
+                    _player.TryAddCard(_cardChoices[i], out _);
                     NodeSelectScene.SaveRun();
                     SceneManager.ChangeScene(new NodeSelectScene());
                     break;
@@ -97,10 +97,12 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            SceneUi.DrawBackground(spriteBatch);
+            SceneUi.DrawPanel(spriteBatch, new Rectangle(70, 40, 1780, 960), Color.MediumPurple);
 
-            DrawCenteredText(spriteBatch, "A Gift Before the Tower", 70, Color.White);
-            DrawCenteredText(spriteBatch, "Your max HP increased by 5 for this run.", 145, Color.LightGreen);
-            DrawCenteredText(spriteBatch, "Choose one Rare card to add to your deck.", 205, Color.Yellow);
+            DrawCenteredText(spriteBatch, "A GIFT BEFORE THE TOWER", 75, Color.Gold);
+            DrawCenteredText(spriteBatch, "Your maximum HP increased by 5 for this run.", 145, Color.LightGreen);
+            DrawCenteredText(spriteBatch, "Choose ONE Rare card. Click a card to add it to your deck.", 205, Color.White);
 
             MouseState mouseState = Mouse.GetState();
             for (int i = 0; i < _cardChoices.Count; i++)
@@ -108,24 +110,28 @@ namespace DreamSlayerV2.Scenes
                 CardManager card = _cardChoices[i];
                 Rectangle bounds = CardBounds[i];
                 bool isHovered = bounds.Contains(mouseState.Position);
-                Color backgroundColor = isHovered ? new Color(70, 55, 95) : new Color(35, 35, 55);
-                Color borderColor = isHovered ? Color.Gold : Color.MediumPurple;
+                Color backgroundColor = isHovered ? new Color(64, 48, 86) : new Color(20, 25, 38);
+                Color borderColor = isHovered ? Color.Gold : new Color(115, 93, 150);
 
                 spriteBatch.Draw(GlobalContentManager.WhitePixel, bounds, backgroundColor);
                 DrawBorder(spriteBatch, bounds, borderColor, 4);
 
-                spriteBatch.DrawString(GlobalContentManager.DefaultFont, card.Name, new Vector2(bounds.X + 24, bounds.Y + 24), Color.White);
-                spriteBatch.DrawString(GlobalContentManager.DefaultFont, "RARE", new Vector2(bounds.X + 24, bounds.Y + 76), Color.Gold);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"CARD {i + 1}", new Vector2(bounds.X + 24, bounds.Y + 22), Color.LightGray);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, card.Name, new Vector2(bounds.X + 24, bounds.Y + 72), Color.White);
+                spriteBatch.Draw(GlobalContentManager.WhitePixel, new Rectangle(bounds.X + 24, bounds.Y + 122, bounds.Width - 48, 2), Color.SlateGray);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, "RARITY: RARE", new Vector2(bounds.X + 24, bounds.Y + 142), Color.Gold);
 
-                string description = card.Description + "\n" + card.Does;
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, "CARD EFFECT", new Vector2(bounds.X + 24, bounds.Y + 205), Color.LightGreen);
+                string description = card.Description + "\n\n" + card.Does;
                 DrawWrappedText(
                     spriteBatch,
                     description,
-                    new Vector2(bounds.X + 24, bounds.Y + 140),
-                    bounds.Width - 48,
+                    new Vector2(bounds.X + 24, bounds.Y + 255),
+                    bounds.Width - 56,
                     Color.White);
 
-                DrawCenteredTextInBounds(spriteBatch, "Click to choose", bounds, bounds.Bottom - 50, isHovered ? Color.Gold : Color.LightGray);
+                Rectangle chooseButton = new Rectangle(bounds.X + 32, bounds.Bottom - 82, bounds.Width - 64, 52);
+                SceneUi.DrawButton(spriteBatch, chooseButton, "CHOOSE THIS CARD", isHovered);
             }
 
             spriteBatch.End();

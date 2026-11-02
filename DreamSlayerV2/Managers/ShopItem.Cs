@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DreamSlayerV2.Scenes
 {
@@ -48,45 +49,109 @@ namespace DreamSlayerV2.Scenes
             for (int i = 0; i < 5; i++)
             {
                 double roll = _rnd.NextDouble();
-                string rarity;
-                int baseSellPrice;
+                CardManager.CardRarity rarity;
 
                 if (roll < 0.48)
                 {
-                    rarity = "Common";
-                    baseSellPrice = _rnd.Next(10, 21);
+                    rarity = CardManager.CardRarity.Common;
                 }
                 else if (roll < 0.98)
                 {
-                    rarity = "Rare";
-                    baseSellPrice = _rnd.Next(30, 61);
+                    rarity = CardManager.CardRarity.Rare;
                 }
                 else
                 {
-                    rarity = "Ultra Rare";
-                    baseSellPrice = _rnd.Next(120, 201);
+                    rarity = CardManager.CardRarity.UltraRare;
                 }
 
-                int buyPrice = baseSellPrice * 2;
-                CardManager card = GenerateCardByRarity(rarity, i);
+                bool isPlusCard = _rnd.NextDouble() < 0.20;
+                CardManager card = GenerateCardByRarity(rarity, isPlusCard);
 
                 _shopCards.Add(new ShopItem
                 {
                     Card = card,
-                    Price = buyPrice,
+                    Price = GenerateBuyPrice(card.Rarity),
                     IsSold = false,
-                    Rarity = rarity
+                    Rarity = GetRarityLabel(card.Rarity)
                 });
             }
         }
 
-        private CardManager GenerateCardByRarity(string rarity, int index)
+        private CardManager GenerateCardByRarity(CardManager.CardRarity rarity, bool isPlusCard)
+        {
+            List<CardManager> catalog = new List<CardManager>
+            {
+                new CardManager(0, "Strike", 1, CardManager.CardType.Attack),
+                new CardManager(1, "Defend", 1, CardManager.CardType.Defense),
+                new CardManager(2, "Inspection", 1, CardManager.CardType.Utility),
+                new CardManager(3, "Heal", 1, CardManager.CardType.Heal),
+                new CardManager(3, "Restore", 1, CardManager.CardType.Heal),
+                new CardManager(4, "All in One", 1, CardManager.CardType.Attack),
+                new CardManager(12, "Piece", 1, CardManager.CardType.Attack),
+                new CardManager(5, "No Fight", 1, CardManager.CardType.Defense),
+                new CardManager(6, "Powerup", 1, CardManager.CardType.Utility),
+                new CardManager(10, "Clock", 1, CardManager.CardType.Utility),
+                new CardManager(14, "Alpha", 1, CardManager.CardType.Special),
+                new CardManager(11, "Aura Heal", 0, CardManager.CardType.Heal),
+                new CardManager(8, "Mighty Defend Attack", 3, CardManager.CardType.Attack),
+                new CardManager(9, "Mirror Shield", 1, CardManager.CardType.Defense),
+                new CardManager(13, "Omega", 0, CardManager.CardType.Special),
+                new CardManager(7, "Focus", 0, CardManager.CardType.Utility),
+                new CardManager(15, "Beta", 0, CardManager.CardType.Special)
+            };
+
+            List<CardManager> matchingCards = catalog.Where(card => card.Rarity == rarity).ToList();
+            if (isPlusCard)
+            {
+                matchingCards = matchingCards
+                    .Where(card => SupportsPlusVariant(card.Name))
+                    .ToList();
+            }
+
+            if (matchingCards.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    $"The shop has no {(isPlusCard ? "plus " : string.Empty)}cards configured for {rarity} rarity.");
+            }
+
+            CardManager selectedCard = matchingCards[_rnd.Next(matchingCards.Count)];
+            return isPlusCard
+                ? new CardManager(
+                    selectedCard.CardID,
+                    selectedCard.Name + "+",
+                    selectedCard.Cost,
+                    selectedCard.Type,
+                    selectedCard.Hazard)
+                : selectedCard;
+        }
+
+        private static bool SupportsPlusVariant(string cardName)
+        {
+            return cardName is
+                "Strike" or "Defend" or "Inspection" or "Piece" or "All in One" or
+                "Mighty Defend Attack" or "No Fight" or "Mirror Shield" or "Omega" or
+                "Powerup" or "Clock" or "Restore" or "Heal" or "Focus" or "Aura Heal";
+        }
+
+        private int GenerateBuyPrice(CardManager.CardRarity rarity)
+        {
+            int baseSellPrice = rarity switch
+            {
+                CardManager.CardRarity.Common => _rnd.Next(10, 21),
+                CardManager.CardRarity.Rare => _rnd.Next(30, 61),
+                CardManager.CardRarity.UltraRare => _rnd.Next(120, 201),
+                _ => throw new InvalidOperationException($"The shop cannot price {rarity} cards.")
+            };
+
+            return baseSellPrice * 2;
+        }
+
+        private static string GetRarityLabel(CardManager.CardRarity rarity)
         {
             return rarity switch
             {
-                "Ultra Rare" => new CardManager(201 + index, "Mighty Defend Attack", 3, CardManager.CardType.Attack),
-                "Rare" => new CardManager(150 + index, "Aura Shield", 2, CardManager.CardType.Defense),
-                _ => new CardManager(100 + index, "Strike", 1, CardManager.CardType.Attack)
+                CardManager.CardRarity.UltraRare => "Ultra Rare",
+                _ => rarity.ToString()
             };
         }
 
@@ -202,8 +267,10 @@ namespace DreamSlayerV2.Scenes
             {
                 player.SoulCoins -= item.Price;
                 item.IsSold = true;
-                player.Deck.Add(item.Card);
-                _interactionMessage = $"Bought {item.Card.Name} ({item.Rarity})!";
+                bool added = player.TryAddCard(item.Card, out int duplicateSaleValue);
+                _interactionMessage = added
+                    ? $"Bought {item.Card.Name} ({item.Rarity})!"
+                    : $"Duplicate {item.Card.Name} auto-sold for {duplicateSaleValue} Soul Coins.";
                 _messageTimer = 2.5f;
             }
             else if (item.IsSold)
@@ -222,17 +289,23 @@ namespace DreamSlayerV2.Scenes
         {
             if (!player.Deck.Contains(card)) return;
 
-            int sellReward = card.Cost switch
-            {
-                3 => _rnd.Next(120, 201),
-                2 => _rnd.Next(30, 61),
-                _ => _rnd.Next(10, 21)
-            };
+            int sellReward = CalculateSellPrice(card);
 
             player.SoulCoins += sellReward;
             player.Deck.Remove(card);
             _interactionMessage = $"Sold {card.Name} for {sellReward} Soul Coins.";
             _messageTimer = 2.5f;
+        }
+
+        public static int CalculateSellPrice(CardManager card)
+        {
+            ArgumentNullException.ThrowIfNull(card);
+            return card.Cost switch
+            {
+                3 => Random.Shared.Next(120, 201),
+                2 => Random.Shared.Next(30, 61),
+                _ => Random.Shared.Next(10, 21)
+            };
         }
 
         public void ClaimOrb(PlayerController player, int orbIndex)

@@ -107,9 +107,10 @@ namespace DreamSlayerV2.Scenes
 
                             case StructureType.StorageArea:
                                 _secondaryUsed = true;
-                                int cardId = player.Deck.Count == 0 ? 1 : player.Deck.Max(card => card.CardID) + 1;
-                                player.Deck.Add(new CardManager(cardId, "Aura Shield", 2, CardManager.CardType.Defense));
-                                _interactionMessage = "Scavenged storage and added an Aura Shield to your deck!";
+                                player.TryAddCard(
+                                    new CardManager(1, "Defend+", 1, CardManager.CardType.Defense),
+                                    out _);
+                                _interactionMessage = "Scavenged storage and added a Defend+ card to your deck!";
                                 break;
 
                             case StructureType.Hospital:
@@ -180,7 +181,7 @@ namespace DreamSlayerV2.Scenes
         {
             StructureType.SafeHouse => "2. Explore the room for hidden Soul Coins",
             StructureType.Blacksmith => "2. Upgrade the first Strike or Defend in your deck",
-            StructureType.StorageArea => "2. Scavenge an Aura Shield card for your deck",
+            StructureType.StorageArea => "2. Scavenge a Defend+ card for your deck",
             StructureType.Hospital => "2. Search Medical Supply for Vaccine Buff (+5 Max HP)",
             _ => "2. Special Action"
         };

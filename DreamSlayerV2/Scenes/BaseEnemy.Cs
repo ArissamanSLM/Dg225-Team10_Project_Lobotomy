@@ -33,8 +33,11 @@ namespace DreamSlayerV2.Scenes
         public int MaxHP { get; protected set; }
         public int Defense { get; set; }
         public IReadOnlyList<EnemyAction> NextActions => _nextActions;
+        protected float DifficultyMultiplier { get; set; } = 1f;
 
         public abstract void RollNextAction(bool isSanityLow);
+
+        protected int ScaleDifficulty(int value) => (int)Math.Ceiling(value * DifficultyMultiplier);
 
         protected void SetNextActions(params EnemyAction[] actions)
         {
@@ -68,11 +71,12 @@ namespace DreamSlayerV2.Scenes
         private readonly bool _isElite;
         private readonly Random _rng = new Random();
 
-        public MonsterBattle(bool isElite = false)
+        public MonsterBattle(bool isElite = false, int depth = 1, bool nightmareMode = false)
         {
             _isElite = isElite;
+            DifficultyMultiplier = nightmareMode ? 1.25f + (Math.Max(1, depth) - 1) * 0.15f : 1f;
             Name = isElite ? "Unreal Wolf (Elite)" : "Unreal Wolf";
-            MaxHP = isElite ? 90 : 30;
+            MaxHP = ScaleDifficulty(isElite ? 90 : 30);
             HP = MaxHP;
         }
 
@@ -82,16 +86,16 @@ namespace DreamSlayerV2.Scenes
 
             if (roll < 60)
             {
-                int damage = _isElite ? _rng.Next(12, 20) : _rng.Next(6, 12);
+                int damage = ScaleDifficulty(_isElite ? _rng.Next(12, 20) : _rng.Next(6, 12));
                 SetNextActions(new EnemyAction(EnemyActionType.Attack, damage));
             }
             else if (roll < 85)
             {
-                SetNextActions(new EnemyAction(EnemyActionType.Defend, _isElite ? 12 : 8));
+                SetNextActions(new EnemyAction(EnemyActionType.Defend, ScaleDifficulty(_isElite ? 12 : 8)));
             }
             else
             {
-                SetNextActions(new EnemyAction(EnemyActionType.EldritchDebuff, 15));
+                SetNextActions(new EnemyAction(EnemyActionType.EldritchDebuff, ScaleDifficulty(15)));
             }
         }
     }
@@ -102,20 +106,21 @@ namespace DreamSlayerV2.Scenes
 
         public int CurrentPhase { get; private set; } = 1;
 
-        public BossBattle()
+        public BossBattle(int depth = 1, bool nightmareMode = false)
         {
+            DifficultyMultiplier = nightmareMode ? 1.25f + (Math.Max(1, depth) - 1) * 0.15f : 1f;
             Name = "Cthulhu";
-            MaxHP = 100;
+            MaxHP = ScaleDifficulty(100);
             HP = MaxHP;
-            Defense = 12;
+            Defense = ScaleDifficulty(12);
         }
 
         public void TransitionToPhase2()
         {
             CurrentPhase = 2;
-            MaxHP = 125;
+            MaxHP = ScaleDifficulty(125);
             HP = MaxHP;
-            Defense = 20;
+            Defense = ScaleDifficulty(20);
         }
 
         public override void RollNextAction(bool isSanityLow)
@@ -124,9 +129,9 @@ namespace DreamSlayerV2.Scenes
             {
                 EnemyAction action = _rng.Next(4) switch
                 {
-                    0 => new EnemyAction(EnemyActionType.Attack, _rng.Next(8, 41)),
-                    1 => new EnemyAction(EnemyActionType.Defend, 12),
-                    2 => new EnemyAction(EnemyActionType.EldritchDebuff, 25),
+                    0 => new EnemyAction(EnemyActionType.Attack, ScaleDifficulty(_rng.Next(8, 41))),
+                    1 => new EnemyAction(EnemyActionType.Defend, ScaleDifficulty(12)),
+                    2 => new EnemyAction(EnemyActionType.EldritchDebuff, ScaleDifficulty(25)),
                     _ => new EnemyAction(EnemyActionType.DoNothing)
                 };
 
@@ -158,9 +163,9 @@ namespace DreamSlayerV2.Scenes
         {
             return type switch
             {
-                EnemyActionType.Attack => new EnemyAction(type, _rng.Next(15, 29)),
-                EnemyActionType.Defend => new EnemyAction(type, 18),
-                EnemyActionType.EldritchDebuff => new EnemyAction(type, 35),
+                EnemyActionType.Attack => new EnemyAction(type, ScaleDifficulty(_rng.Next(15, 29))),
+                EnemyActionType.Defend => new EnemyAction(type, ScaleDifficulty(18)),
+                EnemyActionType.EldritchDebuff => new EnemyAction(type, ScaleDifficulty(35)),
                 _ => new EnemyAction(EnemyActionType.DoNothing)
             };
         }

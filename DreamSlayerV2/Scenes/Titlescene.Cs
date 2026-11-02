@@ -30,8 +30,10 @@ namespace DreamSlayerV2.Scenes
 
         private string titleText = "DREAM SLAYER V2";
 
-        private readonly string[] _mainMenuItems = { "New Game", "Continue", "Upgrades", "Options", "Exit" };
+        private readonly string[] _mainMenuItems = { "New Game", "Continue", "Upgrades", "Options", "Exit", "Nightmare Mode" };
         private int _selectedMenuIndex = 0;
+        private bool _nightmareModeSelected;
+        private bool _showAscendedUpgrades;
 
         private MouseState _currentMouse;
         private MouseState _previousMouse;
@@ -45,7 +47,10 @@ namespace DreamSlayerV2.Scenes
         private List<FloatingNightmareText> _floatingTexts = new List<FloatingNightmareText>();
         private float _spawnTimer = 0f;
 
-        public void Initialize() { }
+        public void Initialize()
+        {
+            GameSaveManager.LoadPermanentProgress();
+        }
 
         public void LoadContent()
         {
@@ -171,7 +176,8 @@ namespace DreamSlayerV2.Scenes
 
         private static bool IsMenuItemEnabled(int index)
         {
-            return index != 1 || GameSaveManager.HasSave;
+            return (index != 1 || GameSaveManager.HasSave) &&
+                   (index != 5 || UpgradeOrbPermanent.NightmareModeUnlocked);
         }
 
         private void ExecuteMenuChoice(int index)
@@ -182,9 +188,10 @@ namespace DreamSlayerV2.Scenes
                     NodeSelectScene.Reset();
                     GameSaveManager.DeleteSave();
                     
-                    // สร้าง PlayerController พร้อมเช็คว่าเปิดโหมด Nightmare อยู่หรือไม่
-                    bool isNightmare = UpgradeOrbPermanent.NightmareModeUnlocked;
-                    GameState.CurrentPlayer = new PlayerController(CharacterClassV2.Human, isNightmare);
+                    GameState.ResetRun();
+                    GameState.CurrentPlayer = new PlayerController(
+                        CharacterClassV2.Human,
+                        _nightmareModeSelected && UpgradeOrbPermanent.NightmareModeUnlocked);
 
                     SceneManager.ChangeScene(new SceneStory1());
                     break;
@@ -215,6 +222,10 @@ namespace DreamSlayerV2.Scenes
 
                 case 4:
                     Environment.Exit(0);
+                    break;
+
+                case 5:
+                    _nightmareModeSelected = !_nightmareModeSelected;
                     break;
             }
 
@@ -264,62 +275,151 @@ namespace DreamSlayerV2.Scenes
 
             if (!isLeftClicked) return;
             Point mousePos = _currentMouse.Position;
+            Rectangle orbTab = new Rectangle(600, 350, 320, 48);
+            Rectangle ascendedTab = new Rectangle(1000, 350, 320, 48);
+            if (orbTab.Contains(mousePos))
+            {
+                _showAscendedUpgrades = false;
+                return;
+            }
+            if (ascendedTab.Contains(mousePos))
+            {
+                _showAscendedUpgrades = true;
+                return;
+            }
 
-            // 1. Max HP
-            Rectangle hpRect = new Rectangle(500, 400, 900, 50);
-            if (hpRect.Contains(mousePos) && UpgradeOrbPermanent.MaxHPLevel < 12)
+            bool changed = _showAscendedUpgrades
+                ? PurchaseAscendedUpgrade(mousePos)
+                : PurchaseOrbUpgrade(mousePos);
+            if (changed) GameSaveManager.SavePermanentProgress();
+        }
+
+        private static bool PurchaseOrbUpgrade(Point mousePos)
+        {
+            bool changed = false;
+            if (UpgradeRowBounds(0).Contains(mousePos) && UpgradeOrbPermanent.MaxHPLevel < 12)
             {
                 int cost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.MaxHPLevel);
                 if (UpgradeOrbPermanent.RebirthCoins >= cost)
                 {
                     UpgradeOrbPermanent.RebirthCoins -= cost;
                     UpgradeOrbPermanent.MaxHPLevel++;
+                    changed = true;
                 }
             }
-
-            // 2. Starting Coins
-            Rectangle coinsRect = new Rectangle(500, 470, 900, 50);
-            if (coinsRect.Contains(mousePos) && UpgradeOrbPermanent.StartCoinsLevel < 9)
+            else if (UpgradeRowBounds(1).Contains(mousePos) && UpgradeOrbPermanent.StartCoinsLevel < 9)
             {
                 int cost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.StartCoinsLevel);
                 if (UpgradeOrbPermanent.RebirthCoins >= cost)
                 {
                     UpgradeOrbPermanent.RebirthCoins -= cost;
                     UpgradeOrbPermanent.StartCoinsLevel++;
+                    changed = true;
                 }
             }
-
-            // 3. Dice Minigame
-            Rectangle diceRect = new Rectangle(500, 540, 900, 50);
-            if (diceRect.Contains(mousePos) && !UpgradeOrbPermanent.UnlockDiceMinigame && UpgradeOrbPermanent.RebirthCoins >= 300)
+            else if (UpgradeRowBounds(2).Contains(mousePos) && !UpgradeOrbPermanent.UnlockDiceMinigame &&
+                     UpgradeOrbPermanent.RebirthCoins >= 300)
             {
                 UpgradeOrbPermanent.RebirthCoins -= 300;
                 UpgradeOrbPermanent.UnlockDiceMinigame = true;
+                changed = true;
             }
-
-            // 4. Energy Altar
-            Rectangle altarRect = new Rectangle(500, 610, 900, 50);
-            if (altarRect.Contains(mousePos) && !UpgradeOrbPermanent.EnergyAltarUnlocked && UpgradeOrbPermanent.RebirthCoins >= 500)
+            else if (UpgradeRowBounds(3).Contains(mousePos) && !UpgradeOrbPermanent.EnergyAltarUnlocked &&
+                     UpgradeOrbPermanent.RebirthCoins >= 500)
             {
                 UpgradeOrbPermanent.RebirthCoins -= 500;
                 UpgradeOrbPermanent.EnergyAltarUnlocked = true;
+                changed = true;
             }
-
-            // 5. Charms
-            Rectangle charmRect = new Rectangle(500, 680, 900, 50);
-            if (charmRect.Contains(mousePos) && !UpgradeOrbPermanent.CharmsUnlocked && UpgradeOrbPermanent.RebirthCoins >= 5000)
+            else if (UpgradeRowBounds(4).Contains(mousePos) && !UpgradeOrbPermanent.CharmsUnlocked &&
+                     UpgradeOrbPermanent.RebirthCoins >= 2500)
             {
-                UpgradeOrbPermanent.RebirthCoins -= 5000;
+                UpgradeOrbPermanent.RebirthCoins -= 2500;
                 UpgradeOrbPermanent.CharmsUnlocked = true;
+                changed = true;
             }
-
-            // 6. Nightmare Mode
-            Rectangle nightmareRect = new Rectangle(500, 750, 900, 50);
-            if (nightmareRect.Contains(mousePos) && !UpgradeOrbPermanent.NightmareModeUnlocked && UpgradeOrbPermanent.RebirthCoins >= 1000)
+            else if (UpgradeRowBounds(5).Contains(mousePos) && !UpgradeOrbPermanent.NightmareModeUnlocked &&
+                     UpgradeOrbPermanent.TotalDepthsCleared >= 10 && UpgradeOrbPermanent.RebirthCoins >= 1000)
             {
                 UpgradeOrbPermanent.RebirthCoins -= 1000;
                 UpgradeOrbPermanent.NightmareModeUnlocked = true;
+                changed = true;
             }
+
+            return changed;
+        }
+
+        private static bool PurchaseAscendedUpgrade(Point mousePos)
+        {
+            if (UpgradeRowBounds(0).Contains(mousePos) && !UpgradeOrbPermanent.ClockPlusUnlocked &&
+                UpgradeOrbPermanent.AscendedCoins >= 10)
+            {
+                UpgradeOrbPermanent.AscendedCoins -= 10;
+                UpgradeOrbPermanent.ClockPlusUnlocked = true;
+                return true;
+            }
+
+            if (UpgradeRowBounds(1).Contains(mousePos))
+            {
+                if (!UpgradeOrbPermanent.PlusBasicCardsUnlocked && UpgradeOrbPermanent.AscendedCoins >= 10)
+                {
+                    UpgradeOrbPermanent.AscendedCoins -= 10;
+                    UpgradeOrbPermanent.PlusBasicCardsUnlocked = true;
+                    UpgradeOrbPermanent.PlusBasicCardsEnabled = true;
+                    return true;
+                }
+
+                if (UpgradeOrbPermanent.PlusBasicCardsUnlocked)
+                {
+                    UpgradeOrbPermanent.PlusBasicCardsEnabled = !UpgradeOrbPermanent.PlusBasicCardsEnabled;
+                    return true;
+                }
+            }
+
+            if (UpgradeRowBounds(2).Contains(mousePos) && UpgradeOrbPermanent.StartingHpUpgradeLevel < 3)
+            {
+                int cost = UpgradeOrbPermanent.GetAscendedUpgradeCost(15, UpgradeOrbPermanent.StartingHpUpgradeLevel);
+                if (UpgradeOrbPermanent.AscendedCoins >= cost)
+                {
+                    UpgradeOrbPermanent.AscendedCoins -= cost;
+                    UpgradeOrbPermanent.StartingHpUpgradeLevel++;
+                    return true;
+                }
+            }
+
+            if (UpgradeRowBounds(3).Contains(mousePos) && !UpgradeOrbPermanent.StartingCoinsUpgradeUnlocked &&
+                UpgradeOrbPermanent.AscendedCoins >= 15)
+            {
+                UpgradeOrbPermanent.AscendedCoins -= 15;
+                UpgradeOrbPermanent.StartingCoinsUpgradeUnlocked = true;
+                return true;
+            }
+
+            if (UpgradeRowBounds(4).Contains(mousePos) && UpgradeOrbPermanent.SoulRewardUpgradeLevel < 5)
+            {
+                int cost = UpgradeOrbPermanent.GetAscendedUpgradeCost(20, UpgradeOrbPermanent.SoulRewardUpgradeLevel);
+                if (UpgradeOrbPermanent.AscendedCoins >= cost)
+                {
+                    UpgradeOrbPermanent.AscendedCoins -= cost;
+                    UpgradeOrbPermanent.SoulRewardUpgradeLevel++;
+                    return true;
+                }
+            }
+
+            if (UpgradeRowBounds(5).Contains(mousePos) && !UpgradeOrbPermanent.StartingEnergyUpgradeUnlocked &&
+                UpgradeOrbPermanent.AscendedCoins >= 25)
+            {
+                UpgradeOrbPermanent.AscendedCoins -= 25;
+                UpgradeOrbPermanent.StartingEnergyUpgradeUnlocked = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static Rectangle UpgradeRowBounds(int row)
+        {
+            return new Rectangle(360, 415 + (row * 62), 1200, 52);
         }
 
         private bool IsKeyPressed(Keys key)
@@ -468,7 +568,8 @@ namespace DreamSlayerV2.Scenes
                 GlobalContentManager.FourthMenu,  // 1: CONTINUE
                 GlobalContentManager.SeventhMenu, // 2: UPGRADES
                 GlobalContentManager.SixthMenu,   // 3: OPTIONS
-                GlobalContentManager.FifthMenu    // 4: EXIT
+                GlobalContentManager.FifthMenu,   // 4: EXIT
+                null                              // 5: Nightmare toggle
             };
 
             for (int i = 0; i < _mainMenuItems.Length; i++)
@@ -494,7 +595,9 @@ namespace DreamSlayerV2.Scenes
                 else
                 {
                     // Fallback เผื่อรูปไหนยังโหลดไม่ขึ้น ให้แสดงตัวหนังสือแทน
-                    string text = _mainMenuItems[i];
+                    string text = i == 5
+                        ? $"Nightmare Mode: {(_nightmareModeSelected ? "ON" : "OFF")}"
+                        : _mainMenuItems[i];
                     Vector2 textSize = GlobalContentManager.DefaultFont.MeasureString(text);
                     Vector2 textPos = new Vector2(
                         destRect.X + (destRect.Width - textSize.X) / 2f,
@@ -541,32 +644,93 @@ namespace DreamSlayerV2.Scenes
 
         private void DrawUpgradesView(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "--- PERMANENT ORB UPGRADES ---", new Vector2(720, 260), Color.Gold);
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Rebirth Coins: {UpgradeOrbPermanent.RebirthCoins}", new Vector2(810, 320), Color.Cyan);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "--- PERMANENT UPGRADES ---", new Vector2(790, 250), Color.Gold);
+            SceneUi.DrawButton(spriteBatch, new Rectangle(600, 350, 320, 48), "Orb Tree", !_showAscendedUpgrades);
+            SceneUi.DrawButton(spriteBatch, new Rectangle(1000, 350, 320, 48), "Nightmare / Ascended", _showAscendedUpgrades);
 
-            int hpCost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.MaxHPLevel);
-            string hpStatus = UpgradeOrbPermanent.MaxHPLevel >= 12 ? "MAX" : $"{hpCost} Coins";
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"1. Max HP (+1 HP/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.MaxHPLevel)}] - Cost: {hpStatus}", new Vector2(500, 400), Color.White);
+            if (_showAscendedUpgrades)
+            {
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Ascended Coins: {UpgradeOrbPermanent.AscendedCoins}", new Vector2(810, 320), Color.Cyan);
+                DrawUpgradeRow(spriteBatch, 0,
+                    $"1. Start with Clock+ - {(UpgradeOrbPermanent.ClockPlusUnlocked ? "OWNED" : "Cost: 10 Ascended Coins")}",
+                    UpgradeOrbPermanent.ClockPlusUnlocked ? Color.LightGreen : Color.White);
+                string plusCards = !UpgradeOrbPermanent.PlusBasicCardsUnlocked
+                    ? "Cost: 10 Ascended Coins"
+                    : UpgradeOrbPermanent.PlusBasicCardsEnabled ? "ON (click to turn OFF)" : "OFF (click to turn ON)";
+                DrawUpgradeRow(spriteBatch, 1, $"2. Plus basic starter cards - {plusCards}",
+                    UpgradeOrbPermanent.PlusBasicCardsUnlocked ? Color.LightGreen : Color.White);
+                string hpUpgrade = UpgradeOrbPermanent.StartingHpUpgradeLevel >= 3
+                    ? "MAX"
+                    : $"Level {UpgradeOrbPermanent.StartingHpUpgradeLevel}/3, +5 HP each - Cost: {UpgradeOrbPermanent.GetAscendedUpgradeCost(15, UpgradeOrbPermanent.StartingHpUpgradeLevel)}";
+                DrawUpgradeRow(spriteBatch, 2, $"3. Tougher start - {hpUpgrade}", Color.White);
+                DrawUpgradeRow(spriteBatch, 3,
+                    $"4. Starting Soul Coins +25 - {(UpgradeOrbPermanent.StartingCoinsUpgradeUnlocked ? "OWNED" : "Cost: 15 Ascended Coins")}",
+                    UpgradeOrbPermanent.StartingCoinsUpgradeUnlocked ? Color.LightGreen : Color.White);
+                string rewardUpgrade = UpgradeOrbPermanent.SoulRewardUpgradeLevel >= 5
+                    ? "MAX"
+                    : $"Level {UpgradeOrbPermanent.SoulRewardUpgradeLevel}/5, +10% each - Cost: {UpgradeOrbPermanent.GetAscendedUpgradeCost(20, UpgradeOrbPermanent.SoulRewardUpgradeLevel)}";
+                DrawUpgradeRow(spriteBatch, 4, $"5. Soul Coin bounty - {rewardUpgrade}", Color.White);
+                DrawUpgradeRow(spriteBatch, 5,
+                    $"6. +1 starting Energy - {(UpgradeOrbPermanent.StartingEnergyUpgradeUnlocked ? "OWNED" : "Cost: 25 Ascended Coins")}",
+                    UpgradeOrbPermanent.StartingEnergyUpgradeUnlocked ? Color.LightGreen : Color.White);
+            }
+            else
+            {
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Rebirth Coins: {UpgradeOrbPermanent.RebirthCoins}", new Vector2(810, 320), Color.Cyan);
 
-            int coinCost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.StartCoinsLevel);
-            string coinStatus = UpgradeOrbPermanent.StartCoinsLevel >= 9 ? "MAX" : $"{coinCost} Coins";
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"2. Starting Soul Coins (+10 Coins/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.StartCoinsLevel)}] - Cost: {coinStatus}", new Vector2(500, 470), Color.White);
+                int hpCost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.MaxHPLevel);
+                string hpStatus = UpgradeOrbPermanent.MaxHPLevel >= 12 ? "MAX" : $"{hpCost} Coins";
+                DrawUpgradeRow(spriteBatch, 0,
+                    $"1. Max HP (+1 HP/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.MaxHPLevel)}] - Cost: {hpStatus}",
+                    Color.White);
 
-            string diceText = UpgradeOrbPermanent.UnlockDiceMinigame ? "UNLOCKED" : "Cost: 300 Coins";
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"3. Dice Minigame Event - {diceText}", new Vector2(500, 540), UpgradeOrbPermanent.UnlockDiceMinigame ? Color.LightGreen : Color.Yellow);
+                int coinCost = UpgradeOrbPermanent.GetUpgradeCost(UpgradeOrbPermanent.StartCoinsLevel);
+                string coinStatus = UpgradeOrbPermanent.StartCoinsLevel >= 9 ? "MAX" : $"{coinCost} Coins";
+                DrawUpgradeRow(spriteBatch, 1,
+                    $"2. Starting Soul Coins (+10/Orb) [{UpgradeOrbPermanent.GetStarOrbText(UpgradeOrbPermanent.StartCoinsLevel)}] - Cost: {coinStatus}",
+                    Color.White);
 
-            string altarText = !UpgradeOrbPermanent.EnergyAltarUnlocked ? "Cost: 500 Coins" : (UpgradeOrbPermanent.CanUseEnergyAltar() ? "READY (Free Buff)" : "RECHARGING (24h Cooldown)");
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"4. Energy Altar - {altarText}", new Vector2(500, 610), UpgradeOrbPermanent.EnergyAltarUnlocked ? Color.DeepSkyBlue : Color.Yellow);
+                DrawUpgradeRow(spriteBatch, 2,
+                    $"3. Dice Minigame Event - {(UpgradeOrbPermanent.UnlockDiceMinigame ? "UNLOCKED" : "Cost: 300 Coins")}",
+                    UpgradeOrbPermanent.UnlockDiceMinigame ? Color.LightGreen : Color.White);
+                string altarText = !UpgradeOrbPermanent.EnergyAltarUnlocked
+                    ? "Cost: 500 Coins"
+                    : UpgradeOrbPermanent.CanUseEnergyAltar() ? "READY" : "RECHARGING (24h)";
+                DrawUpgradeRow(spriteBatch, 3, $"4. Energy Altar - {altarText}", Color.White);
+                DrawUpgradeRow(spriteBatch, 4,
+                    $"5. Unlock Charms - {(UpgradeOrbPermanent.CharmsUnlocked ? "UNLOCKED" : "Cost: 2500 Coins")}",
+                    UpgradeOrbPermanent.CharmsUnlocked ? Color.LightGreen : Color.White);
 
-            string charmText = UpgradeOrbPermanent.CharmsUnlocked ? "COMPLETED" : "Cost: 2500 Coins [BRAVE BUFF: +20 Max Sanity & +5 Regen/turn!]";
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"5. Unlock Charms (Challenge) - {charmText}", new Vector2(500, 680), UpgradeOrbPermanent.CharmsUnlocked ? Color.Magenta : Color.Orange);
-
-            string nmText = UpgradeOrbPermanent.NightmareModeUnlocked ? "UNLOCKED" : "Cost: 1000 Coins (Req Depths 10)";
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"6. Unlock Nightmare Mode - {nmText}", new Vector2(500, 750), UpgradeOrbPermanent.NightmareModeUnlocked ? Color.Crimson : Color.Red);
+                string nightmareText = UpgradeOrbPermanent.NightmareModeUnlocked
+                    ? "UNLOCKED"
+                    : $"Cost: 1000 Coins; requires 10 cleared Depths ({UpgradeOrbPermanent.TotalDepthsCleared}/10)";
+                DrawUpgradeRow(spriteBatch, 5, $"6. Unlock Nightmare Mode - {nightmareText}",
+                    UpgradeOrbPermanent.NightmareModeUnlocked ? Color.Crimson : Color.White);
+            }
 
             Rectangle backRect = new Rectangle(810, 920, 300, 50);
             bool isHovered = backRect.Contains(_currentMouse.Position);
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "< BACK TO MENU >", new Vector2(810, 920), isHovered ? Color.Gold : Color.White);
+            SceneUi.DrawButton(spriteBatch, backRect, "< BACK TO MENU >", isHovered);
+        }
+
+        private void DrawUpgradeRow(SpriteBatch spriteBatch, int row, string text, Color color)
+        {
+            Rectangle bounds = UpgradeRowBounds(row);
+            bool hovered = bounds.Contains(_currentMouse.Position);
+            SceneUi.DrawPanel(spriteBatch, bounds, hovered ? Color.Gold : Color.SlateGray);
+            SpriteFont font = GlobalContentManager.DefaultFont;
+            Vector2 size = font.MeasureString(text);
+            float scale = Math.Min(1f, (bounds.Width - 36f) / Math.Max(1f, size.X));
+            spriteBatch.DrawString(
+                font,
+                text,
+                new Vector2(bounds.X + 18, bounds.Y + (bounds.Height - size.Y * scale) / 2f),
+                hovered ? Color.Gold : color,
+                0f,
+                Vector2.Zero,
+                scale,
+                SpriteEffects.None,
+                0f);
         }
 
         private void DrawCreditsView(SpriteBatch spriteBatch)

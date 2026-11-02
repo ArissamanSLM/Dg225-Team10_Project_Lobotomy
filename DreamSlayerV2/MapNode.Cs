@@ -13,7 +13,9 @@ namespace DreamSlayerV2.Core
         Shop,       // Rogue Trader
         Rest,       // Safe House / Rest (Not fully implemented)
         Event,      // Random event scene
-        Boss        // Dreadful Foe / Final Stage
+        Boss,       // Dreadful Foe / Final Stage
+        Escape,
+        GoDeeper
     }
 
     public class MapNode
@@ -36,6 +38,8 @@ namespace DreamSlayerV2.Core
             NodeType.Rest => "Safe House",
             NodeType.Event => "Event",
             NodeType.Boss => "Dreadful Foe",
+            NodeType.Escape => "Escape",
+            NodeType.GoDeeper => "Go Deeper",
             _ => "Unknown"
         };
 
@@ -161,6 +165,26 @@ namespace DreamSlayerV2.Core
             {
                 node.ConnectedNodes.Add(bossNode);
             }
+
+            int choiceX = currentX + xSpacing;
+            MapNode escapeNode = new MapNode
+            {
+                Name = "14-Escape",
+                Stage = 14,
+                Position = new Vector2(choiceX, startY - 120),
+                Type = NodeType.Escape
+            };
+            MapNode deeperNode = new MapNode
+            {
+                Name = "14-GoDeeper",
+                Stage = 14,
+                Position = new Vector2(choiceX, startY + 120),
+                Type = NodeType.GoDeeper
+            };
+            bossNode.ConnectedNodes.Add(escapeNode);
+            bossNode.ConnectedNodes.Add(deeperNode);
+            generatedNodes.Add(escapeNode);
+            generatedNodes.Add(deeperNode);
 
             return generatedNodes;
         }

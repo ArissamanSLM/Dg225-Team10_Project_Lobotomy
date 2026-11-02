@@ -19,6 +19,10 @@ namespace DreamSlayerV2
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "DreamSlayerV2",
             "save.json");
+        private static string PermanentProgressPath => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "DreamSlayerV2",
+            "progress.json");
 
         public static bool HasSave => File.Exists(SavePath);
 
@@ -62,6 +66,11 @@ namespace DreamSlayerV2
                 Player = SavePlayer(player),
                 CurrentNodeIndex = currentNodeIndex,
                 PendingStartReward = pendingStartReward,
+                CurrentDepth = GameState.CurrentDepth,
+                NodesVisited = GameState.NodesVisited,
+                EnemiesDefeated = GameState.EnemiesDefeated,
+                CardsPlayed = GameState.CardsPlayed,
+                DepthsCleared = GameState.DepthsCleared,
                 Nodes = nodes.Select(node => new SavedMapNode
                 {
                     Name = node.Name,
@@ -85,6 +94,77 @@ namespace DreamSlayerV2
             string temporaryPath = SavePath + ".tmp";
             File.WriteAllText(temporaryPath, JsonSerializer.Serialize(data, JsonOptions));
             File.Move(temporaryPath, SavePath, overwrite: true);
+        }
+
+        public static void LoadPermanentProgress()
+        {
+            if (!File.Exists(PermanentProgressPath)) return;
+
+            try
+            {
+                string json = File.ReadAllText(PermanentProgressPath);
+                PermanentProgressData data = JsonSerializer.Deserialize<PermanentProgressData>(json, JsonOptions)
+                    ?? throw new InvalidDataException("The permanent progress file is empty.");
+
+                UpgradeOrbPermanent.RebirthCoins = data.RebirthCoins;
+                UpgradeOrbPermanent.AscendedCoins = data.AscendedCoins;
+                UpgradeOrbPermanent.TotalDepthsCleared = data.TotalDepthsCleared;
+                UpgradeOrbPermanent.MaxHPLevel = data.MaxHPLevel;
+                UpgradeOrbPermanent.StartCoinsLevel = data.StartCoinsLevel;
+                UpgradeOrbPermanent.UnlockDiceMinigame = data.UnlockDiceMinigame;
+                UpgradeOrbPermanent.EnergyAltarUnlocked = data.EnergyAltarUnlocked;
+                UpgradeOrbPermanent.LastAltarUse = data.LastAltarUse;
+                UpgradeOrbPermanent.CharmsUnlocked = data.CharmsUnlocked;
+                UpgradeOrbPermanent.NightmareModeUnlocked = data.NightmareModeUnlocked;
+                UpgradeOrbPermanent.ClockPlusUnlocked = data.ClockPlusUnlocked;
+                UpgradeOrbPermanent.PlusBasicCardsUnlocked = data.PlusBasicCardsUnlocked;
+                UpgradeOrbPermanent.PlusBasicCardsEnabled = data.PlusBasicCardsEnabled;
+                UpgradeOrbPermanent.StartingHpUpgradeLevel = data.StartingHpUpgradeLevel;
+                UpgradeOrbPermanent.StartingCoinsUpgradeUnlocked = data.StartingCoinsUpgradeUnlocked;
+                UpgradeOrbPermanent.SoulRewardUpgradeLevel = data.SoulRewardUpgradeLevel;
+                UpgradeOrbPermanent.StartingEnergyUpgradeUnlocked = data.StartingEnergyUpgradeUnlocked;
+                UpgradeOrbPermanent.BestScore = data.BestScore;
+            }
+            catch (Exception exception) when (
+                exception is IOException ||
+                exception is JsonException ||
+                exception is InvalidDataException)
+            {
+                throw new InvalidDataException($"Could not load permanent progress: {exception.Message}", exception);
+            }
+        }
+
+        public static void SavePermanentProgress()
+        {
+            string directory = Path.GetDirectoryName(PermanentProgressPath)
+                ?? throw new InvalidOperationException("The permanent progress directory could not be determined.");
+            Directory.CreateDirectory(directory);
+
+            var data = new PermanentProgressData
+            {
+                RebirthCoins = UpgradeOrbPermanent.RebirthCoins,
+                AscendedCoins = UpgradeOrbPermanent.AscendedCoins,
+                TotalDepthsCleared = UpgradeOrbPermanent.TotalDepthsCleared,
+                MaxHPLevel = UpgradeOrbPermanent.MaxHPLevel,
+                StartCoinsLevel = UpgradeOrbPermanent.StartCoinsLevel,
+                UnlockDiceMinigame = UpgradeOrbPermanent.UnlockDiceMinigame,
+                EnergyAltarUnlocked = UpgradeOrbPermanent.EnergyAltarUnlocked,
+                LastAltarUse = UpgradeOrbPermanent.LastAltarUse,
+                CharmsUnlocked = UpgradeOrbPermanent.CharmsUnlocked,
+                NightmareModeUnlocked = UpgradeOrbPermanent.NightmareModeUnlocked,
+                ClockPlusUnlocked = UpgradeOrbPermanent.ClockPlusUnlocked,
+                PlusBasicCardsUnlocked = UpgradeOrbPermanent.PlusBasicCardsUnlocked,
+                PlusBasicCardsEnabled = UpgradeOrbPermanent.PlusBasicCardsEnabled,
+                StartingHpUpgradeLevel = UpgradeOrbPermanent.StartingHpUpgradeLevel,
+                StartingCoinsUpgradeUnlocked = UpgradeOrbPermanent.StartingCoinsUpgradeUnlocked,
+                SoulRewardUpgradeLevel = UpgradeOrbPermanent.SoulRewardUpgradeLevel,
+                StartingEnergyUpgradeUnlocked = UpgradeOrbPermanent.StartingEnergyUpgradeUnlocked,
+                BestScore = UpgradeOrbPermanent.BestScore
+            };
+
+            string temporaryPath = PermanentProgressPath + ".tmp";
+            File.WriteAllText(temporaryPath, JsonSerializer.Serialize(data, JsonOptions));
+            File.Move(temporaryPath, PermanentProgressPath, overwrite: true);
         }
 
         public static bool TryLoadRun(out SavedRunData run, out string error)
@@ -142,6 +222,7 @@ namespace DreamSlayerV2
                 Hand = RestoreHand(playerData.Hand)
             };
 
+            player.ResolveUniqueCardDuplicates();
             return player;
         }
 
@@ -167,6 +248,34 @@ namespace DreamSlayerV2
                     }
 
                     nodes[i].ConnectedNodes.Add(nodes[connectedIndex]);
+                }
+            }
+
+            if (!nodes.Any(node => node.Stage == 14))
+            {
+                MapNode bossNode = nodes.FirstOrDefault(node =>
+                    node.Stage == 13 && node.Type == NodeType.Boss);
+                if (bossNode != null)
+                {
+                    int choiceX = (int)bossNode.Position.X + 350;
+                    var escapeNode = new MapNode
+                    {
+                        Name = "14-Escape",
+                        Stage = 14,
+                        Position = new Vector2(choiceX, bossNode.Position.Y - 120),
+                        Type = NodeType.Escape
+                    };
+                    var deeperNode = new MapNode
+                    {
+                        Name = "14-GoDeeper",
+                        Stage = 14,
+                        Position = new Vector2(choiceX, bossNode.Position.Y + 120),
+                        Type = NodeType.GoDeeper
+                    };
+                    bossNode.ConnectedNodes.Add(escapeNode);
+                    bossNode.ConnectedNodes.Add(deeperNode);
+                    nodes.Add(escapeNode);
+                    nodes.Add(deeperNode);
                 }
             }
 
@@ -251,6 +360,33 @@ namespace DreamSlayerV2
         public List<SavedMapNode> Nodes { get; set; } = new List<SavedMapNode>();
         public int CurrentNodeIndex { get; set; }
         public bool PendingStartReward { get; set; }
+        public int CurrentDepth { get; set; } = 1;
+        public int NodesVisited { get; set; }
+        public int EnemiesDefeated { get; set; }
+        public int CardsPlayed { get; set; }
+        public int DepthsCleared { get; set; }
+    }
+
+    public sealed class PermanentProgressData
+    {
+        public int RebirthCoins { get; set; }
+        public int AscendedCoins { get; set; }
+        public int TotalDepthsCleared { get; set; }
+        public int MaxHPLevel { get; set; }
+        public int StartCoinsLevel { get; set; }
+        public bool UnlockDiceMinigame { get; set; }
+        public bool EnergyAltarUnlocked { get; set; }
+        public DateTime LastAltarUse { get; set; }
+        public bool CharmsUnlocked { get; set; }
+        public bool NightmareModeUnlocked { get; set; }
+        public bool ClockPlusUnlocked { get; set; }
+        public bool PlusBasicCardsUnlocked { get; set; }
+        public bool PlusBasicCardsEnabled { get; set; }
+        public int StartingHpUpgradeLevel { get; set; }
+        public bool StartingCoinsUpgradeUnlocked { get; set; }
+        public int SoulRewardUpgradeLevel { get; set; }
+        public bool StartingEnergyUpgradeUnlocked { get; set; }
+        public int BestScore { get; set; }
     }
 
     public sealed class SavedPlayer

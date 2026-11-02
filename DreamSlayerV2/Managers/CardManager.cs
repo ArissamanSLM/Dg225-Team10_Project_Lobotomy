@@ -28,6 +28,18 @@ namespace DreamSlayerV2
         public int InHandDamage { get; set; }
         public string Description { get; set; } = "This is a Card Prototype";
         public string Does { get; set; } = "This card does something";
+        public string UniqueFamily => GetUniqueFamily(Name);
+
+        public static string GetUniqueFamily(string cardName)
+        {
+            string baseName = cardName.EndsWith("+", StringComparison.Ordinal)
+                ? cardName[..^1]
+                : cardName;
+
+            return baseName is "Alpha" or "Beta" or "Omega" or "Clock"
+                ? baseName
+                : null;
+        }
 
         public CardManager(int cardID, string name, int cost, CardType type, HazardSubtype hazard = HazardSubtype.None)
         {
@@ -274,6 +286,10 @@ namespace DreamSlayerV2
                 case "Powerup+":
                     Description = "Empower your attacks with a bonus that fades over time.";
                     Does = $"Gain +3 base damage to Attack cards, decreasing by 1 at the end of each turn until it reaches 0. Cost: {Cost * 10} Sanity.";
+                    break;
+                case "Clock+":
+                    Description = "Store damage dealt this turn and release an amplified burst at turn end.";
+                    Does = $"Deals 50% of the damage you dealt this turn again. Cost: {Cost * 10} Sanity.";
                     break;
                 case "Restore+":
                 case "Heal+":

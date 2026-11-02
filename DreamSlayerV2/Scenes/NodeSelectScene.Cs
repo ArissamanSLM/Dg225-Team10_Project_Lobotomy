@@ -38,6 +38,7 @@ namespace DreamSlayerV2.Scenes
         {
             allNodes = GameSaveManager.RestoreNodes(run);
             _currentNode = allNodes[run.CurrentNodeIndex];
+            GameState.RestoreRun(run);
         }
 
         public void Initialize()
@@ -47,7 +48,7 @@ namespace DreamSlayerV2.Scenes
 
             if (allNodes.Count == 0)
             {
-                allNodes = MapGenerator.GenerateLovecraftianMap(stages: 13, startY: 540);
+                allNodes = MapGenerator.GenerateLovecraftianMap(stages: 14, startY: 540);
 
                 if (_currentNode == null)
                 {
@@ -83,7 +84,7 @@ namespace DreamSlayerV2.Scenes
             KeyboardState currentKeyboardState = Keyboard.GetState();
             if (currentKeyboardState.IsKeyDown(Keys.G))
             {
-                SceneManager.ChangeScene(new GameOverScene(5, 3, 24, true, false ,0));
+                SceneManager.ChangeScene(new GameOverScene(true, false));
             }
             if (currentKeyboardState.IsKeyDown(Keys.T))
             {
@@ -161,9 +162,22 @@ namespace DreamSlayerV2.Scenes
                                 connected.IsAvailable = true;
                             }
 
+                            if (node.Type != NodeType.Start &&
+                                node.Type != NodeType.Escape &&
+                                node.Type != NodeType.GoDeeper)
+                            {
+                                GameState.RecordNodeVisited();
+                            }
+
                             // Scene Switching ใน NodeSelectScene.Cs
                             switch (node.Type)
                             {
+                                case NodeType.Escape:
+                                    SceneManager.ChangeScene(new GameOverScene(true, false));
+                                    return;
+                                case NodeType.GoDeeper:
+                                    AdvanceDepth();
+                                    return;
                                 case NodeType.Boss:
                                     // เมื่อคลิกโดนโหนด Boss (Stage 13) ให้เปิดฉากคัตซีนสนทนาก่อนสู้
                                     SceneManager.ChangeScene(new BossScene(node));
@@ -197,6 +211,7 @@ namespace DreamSlayerV2.Scenes
                                     SceneManager.ChangeScene(new BattleScene(false, null));
                                     break;
                             }
+
                         }
                     }
                 }
@@ -204,6 +219,22 @@ namespace DreamSlayerV2.Scenes
 
             _previousMouseState = currentMouseState;
             _previousKeyboardState = currentKeyboardState;
+        }
+
+        private void AdvanceDepth()
+        {
+            GameState.CurrentDepth++;
+            allNodes = MapGenerator.GenerateLovecraftianMap(stages: 14, startY: 540);
+            _currentNode = allNodes[0];
+            _currentNode.IsVisited = true;
+            foreach (MapNode connected in _currentNode.ConnectedNodes)
+            {
+                connected.IsAvailable = true;
+            }
+
+            CameraPosition.X = 0f;
+            SaveRun();
+            SceneManager.ChangeScene(new NodeSelectScene());
         }
 
         private void LockCameraToStage(int stage)
@@ -248,6 +279,8 @@ namespace DreamSlayerV2.Scenes
             NodeType.Rest => Color.MediumSeaGreen,
             NodeType.Event => Color.MediumPurple,
             NodeType.Boss => Color.Crimson,
+            NodeType.Escape => Color.LightGreen,
+            NodeType.GoDeeper => Color.DeepSkyBlue,
             _ => Color.White
         };
 
@@ -255,6 +288,8 @@ namespace DreamSlayerV2.Scenes
         {
             NodeType.Start => "S",
             NodeType.Rest => "+",
+            NodeType.Escape => "E",
+            NodeType.GoDeeper => ">",
             _ => "?"
         };
 
@@ -282,6 +317,9 @@ namespace DreamSlayerV2.Scenes
             }
             spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Tower Ascent Map", new Vector2(50, 50) - CameraPosition * scroll_factor, Color.White);
             spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Use Mouse Scroll Wheel to view full map! Press 5/0 to lock on stages 5/10.", new Vector2(50, 85) - CameraPosition * scroll_factor, Color.Yellow);
+            string runStatus = $"Depth {GameState.CurrentDepth}  Score {GameState.CalculateCurrentScore()}" +
+                (GameState.CurrentPlayer.IsNightmareMode ? "  NIGHTMARE" : "");
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, runStatus, new Vector2(50, 120), Color.Cyan);
 
             // Draw Paths
             foreach (var node in allNodes)
@@ -325,6 +363,8 @@ namespace DreamSlayerV2.Scenes
                     NodeType.Elite => GlobalContentManager.EliteIcon,
                     NodeType.Boss => GlobalContentManager.BossIcon,
                     NodeType.Encounter => GlobalContentManager.EncounterIcon,
+                    NodeType.Escape => GlobalContentManager.Portal,
+                    NodeType.GoDeeper => GlobalContentManager.NextFloorLogo,
                     NodeType.Event => null,
                     _ => null
                 };

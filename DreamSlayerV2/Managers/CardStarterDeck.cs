@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DreamSlayerV2.Core;
 
 namespace DreamSlayerV2
 {
@@ -63,6 +64,23 @@ namespace DreamSlayerV2
                     starterDeck.Add(new CardManager(4, "Shadow Mix", 1, CardManager.CardType.Utility));
                     starterDeck.Add(new CardManager(5, "Orb Mix", 1, CardManager.CardType.Utility));
                     break;
+            }
+
+            if (UpgradeOrbPermanent.PlusBasicCardsEnabled)
+            {
+                for (int i = 0; i < starterDeck.Count; i++)
+                {
+                    CardManager card = starterDeck[i];
+                    if (card.Name == "Strike" || card.Name == "Defend")
+                    {
+                        starterDeck[i] = new CardManager(
+                            card.CardID,
+                            card.Name + "+",
+                            card.Cost,
+                            card.Type,
+                            card.Hazard);
+                    }
+                }
             }
 
             return starterDeck;

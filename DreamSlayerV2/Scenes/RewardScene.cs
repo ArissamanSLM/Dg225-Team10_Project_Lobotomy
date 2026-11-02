@@ -1,45 +1,74 @@
 using DreamSlayerV2.Core;
-using DreamSlayerV2.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DreamSlayerV2.Scenes
 {
     public class RewardScene : IScene
     {
-        private string promptText = "Move to Next Node";
-        private Vector2 promptPos = new Vector2(100, 600);
+        private readonly string _enemyTypeLabel;
+        private readonly int _soulReward;
+        private readonly CardManager _cardReward;
+        private readonly bool _isDuplicateCardReward;
+        private readonly int _duplicateSaleValue;
+        private readonly bool _isNightmare;
+        private readonly int _depth;
+        private readonly Rectangle _continueBounds = new Rectangle(700, 900, 520, 80);
         private MouseState _previousMouseState;
+        private bool _claimed;
 
-        private int _soulReward;
-        private Random _rand = new Random();
-        private bool _isEliteOrBoss = false;
-        private string _enemyTypeLabel = "Enemy";
-
-        // Constructor to dynamically set rewards based on what was defeated
-        // roomType: 0 = Normal Encounter, 1 = Elite, 2 = Boss
-        public RewardScene(int rewardTier)
+        public RewardScene(int rewardTier, bool isNightmare = false, int depth = 1)
         {
-            if (rewardTier == 0) // Normal Encounter (20-30 Soul Coins)
+            if (rewardTier < 0 || rewardTier > 2)
             {
-                _soulReward = _rand.Next(30, 41);
-                _isEliteOrBoss = false;
-                _enemyTypeLabel = "Enemy";
-               
+                throw new ArgumentOutOfRangeException(nameof(rewardTier), "Reward tier must be normal, elite, or boss.");
             }
-            else if (rewardTier == 1) // Elite (50-75 Soul Coins + Relic chance for full version)
+
+            _isNightmare = isNightmare;
+            _depth = Math.Max(1, depth);
+            _enemyTypeLabel = rewardTier switch
             {
-                _soulReward = _rand.Next(50, 76);
-                _isEliteOrBoss = true;
-                _enemyTypeLabel = "Elite";
+                1 => "Elite",
+                2 => "Boss",
+                _ => "Enemy"
+            };
+
+            int minimumCoins = rewardTier switch { 1 => 50, 2 => 100, _ => 30 };
+            int maximumCoinsExclusive = rewardTier switch { 1 => 76, 2 => 151, _ => 41 };
+            float depthMultiplier = _isNightmare ? 1.5f + ((_depth - 1) * 0.25f) : 1f;
+            _soulReward = (int)Math.Round(
+                Random.Shared.Next(minimumCoins, maximumCoinsExclusive) *
+                depthMultiplier *
+                UpgradeOrbPermanent.GetSoulRewardMultiplier());
+
+            if (rewardTier == 1)
+            {
+                _cardReward = CreateRewardCard(Random.Shared.Next(100) switch
+                {
+                    < 40 => CardManager.CardRarity.Common,
+                    < 99 => CardManager.CardRarity.Rare,
+                    _ => CardManager.CardRarity.UltraRare
+                });
             }
-            else if (rewardTier == 2) // Boss (100+ Soul Coins)
+            else if (rewardTier == 2)
             {
-                _soulReward = _rand.Next(100, 151);
-                _isEliteOrBoss = true;
-                _enemyTypeLabel = "Boss";
+                _cardReward = CreateRewardCard(Random.Shared.Next(100) < 90
+                    ? CardManager.CardRarity.Rare
+                    : CardManager.CardRarity.UltraRare);
+            }
+
+            if (_cardReward != null)
+            {
+                PlayerController player = GameState.CurrentPlayer;
+                _isDuplicateCardReward = player.OwnsUniqueCard(_cardReward);
+                if (_isDuplicateCardReward)
+                {
+                    _duplicateSaleValue = player.GetDuplicateCardSalePrice(_cardReward);
+                }
             }
         }
 
@@ -48,27 +77,24 @@ namespace DreamSlayerV2.Scenes
             _previousMouseState = Mouse.GetState();
         }
 
-        public void LoadContent()
-        {
-        }
+        public void LoadContent() { }
 
         public void Update(GameTime gameTime)
         {
             MouseState currentMouseState = Mouse.GetState();
+            bool clicked = currentMouseState.LeftButton == ButtonState.Pressed &&
+                           _previousMouseState.LeftButton == ButtonState.Released;
 
-            Vector2 textSize = GlobalContentManager.DefaultFont.MeasureString(promptText);
-            Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);
-
-            bool isHovered = promptBounds.Contains(currentMouseState.Position);
-            bool isClicked = isHovered && currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released;
-
-            if (isClicked)
+            if (clicked && _continueBounds.Contains(currentMouseState.Position) && !_claimed)
             {
-                SceneManager.ChangeScene(new NodeSelectScene());
-                if (DreamSlayerV2.Core.GameState.CurrentPlayer != null)
+                PlayerController player = GameState.CurrentPlayer;
+                player.SoulCoins += _soulReward;
+                if (_cardReward != null)
                 {
-                    DreamSlayerV2.Core.GameState.CurrentPlayer.SoulCoins += _soulReward;
+                    player.TryAddCard(_cardReward, _duplicateSaleValue, out _);
                 }
+                _claimed = true;
+                SceneManager.ChangeScene(new NodeSelectScene());
             }
 
             _previousMouseState = currentMouseState;
@@ -77,30 +103,97 @@ namespace DreamSlayerV2.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            spriteBatch.Draw(GlobalContentManager.RewardScreen, new Rectangle(0, 0, 1920, 1080), Color.White);
+            SceneUi.DrawPanel(spriteBatch, new Rectangle(310, 120, 1300, 740), Color.MediumPurple);
 
-            // Draw Defeat text based on enemy tier
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"You Defeated an {_enemyTypeLabel}!", new Vector2(100, 150), Color.Purple);
+            string title = $"You defeated the {_enemyTypeLabel}!";
+            Vector2 titleSize = GlobalContentManager.DefaultFont.MeasureString(title);
+            spriteBatch.DrawString(
+                GlobalContentManager.DefaultFont,
+                title,
+                new Vector2((1920 - titleSize.X) / 2f, 170),
+                Color.Gold);
 
-            // Draw Soul Coins reward text
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"You gained +{_soulReward} Soul Coins", new Vector2(100, 220), Color.Yellow);
+            string depthLabel = _isNightmare ? $"Nightmare Depth {_depth}" : $"Depth {_depth}";
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, depthLabel, new Vector2(820, 245), Color.LightCoral);
+            spriteBatch.Draw(GlobalContentManager.SoulCoinIcon, new Rectangle(565, 326, 40, 40), Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Soul Coins: +{_soulReward}", new Vector2(620, 330), Color.Yellow);
 
-            // Relic reward text (Active for Elite/Boss if you want to test it, or ready for the full version update)
-            if (_isEliteOrBoss)
+            if (_cardReward != null)
             {
-                // Full version relic hook: sprite/text placeholder
-                spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Bonus Reward: Random Relic [Full Version Feature]", new Vector2(100, 290), Color.White);
+                Rectangle cardBounds = new Rectangle(610, 415, 700, 300);
+                SceneUi.DrawPanel(spriteBatch, cardBounds, Color.Gold);
+                spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Card reward", new Vector2(650, 450), Color.LightGreen);
+                spriteBatch.DrawString(
+                    GlobalContentManager.DefaultFont,
+                    $"{_cardReward.Name}  ({_cardReward.Rarity})",
+                    new Vector2(650, 510),
+                    Color.White);
+                SceneUi.DrawWrappedText(
+                    spriteBatch,
+                    _cardReward.Description + "\n" + _cardReward.Does,
+                    new Vector2(650, 570),
+                    620,
+                    Color.LightGray);
+                if (_isDuplicateCardReward)
+                {
+                    spriteBatch.DrawString(
+                        GlobalContentManager.DefaultFont,
+                        $"Duplicate unique card: auto-sells for +{_duplicateSaleValue} Soul Coins.",
+                        new Vector2(650, 680),
+                        Color.Yellow);
+                }
+            }
+            else
+            {
+                spriteBatch.DrawString(
+                    GlobalContentManager.DefaultFont,
+                    "Normal enemies grant Soul Coins only.",
+                    new Vector2(620, 455),
+                    Color.LightGray);
             }
 
-            // Draw interactive prompt to move back to node map
-            Vector2 textSize = GlobalContentManager.DefaultFont.MeasureString(promptText);
-            Rectangle promptBounds = new Rectangle((int)promptPos.X, (int)promptPos.Y, (int)textSize.X, (int)textSize.Y);
-            Color promptColor = promptBounds.Contains(Mouse.GetState().Position) ? Color.LightYellow : Color.Yellow;
-
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, promptText, promptPos, promptColor);
-
+            MouseState mouse = Mouse.GetState();
+            SceneUi.DrawButton(
+                spriteBatch,
+                _continueBounds,
+                "Claim Reward and Continue",
+                _continueBounds.Contains(mouse.Position));
             spriteBatch.End();
         }
 
         public void UnloadContent() { }
+
+        private static CardManager CreateRewardCard(CardManager.CardRarity rarity)
+        {
+            List<CardManager> candidates = new List<CardManager>
+            {
+                new CardManager(0, "Strike", 1, CardManager.CardType.Attack),
+                new CardManager(1, "Defend", 1, CardManager.CardType.Defense),
+                new CardManager(2, "Inspection", 1, CardManager.CardType.Utility),
+                new CardManager(3, "Heal", 1, CardManager.CardType.Heal),
+                new CardManager(3, "Restore", 1, CardManager.CardType.Heal),
+                new CardManager(4, "All in One", 1, CardManager.CardType.Attack),
+                new CardManager(12, "Piece", 1, CardManager.CardType.Attack),
+                new CardManager(5, "No Fight", 1, CardManager.CardType.Defense),
+                new CardManager(6, "Powerup", 1, CardManager.CardType.Utility),
+                new CardManager(10, "Clock", 1, CardManager.CardType.Utility),
+                new CardManager(14, "Alpha", 1, CardManager.CardType.Special),
+                new CardManager(11, "Aura Heal", 0, CardManager.CardType.Heal),
+                new CardManager(8, "Mighty Defend Attack", 0, CardManager.CardType.Attack),
+                new CardManager(9, "Mirror Shield", 1, CardManager.CardType.Defense),
+                new CardManager(13, "Omega", 0, CardManager.CardType.Special),
+                new CardManager(7, "Focus", 0, CardManager.CardType.Utility),
+                new CardManager(15, "Beta", 0, CardManager.CardType.Special)
+            };
+
+            candidates = candidates.Where(card => card.Rarity == rarity).ToList();
+            if (candidates.Count == 0)
+            {
+                throw new InvalidOperationException($"No reward cards are configured for {rarity} rarity.");
+            }
+
+            return candidates[Random.Shared.Next(candidates.Count)];
+        }
     }
 }

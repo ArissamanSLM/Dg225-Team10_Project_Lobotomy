@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using DreamSlayerV2.Core;
+using DreamSlayerV2.Scenes;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DreamSlayerV2
@@ -41,11 +43,16 @@ namespace DreamSlayerV2
             SelectedClass = characterClass;
             IsNightmareMode = isNightmareMode;
             InitializeCharacterStats();
-            MaxHP += UpgradeOrbPermanent.GetMaxHPBonus();
-            PlayerHP += UpgradeOrbPermanent.GetMaxHPBonus();
-            SoulCoins = UpgradeOrbPermanent.GetStartingCoinsBonus();
-            Energy = IsNightmareMode ? 3 : 5;
+            int hpBonus = UpgradeOrbPermanent.GetMaxHPBonus() + UpgradeOrbPermanent.GetAscendedStartingHpBonus();
+            MaxHP += hpBonus;
+            PlayerHP += hpBonus;
+            SoulCoins = UpgradeOrbPermanent.GetStartingCoinsBonus() + UpgradeOrbPermanent.GetAscendedStartingCoinsBonus();
+            Energy = (IsNightmareMode ? 3 : 5) + UpgradeOrbPermanent.GetStartingEnergyBonus();
             Deck = CardStarterDeck.GetStarterDeck(SelectedClass);
+            if (UpgradeOrbPermanent.ClockPlusUnlocked)
+            {
+                TryAddCard(new CardManager(10, "Clock+", 1, CardManager.CardType.Utility), out _);
+            }
             Shuffle();
         }
 
@@ -104,6 +111,89 @@ namespace DreamSlayerV2
             }
         }
 
+        public bool OwnsUniqueCard(CardManager card)
+        {
+            ArgumentNullException.ThrowIfNull(card);
+            string family = card.UniqueFamily;
+            return family != null && EnumerateOwnedCards().Any(ownedCard => ownedCard.UniqueFamily == family);
+        }
+
+        public int GetDuplicateCardSalePrice(CardManager card)
+        {
+            ArgumentNullException.ThrowIfNull(card);
+            return OwnsUniqueCard(card) ? Shop.CalculateSellPrice(card) * 2 : 0;
+        }
+
+        public bool TryAddCard(CardManager card, out int duplicateSaleValue)
+        {
+            return TryAddCard(card, null, out duplicateSaleValue);
+        }
+
+        public bool TryAddCard(CardManager card, int? duplicateSalePrice, out int duplicateSaleValue)
+        {
+            ArgumentNullException.ThrowIfNull(card);
+            duplicateSaleValue = 0;
+
+            if (OwnsUniqueCard(card))
+            {
+                duplicateSaleValue = duplicateSalePrice ?? Shop.CalculateSellPrice(card) * 2;
+                SoulCoins += duplicateSaleValue;
+                return false;
+            }
+
+            Deck.Add(card);
+            return true;
+        }
+
+        public void ResolveUniqueCardDuplicates()
+        {
+            var ownedFamilies = new HashSet<string>();
+
+            for (int i = Deck.Count - 1; i >= 0; i--)
+            {
+                if (RemoveDuplicateCard(Deck[i], ownedFamilies))
+                {
+                    SoulCoins += Shop.CalculateSellPrice(Deck[i]) * 2;
+                    Deck.RemoveAt(i);
+                }
+            }
+
+            for (int i = DiscardPile.Count - 1; i >= 0; i--)
+            {
+                if (RemoveDuplicateCard(DiscardPile[i], ownedFamilies))
+                {
+                    SoulCoins += Shop.CalculateSellPrice(DiscardPile[i]) * 2;
+                    DiscardPile.RemoveAt(i);
+                }
+            }
+
+            for (int i = 0; i < Hand.Length; i++)
+            {
+                CardManager card = Hand[i];
+                if (card != null && RemoveDuplicateCard(card, ownedFamilies))
+                {
+                    SoulCoins += Shop.CalculateSellPrice(card) * 2;
+                    Hand[i] = null;
+                }
+            }
+        }
+
+        private IEnumerable<CardManager> EnumerateOwnedCards()
+        {
+            foreach (CardManager card in Deck) yield return card;
+            foreach (CardManager card in DiscardPile) yield return card;
+            foreach (CardManager card in Hand)
+            {
+                if (card != null) yield return card;
+            }
+        }
+
+        private static bool RemoveDuplicateCard(CardManager card, HashSet<string> ownedFamilies)
+        {
+            string family = card.UniqueFamily;
+            return family != null && !ownedFamilies.Add(family);
+        }
+
         public void Shuffle()
         {
             int n = Deck.Count;
@@ -126,6 +216,20 @@ namespace DreamSlayerV2
             {
                 if (Hand[i] == null) DrawCard();
             }
+        }
+
+        public void StartEncounterTurn()
+        {
+            foreach (CardManager card in Hand)
+            {
+                if (card != null) Deck.Add(card);
+            }
+
+            Array.Clear(Hand, 0, Hand.Length);
+            Deck.AddRange(DiscardPile);
+            DiscardPile.Clear();
+            Shuffle();
+            PlayerTurn();
         }
 
         public void EndTurn()
