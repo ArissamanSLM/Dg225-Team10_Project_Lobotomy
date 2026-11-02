@@ -24,17 +24,25 @@ namespace DreamSlayerV2.Managers
             }
         }
 
-        public static void PlaySong(Song song)
+        public static void PlaySong(Song song, bool restart = false)
         {
             ArgumentNullException.ThrowIfNull(song);
 
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = MusicVolume;
-
-            if (MediaPlayer.State != MediaState.Playing || !ReferenceEquals(_currentSong, song))
+            bool shouldPlay = restart ||
+                MediaPlayer.State != MediaState.Playing ||
+                !ReferenceEquals(_currentSong, song);
+            if (shouldPlay)
             {
+                MediaPlayer.Stop();
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Volume = MusicVolume;
                 MediaPlayer.Play(song);
                 _currentSong = song;
+            }
+            else
+            {
+                MediaPlayer.Volume = MusicVolume;
+                MediaPlayer.IsRepeating = true;
             }
         }
 

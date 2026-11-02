@@ -16,6 +16,7 @@ namespace DreamSlayerV2.Core
         private static SpriteFont _natureFont;
         private static Song _nightmareSong;
         private static Song _nodeSong;
+        private static Song _shopSong;
         private static Song _bossPhase1Song;
         private static Song _bossPhase2Song;
         private static Texture2D _menuBackground;
@@ -79,7 +80,8 @@ namespace DreamSlayerV2.Core
         public static SpriteFont BattleFont => GetAsset(ref _battleFont, "BattleUIFont");
         public static SpriteFont NatureFont => GetAsset(ref _natureFont, "NatureFonts");
         public static Song NightmareSong => GetAsset(ref _nightmareSong, "leberch-nightmare-611631");
-        public static Song NodeSong => GetAsset(ref _nodeSong, "Start_music (1)");
+        public static Song NodeSong => GetAsset(ref _nodeSong, "NodeMusic");
+        public static Song ShopSong => GetAsset(ref _shopSong, "Event_shop");
         public static Song BossPhase1Song => GetAsset(ref _bossPhase1Song, "Boss_music_02");
         public static Song BossPhase2Song => GetAsset(ref _bossPhase2Song, "Boss_music_01");
         public static Texture2D MenuBackground => GetAsset(ref _menuBackground, "Blankmenu");

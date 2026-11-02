@@ -39,7 +39,10 @@ namespace DreamSlayerV2.Scenes
 
             int minimumCoins = rewardTier switch { 1 => 50, 2 => 100, _ => 30 };
             int maximumCoinsExclusive = rewardTier switch { 1 => 76, 2 => 151, _ => 41 };
-            float depthMultiplier = _isNightmare ? 1.5f + ((_depth - 1) * 0.25f) : 1f;
+            float depthBonus = _depth - 1;
+            float depthMultiplier = _isNightmare
+                ? 1.5f + (depthBonus * 0.25f)
+                : 1f + (depthBonus * 0.03f);
             _soulReward = (int)Math.Round(
                 Random.Shared.Next(minimumCoins, maximumCoinsExclusive) *
                 depthMultiplier *

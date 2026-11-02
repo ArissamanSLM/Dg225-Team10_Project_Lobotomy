@@ -37,6 +37,13 @@ namespace DreamSlayerV2.Scenes
 
         public abstract void RollNextAction(bool isSanityLow);
 
+        protected void SetDepthDifficulty(int depth, bool nightmareMode)
+        {
+            int depthBonus = Math.Max(1, depth) - 1;
+            float nightmareMultiplier = nightmareMode ? 1.25f : 1f;
+            DifficultyMultiplier = nightmareMultiplier * (1f + depthBonus * 0.03f);
+        }
+
         protected int ScaleDifficulty(int value) => (int)Math.Ceiling(value * DifficultyMultiplier);
 
         protected void SetNextActions(params EnemyAction[] actions)
@@ -69,12 +76,16 @@ namespace DreamSlayerV2.Scenes
     public class MonsterBattle : BaseEnemy
     {
         private readonly bool _isElite;
+        private readonly bool _nightmareMode;
+        private readonly int _depth;
         private readonly Random _rng = new Random();
 
         public MonsterBattle(bool isElite = false, int depth = 1, bool nightmareMode = false)
         {
             _isElite = isElite;
-            DifficultyMultiplier = nightmareMode ? 1.25f + (Math.Max(1, depth) - 1) * 0.15f : 1f;
+            _nightmareMode = nightmareMode;
+            _depth = Math.Max(1, depth);
+            SetDepthDifficulty(_depth, nightmareMode);
             Name = isElite ? "Unreal Wolf (Elite)" : "Unreal Wolf";
             MaxHP = ScaleDifficulty(isElite ? 90 : 30);
             HP = MaxHP;
@@ -97,6 +108,41 @@ namespace DreamSlayerV2.Scenes
             {
                 SetNextActions(new EnemyAction(EnemyActionType.EldritchDebuff, ScaleDifficulty(15)));
             }
+
+            AddNightmareDepthAction();
+        }
+
+        private void AddNightmareDepthAction()
+        {
+            if (!_nightmareMode || _depth < 5)
+            {
+                return;
+            }
+
+            int doubleActionChance = Math.Min(25, 10 + (_depth - 5) * 5);
+            if (_rng.Next(100) >= doubleActionChance)
+            {
+                return;
+            }
+
+            EnemyAction firstAction = NextActions[0];
+            var availableActions = new List<EnemyActionType>
+            {
+                EnemyActionType.Attack,
+                EnemyActionType.Defend,
+                EnemyActionType.EldritchDebuff
+            };
+            availableActions.Remove(firstAction.Type);
+
+            EnemyActionType secondType = availableActions[_rng.Next(availableActions.Count)];
+            EnemyAction secondAction = secondType switch
+            {
+                EnemyActionType.Attack => new EnemyAction(secondType, ScaleDifficulty(_isElite ? _rng.Next(12, 20) : _rng.Next(6, 12))),
+                EnemyActionType.Defend => new EnemyAction(secondType, ScaleDifficulty(_isElite ? 12 : 8)),
+                _ => new EnemyAction(secondType, ScaleDifficulty(15))
+            };
+
+            SetNextActions(firstAction, secondAction);
         }
     }
 
@@ -108,7 +154,7 @@ namespace DreamSlayerV2.Scenes
 
         public BossBattle(int depth = 1, bool nightmareMode = false)
         {
-            DifficultyMultiplier = nightmareMode ? 1.25f + (Math.Max(1, depth) - 1) * 0.15f : 1f;
+            SetDepthDifficulty(depth, nightmareMode);
             Name = "Cthulhu";
             MaxHP = ScaleDifficulty(100);
             HP = MaxHP;

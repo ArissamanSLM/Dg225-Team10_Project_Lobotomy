@@ -47,6 +47,9 @@ namespace DreamSlayerV2.Core
                         ? GlobalContentManager.BossPhase2Song
                         : GlobalContentManager.BossPhase1Song);
                     break;
+                case BattleScene battleScene when battleScene.IsEliteBattle:
+                    MusicManager.PlaySong(GlobalContentManager.NightmareSong);
+                    break;
                 case BattleScene battleScene when battleScene.IsBossRoom:
                     if (!MusicManager.IsPlayingSong(GlobalContentManager.BossPhase1Song) &&
                         !MusicManager.IsPlayingSong(GlobalContentManager.BossPhase2Song))
@@ -63,9 +66,6 @@ namespace DreamSlayerV2.Core
                     MusicManager.StopSong();
                     break;
                 case PlayerStatsScene:
-                    break;
-                default:
-                    MusicManager.PlaySong(GlobalContentManager.NodeSong);
                     break;
             }
         }

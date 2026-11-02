@@ -1,4 +1,5 @@
 using DreamSlayerV2.Core;
+using DreamSlayerV2.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -61,6 +62,7 @@ namespace DreamSlayerV2.Scenes
 
         public void LoadContent()
         {
+            MusicManager.StopSong();
             var graphicsDevice = GlobalContentManager.GraphicsDevice;
             _viewportWidth = graphicsDevice.Viewport.Width;
             if (_currentNode != null)

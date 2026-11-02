@@ -1,4 +1,5 @@
 using DreamSlayerV2.Core;
+using DreamSlayerV2.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -38,6 +39,12 @@ namespace DreamSlayerV2.Scenes
         {
             GenerateShopStock();
             GenerateOrbStock();
+        }
+
+        public override void LoadContent()
+        {
+            base.LoadContent();
+            MusicManager.PlaySong(GlobalContentManager.ShopSong, restart: true);
         }
 
         private Rectangle GetCardButtonBounds(int index) => new Rectangle(100, 290 + (index * 96), 850, 76);

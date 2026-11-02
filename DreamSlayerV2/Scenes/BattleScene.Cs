@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using DreamSlayerV2.Core;
+using DreamSlayerV2.Managers;
 using DreamSlayerV2.Scenes;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
@@ -57,6 +58,7 @@ private float _shieldEffectTimer = 0f;
         }
 
         public bool IsBossRoom => isBossRoom;
+        public bool IsEliteBattle => targetNode?.Type == NodeType.Elite;
 
         public void Initialize()
         {
@@ -76,6 +78,10 @@ private float _shieldEffectTimer = 0f;
         public void LoadContent()
         {
             if (_contentLoaded) return;
+            if (!isBossRoom && targetNode == null)
+            {
+                MusicManager.PlaySong(GlobalContentManager.NodeSong, restart: true);
+            }
             _debuffSoundInstance = GlobalContentManager.BadEffectSound.CreateInstance();
             _debuffSoundInstance.Volume = 1.0f;
             _debuffSoundInstance.Pitch = -0.509f;

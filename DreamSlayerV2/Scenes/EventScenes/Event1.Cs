@@ -1,4 +1,5 @@
 using DreamSlayerV2.Core;
+using DreamSlayerV2.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -54,6 +55,7 @@ namespace DreamSlayerV2.Scenes
 
         public void LoadContent()
         {
+            MusicManager.PlaySong(GlobalContentManager.NodeSong, restart: true);
         }
 
         public void Update(GameTime gameTime)

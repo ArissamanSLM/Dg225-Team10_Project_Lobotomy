@@ -508,11 +508,17 @@
 /processorParam:TextureFormat=Color
 /build:Soul coin UI.jpg
 
-#begin Start_music (1).mp3
+#begin NodeMusic.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Start_music (1).mp3
+/build:NodeMusic.mp3
+
+#begin Event_shop.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Event_shop.mp3
 
 #begin Boss_music_02.mp3
 /importer:Mp3Importer

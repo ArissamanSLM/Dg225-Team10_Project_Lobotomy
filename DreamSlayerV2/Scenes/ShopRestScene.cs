@@ -1,4 +1,5 @@
 using DreamSlayerV2.Core;
+using DreamSlayerV2.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -41,8 +42,12 @@ namespace DreamSlayerV2.Scenes
             _prevMouse = Mouse.GetState();
         }
 
-        public void LoadContent()
+        public virtual void LoadContent()
         {
+            if (_isRest)
+            {
+                MusicManager.PlaySong(GlobalContentManager.NodeSong, restart: true);
+            }
             var graphicsDevice = GlobalContentManager.GraphicsDevice;
         }
 
