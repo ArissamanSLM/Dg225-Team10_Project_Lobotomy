@@ -10,27 +10,124 @@ namespace DreamSlayerV2
 {
     public static class GameSaveManager
     {
+        private const int SaveSlotCount = 2;
         private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
         {
             WriteIndented = true
         };
 
-        private static string SavePath => Path.Combine(
+        private static string SaveDirectory => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "DreamSlayerV2",
-            "save.json");
+            "DreamSlayerV2");
+        private static string SavePath => GetSavePath(ActiveSlot);
+        private static string LegacySavePath => Path.Combine(SaveDirectory, "save.json");
         private static string PermanentProgressPath => Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "DreamSlayerV2",
+            SaveDirectory,
             "progress.json");
+        private static string BackupDirectory => Path.Combine(SaveDirectory, "Backups");
+        private static int _activeSlot = 1;
 
-        public static bool HasSave => File.Exists(SavePath);
+        public static int ActiveSlot
+        {
+            get => _activeSlot;
+            set
+            {
+                if (value < 1 || value > SaveSlotCount)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), "Save slot must be 1 or 2.");
+                }
+
+                _activeSlot = value;
+            }
+        }
+
+        public static bool HasSave => File.Exists(SavePath) ||
+                                      (ActiveSlot == 1 && File.Exists(LegacySavePath));
+        public static bool HasAnySave => HasSaveForSlot(1) || HasSaveForSlot(2);
+
+        public static bool HasSaveForSlot(int slot)
+        {
+            ValidateSlot(slot);
+            return File.Exists(GetSavePath(slot)) || (slot == 1 && File.Exists(LegacySavePath));
+        }
 
         public static void DeleteSave()
         {
-            if (File.Exists(SavePath))
+            CreateBackupSnapshot();
+            DeleteFileIfExists(SavePath);
+            if (ActiveSlot == 1) DeleteFileIfExists(LegacySavePath);
+        }
+
+        public static void ResetAllProgress()
+        {
+            CreateBackupSnapshot();
+            DeleteFileIfExists(GetSavePath(1));
+            DeleteFileIfExists(GetSavePath(2));
+            DeleteFileIfExists(LegacySavePath);
+            DeleteFileIfExists(PermanentProgressPath);
+
+            UpgradeOrbPermanent.RebirthCoins = 0;
+            UpgradeOrbPermanent.AscendedCoins = 0;
+            UpgradeOrbPermanent.TotalDepthsCleared = 0;
+            UpgradeOrbPermanent.BestScore = 0;
+            UpgradeOrbPermanent.MaxHPLevel = 0;
+            UpgradeOrbPermanent.StartCoinsLevel = 0;
+            UpgradeOrbPermanent.UnlockDiceMinigame = false;
+            UpgradeOrbPermanent.EnergyAltarUnlocked = false;
+            UpgradeOrbPermanent.LastAltarUse = DateTime.MinValue;
+            UpgradeOrbPermanent.CharmsUnlocked = false;
+            UpgradeOrbPermanent.NightmareModeUnlocked = false;
+            UpgradeOrbPermanent.ClockPlusUnlocked = false;
+            UpgradeOrbPermanent.PlusBasicCardsUnlocked = false;
+            UpgradeOrbPermanent.PlusBasicCardsEnabled = false;
+            UpgradeOrbPermanent.StartingHpUpgradeLevel = 0;
+            UpgradeOrbPermanent.StartingCoinsUpgradeUnlocked = false;
+            UpgradeOrbPermanent.SoulRewardUpgradeLevel = 0;
+            UpgradeOrbPermanent.StartingEnergyUpgradeUnlocked = false;
+        }
+
+        private static string GetSavePath(int slot)
+        {
+            ValidateSlot(slot);
+            return Path.Combine(SaveDirectory, $"run-slot-{slot}.json");
+        }
+
+        private static void ValidateSlot(int slot)
+        {
+            if (slot < 1 || slot > SaveSlotCount)
             {
-                File.Delete(SavePath);
+                throw new ArgumentOutOfRangeException(nameof(slot), "Save slot must be 1 or 2.");
+            }
+        }
+
+        private static void DeleteFileIfExists(string path)
+        {
+            if (File.Exists(path)) File.Delete(path);
+        }
+
+        private static void CreateBackupSnapshot()
+        {
+            string[] saveFiles =
+            {
+                GetSavePath(1),
+                GetSavePath(2),
+                LegacySavePath,
+                PermanentProgressPath
+            };
+            string[] existingFiles = saveFiles.Where(File.Exists).ToArray();
+            if (existingFiles.Length == 0) return;
+
+            string newestBackup = Path.Combine(BackupDirectory, "Backup1");
+            string olderBackup = Path.Combine(BackupDirectory, "Backup2");
+            Directory.CreateDirectory(BackupDirectory);
+
+            if (Directory.Exists(olderBackup)) Directory.Delete(olderBackup, recursive: true);
+            if (Directory.Exists(newestBackup)) Directory.Move(newestBackup, olderBackup);
+
+            Directory.CreateDirectory(newestBackup);
+            foreach (string file in existingFiles)
+            {
+                File.Copy(file, Path.Combine(newestBackup, Path.GetFileName(file)), overwrite: true);
             }
         }
 
@@ -91,6 +188,7 @@ namespace DreamSlayerV2
                 ?? throw new InvalidOperationException("The save directory could not be determined.");
             Directory.CreateDirectory(directory);
 
+            CreateBackupSnapshot();
             string temporaryPath = SavePath + ".tmp";
             File.WriteAllText(temporaryPath, JsonSerializer.Serialize(data, JsonOptions));
             File.Move(temporaryPath, SavePath, overwrite: true);
@@ -162,6 +260,7 @@ namespace DreamSlayerV2
                 BestScore = UpgradeOrbPermanent.BestScore
             };
 
+            CreateBackupSnapshot();
             string temporaryPath = PermanentProgressPath + ".tmp";
             File.WriteAllText(temporaryPath, JsonSerializer.Serialize(data, JsonOptions));
             File.Move(temporaryPath, PermanentProgressPath, overwrite: true);
@@ -180,7 +279,8 @@ namespace DreamSlayerV2
 
             try
             {
-                string json = File.ReadAllText(SavePath);
+                string path = File.Exists(SavePath) ? SavePath : LegacySavePath;
+                string json = File.ReadAllText(path);
                 run = JsonSerializer.Deserialize<SavedRunData>(json, JsonOptions);
                 if (run?.Player == null || run.Nodes == null ||
                     run.CurrentNodeIndex < 0 || run.CurrentNodeIndex >= run.Nodes.Count)

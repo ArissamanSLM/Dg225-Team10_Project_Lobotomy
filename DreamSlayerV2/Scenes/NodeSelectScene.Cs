@@ -57,10 +57,7 @@ namespace DreamSlayerV2.Scenes
                 }
             }
 
-            if (GameSaveManager.HasSave)
-            {
-                SaveRun();
-            }
+            SaveRun();
         }
 
         public void LoadContent()

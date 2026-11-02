@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DreamSlayerV2.Scenes
 {
@@ -16,7 +17,16 @@ namespace DreamSlayerV2.Scenes
             Main,
             Options,
             Upgrades,
-            Credits
+            Credits,
+            SaveSlots,
+            OverwriteConfirm,
+            HardResetConfirm
+        }
+
+        private enum SlotAction
+        {
+            NewGame,
+            Continue
         }
 
         private MenuState _currentState = MenuState.Main;
@@ -33,6 +43,10 @@ namespace DreamSlayerV2.Scenes
         private int _selectedMenuIndex = 0;
         private bool _nightmareModeSelected;
         private bool _showAscendedUpgrades;
+        private SlotAction _slotAction;
+        private int _selectedSaveSlot;
+        private int _pendingOverwriteSlot;
+        private int _confirmationSelection = 1;
 
         private MouseState _currentMouse;
         private MouseState _previousMouse;
@@ -117,6 +131,18 @@ namespace DreamSlayerV2.Scenes
                         _currentState = MenuState.Main;
                     }
                     break;
+
+                case MenuState.SaveSlots:
+                    HandleSaveSlotsInput(isLeftClicked);
+                    break;
+
+                case MenuState.OverwriteConfirm:
+                    HandleOverwriteConfirmationInput(isLeftClicked);
+                    break;
+
+                case MenuState.HardResetConfirm:
+                    HandleHardResetConfirmationInput(isLeftClicked);
+                    break;
             }
         }
 
@@ -175,7 +201,7 @@ namespace DreamSlayerV2.Scenes
 
         private static bool IsMenuItemEnabled(int index)
         {
-            return (index != 1 || GameSaveManager.HasSave) &&
+            return (index != 1 || GameSaveManager.HasAnySave) &&
                    (index != 5 || UpgradeOrbPermanent.NightmareModeUnlocked);
         }
 
@@ -184,31 +210,11 @@ namespace DreamSlayerV2.Scenes
             switch (index)
             {
                 case 0:
-                    NodeSelectScene.Reset();
-                    GameSaveManager.DeleteSave();
-                    
-                    GameState.ResetRun();
-                    GameState.CurrentPlayer = new PlayerController(
-                        CharacterClassV2.Human,
-                        _nightmareModeSelected && UpgradeOrbPermanent.NightmareModeUnlocked);
-
-                    SceneManager.ChangeScene(new SceneStory1());
+                    BeginSaveSlotSelection(SlotAction.NewGame);
                     break;
 
                 case 1:
-                    if (GameSaveManager.TryLoadRun(out SavedRunData savedRun, out string loadError))
-                    {
-                        GameState.CurrentPlayer = GameSaveManager.RestorePlayer(savedRun.Player);
-                        NodeSelectScene.RestoreRun(savedRun);
-                        _menuStatusText = string.Empty;
-                        SceneManager.ChangeScene(savedRun.PendingStartReward
-                            ? new NodeStartScene()
-                            : new NodeSelectScene());
-                    }
-                    else
-                    {
-                        _menuStatusText = loadError;
-                    }
+                    BeginSaveSlotSelection(SlotAction.Continue);
                     break;
 
                 case 2:
@@ -230,17 +236,228 @@ namespace DreamSlayerV2.Scenes
 
         }
 
+        private void BeginSaveSlotSelection(SlotAction action)
+        {
+            _slotAction = action;
+            _selectedSaveSlot = 0;
+            _menuStatusText = string.Empty;
+            _currentState = MenuState.SaveSlots;
+        }
+
+        private void HandleSaveSlotsInput(bool isLeftClicked)
+        {
+            Rectangle firstSlot = new Rectangle(600, 535, 320, 100);
+            Rectangle secondSlot = new Rectangle(1000, 535, 320, 100);
+            Rectangle backButton = new Rectangle(810, 675, 300, 58);
+
+            if (IsKeyPressed(Keys.Escape) || IsKeyPressed(Keys.Back))
+            {
+                _currentState = MenuState.Main;
+                return;
+            }
+
+            if (IsKeyPressed(Keys.Left) || IsKeyPressed(Keys.Right) ||
+                IsKeyPressed(Keys.A) || IsKeyPressed(Keys.D))
+            {
+                _selectedSaveSlot = 1 - _selectedSaveSlot;
+            }
+
+            if (firstSlot.Contains(_currentMouse.Position))
+            {
+                _selectedSaveSlot = 0;
+                if (isLeftClicked)
+                {
+                    SelectSaveSlot(1);
+                    return;
+                }
+            }
+            else if (secondSlot.Contains(_currentMouse.Position))
+            {
+                _selectedSaveSlot = 1;
+                if (isLeftClicked)
+                {
+                    SelectSaveSlot(2);
+                    return;
+                }
+            }
+            else if (backButton.Contains(_currentMouse.Position) && isLeftClicked)
+            {
+                _currentState = MenuState.Main;
+                return;
+            }
+
+            if (IsKeyPressed(Keys.Enter) || IsKeyPressed(Keys.Space))
+            {
+                SelectSaveSlot(_selectedSaveSlot + 1);
+            }
+        }
+
+        private void SelectSaveSlot(int slot)
+        {
+            GameSaveManager.ActiveSlot = slot;
+            if (_slotAction == SlotAction.NewGame)
+            {
+                if (GameSaveManager.HasSave)
+                {
+                    _pendingOverwriteSlot = slot;
+                    _confirmationSelection = 1;
+                    _currentState = MenuState.OverwriteConfirm;
+                }
+                else
+                {
+                    StartNewGame(slot);
+                }
+
+                return;
+            }
+
+            if (GameSaveManager.TryLoadRun(out SavedRunData savedRun, out string loadError))
+            {
+                GameState.CurrentPlayer = GameSaveManager.RestorePlayer(savedRun.Player);
+                NodeSelectScene.RestoreRun(savedRun);
+                _menuStatusText = string.Empty;
+                SceneManager.ChangeScene(savedRun.PendingStartReward
+                    ? new NodeStartScene()
+                    : new NodeSelectScene());
+            }
+            else
+            {
+                _menuStatusText = loadError;
+            }
+        }
+
+        private void StartNewGame(int slot)
+        {
+            GameSaveManager.ActiveSlot = slot;
+            NodeSelectScene.Reset();
+            GameSaveManager.DeleteSave();
+            GameState.ResetRun();
+            GameState.CurrentPlayer = new PlayerController(
+                CharacterClassV2.Human,
+                _nightmareModeSelected && UpgradeOrbPermanent.NightmareModeUnlocked);
+
+            SceneManager.ChangeScene(new SceneStory1());
+        }
+
+        private void HandleOverwriteConfirmationInput(bool isLeftClicked)
+        {
+            Rectangle yesButton = new Rectangle(640, 650, 280, 64);
+            Rectangle noButton = new Rectangle(1000, 650, 280, 64);
+
+            if (IsKeyPressed(Keys.Escape) || IsKeyPressed(Keys.Back))
+            {
+                _currentState = MenuState.SaveSlots;
+                return;
+            }
+
+            if (IsKeyPressed(Keys.Left) || IsKeyPressed(Keys.Right) ||
+                IsKeyPressed(Keys.A) || IsKeyPressed(Keys.D))
+            {
+                _confirmationSelection = 1 - _confirmationSelection;
+            }
+
+            if (yesButton.Contains(_currentMouse.Position))
+            {
+                _confirmationSelection = 0;
+                if (isLeftClicked)
+                {
+                    StartNewGame(_pendingOverwriteSlot);
+                    return;
+                }
+            }
+            else if (noButton.Contains(_currentMouse.Position))
+            {
+                _confirmationSelection = 1;
+                if (isLeftClicked)
+                {
+                    _currentState = MenuState.SaveSlots;
+                    return;
+                }
+            }
+
+            if (IsKeyPressed(Keys.Enter) || IsKeyPressed(Keys.Space))
+            {
+                if (_confirmationSelection == 0) StartNewGame(_pendingOverwriteSlot);
+                else _currentState = MenuState.SaveSlots;
+            }
+        }
+
+        private void HandleHardResetConfirmationInput(bool isLeftClicked)
+        {
+            Rectangle resetButton = new Rectangle(640, 650, 280, 64);
+            Rectangle cancelButton = new Rectangle(1000, 650, 280, 64);
+
+            if (IsKeyPressed(Keys.Escape) || IsKeyPressed(Keys.Back))
+            {
+                _currentState = MenuState.Options;
+                return;
+            }
+
+            if (IsKeyPressed(Keys.Left) || IsKeyPressed(Keys.Right) ||
+                IsKeyPressed(Keys.A) || IsKeyPressed(Keys.D))
+            {
+                _confirmationSelection = 1 - _confirmationSelection;
+            }
+
+            if (resetButton.Contains(_currentMouse.Position))
+            {
+                _confirmationSelection = 0;
+                if (isLeftClicked)
+                {
+                    PerformHardReset();
+                    return;
+                }
+            }
+            else if (cancelButton.Contains(_currentMouse.Position))
+            {
+                _confirmationSelection = 1;
+                if (isLeftClicked)
+                {
+                    _currentState = MenuState.Options;
+                    return;
+                }
+            }
+
+            if (IsKeyPressed(Keys.Enter) || IsKeyPressed(Keys.Space))
+            {
+                if (_confirmationSelection == 0) PerformHardReset();
+                else _currentState = MenuState.Options;
+            }
+        }
+
+        private void PerformHardReset()
+        {
+            try
+            {
+                GameSaveManager.ResetAllProgress();
+                NodeSelectScene.Reset();
+                GameState.ResetRun();
+                _nightmareModeSelected = false;
+                _menuStatusText = "Progress reset. Two rotating backups are kept in AppData.";
+                _currentState = MenuState.Options;
+            }
+            catch (Exception exception) when (
+                exception is IOException ||
+                exception is UnauthorizedAccessException)
+            {
+                _menuStatusText = $"Could not reset progress: {exception.Message}";
+                _currentState = MenuState.Options;
+            }
+        }
+
         private void HandleOptionsInput(bool isLeftClicked)
         {
-            Rectangle backButton = new Rectangle(810, 750, 300, 50);
+            Rectangle backButton = new Rectangle(770, 790, 380, 58);
             if ((backButton.Contains(_currentMouse.Position) && isLeftClicked) || IsKeyPressed(Keys.Escape))
             {
                 _currentState = MenuState.Main;
                 return;
             }
 
-            Rectangle volDown = new Rectangle(1100, 420, 40, 40);
-            Rectangle volUp = new Rectangle(1220, 420, 40, 40);
+            Rectangle volDown = new Rectangle(990, 400, 56, 52);
+            Rectangle volUp = new Rectangle(1220, 400, 56, 52);
+            Rectangle sfxToggle = new Rectangle(1030, 500, 220, 58);
+            Rectangle hardReset = new Rectangle(730, 640, 460, 58);
 
             if (isLeftClicked)
             {
@@ -255,10 +472,15 @@ namespace DreamSlayerV2.Scenes
                     MediaPlayer.Volume = _masterVolume;
                 }
 
-                Rectangle sfxBox = new Rectangle(1100, 480, 160, 40);
-                if (sfxBox.Contains(_currentMouse.Position))
+                if (sfxToggle.Contains(_currentMouse.Position))
                 {
                     _sfxEnabled = !_sfxEnabled;
+                }
+
+                if (hardReset.Contains(_currentMouse.Position))
+                {
+                    _confirmationSelection = 1;
+                    _currentState = MenuState.HardResetConfirm;
                 }
             }
         }
@@ -544,6 +766,18 @@ namespace DreamSlayerV2.Scenes
                 case MenuState.Credits:
                     DrawCreditsView(spriteBatch);
                     break;
+
+                case MenuState.SaveSlots:
+                    DrawSaveSlotSelection(spriteBatch);
+                    break;
+
+                case MenuState.OverwriteConfirm:
+                    DrawOverwriteConfirmation(spriteBatch);
+                    break;
+
+                case MenuState.HardResetConfirm:
+                    DrawHardResetConfirmation(spriteBatch);
+                    break;
             }
 
             spriteBatch.End();
@@ -623,19 +857,178 @@ namespace DreamSlayerV2.Scenes
 
         private void DrawOptionsMenu(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "--- OPTIONS ---", new Vector2(850, 320), Color.Gold);
+            Rectangle panel = new Rectangle(520, 285, 880, 560);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, panel, Color.Black * 0.72f);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, new Rectangle(panel.X, panel.Y, panel.Width, 4), Color.MediumPurple);
 
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Master Volume: {(int)(_masterVolume * 100)}%", new Vector2(750, 420), Color.White);
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "[ - ]", new Vector2(1100, 420), Color.Yellow);
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "[ + ]", new Vector2(1220, 420), Color.Yellow);
+            DrawCenteredLabel(spriteBatch, "OPTIONS", 335, Color.White, 1.35f);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Music volume", new Vector2(640, 415), Color.Gainsboro);
 
-            string sfxText = _sfxEnabled ? "ON" : "OFF";
-            Color sfxColor = _sfxEnabled ? Color.LightGreen : Color.Red;
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Sound Effects: {sfxText}", new Vector2(750, 480), sfxColor);
+            Rectangle downButton = new Rectangle(990, 400, 56, 52);
+            Rectangle volumeTrack = new Rectangle(1060, 416, 140, 20);
+            Rectangle upButton = new Rectangle(1220, 400, 56, 52);
+            DrawUiButton(spriteBatch, downButton, "-", downButton.Contains(_currentMouse.Position), Color.SlateBlue);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, volumeTrack, Color.DimGray);
+            if (_masterVolume > 0f)
+            {
+                spriteBatch.Draw(
+                    GlobalContentManager.WhitePixel,
+                    new Rectangle(volumeTrack.X, volumeTrack.Y, (int)(volumeTrack.Width * _masterVolume), volumeTrack.Height),
+                    Color.MediumPurple);
+            }
+            DrawUiButton(spriteBatch, upButton, "+", upButton.Contains(_currentMouse.Position), Color.SlateBlue);
+            spriteBatch.DrawString(
+                GlobalContentManager.DefaultFont,
+                $"{(int)(_masterVolume * 100)}%",
+                new Vector2(1072, 445),
+                Color.LightGray);
 
-            Rectangle backRect = new Rectangle(810, 750, 300, 50);
-            bool isHovered = backRect.Contains(_currentMouse.Position);
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "< BACK TO MENU >", new Vector2(810, 750), isHovered ? Color.Gold : Color.White);
+            spriteBatch.DrawString(GlobalContentManager.DefaultFont, "Sound effects", new Vector2(640, 515), Color.Gainsboro);
+            Rectangle sfxButton = new Rectangle(1030, 500, 220, 58);
+            DrawUiButton(
+                spriteBatch,
+                sfxButton,
+                _sfxEnabled ? "ON" : "OFF",
+                sfxButton.Contains(_currentMouse.Position),
+                _sfxEnabled ? Color.SeaGreen : Color.Firebrick);
+
+            Rectangle hardResetButton = new Rectangle(730, 640, 460, 58);
+            bool resetHovered = hardResetButton.Contains(_currentMouse.Position);
+            spriteBatch.Draw(
+                GlobalContentManager.WhitePixel,
+                hardResetButton,
+                resetHovered ? Color.DarkRed : new Color(90, 28, 38));
+            if (GlobalContentManager.EighthMenu != null)
+            {
+                spriteBatch.Draw(GlobalContentManager.EighthMenu, hardResetButton, Color.White);
+            }
+            else
+            {
+                DrawCenteredInButton(spriteBatch, "HARD RESET", hardResetButton, Color.White);
+            }
+
+            Rectangle backRect = new Rectangle(770, 790, 380, 58);
+            DrawUiButton(spriteBatch, backRect, "BACK TO MENU", backRect.Contains(_currentMouse.Position), Color.SlateBlue);
+
+            if (!string.IsNullOrEmpty(_menuStatusText))
+            {
+                DrawCenteredLabel(spriteBatch, _menuStatusText, 875, Color.OrangeRed, 0.8f);
+            }
+        }
+
+        private void DrawSaveSlotSelection(SpriteBatch spriteBatch)
+        {
+            DrawOverlayPanel(spriteBatch, "CHOOSE A SAVE SLOT", "Select a slot using the mouse or left/right arrow keys.");
+            DrawSaveSlotButton(spriteBatch, 1, new Rectangle(600, 535, 320, 100));
+            DrawSaveSlotButton(spriteBatch, 2, new Rectangle(1000, 535, 320, 100));
+            Rectangle backButton = new Rectangle(810, 675, 300, 58);
+            DrawUiButton(spriteBatch, backButton, "BACK", backButton.Contains(_currentMouse.Position), Color.SlateBlue);
+            if (!string.IsNullOrEmpty(_menuStatusText))
+            {
+                DrawCenteredLabel(spriteBatch, _menuStatusText, 700, Color.OrangeRed, 0.8f);
+            }
+        }
+
+        private void DrawSaveSlotButton(SpriteBatch spriteBatch, int slot, Rectangle bounds)
+        {
+            bool selected = _selectedSaveSlot == slot - 1 || bounds.Contains(_currentMouse.Position);
+            bool hasSave = GameSaveManager.HasSaveForSlot(slot);
+            Color background = selected ? new Color(80, 52, 126) : new Color(40, 43, 62);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, bounds, background);
+            spriteBatch.Draw(
+                GlobalContentManager.WhitePixel,
+                new Rectangle(bounds.X, bounds.Y, bounds.Width, 3),
+                selected ? Color.MediumPurple : Color.SlateGray);
+
+            DrawCenteredLabel(spriteBatch, $"SLOT {slot}", bounds.Y + 20, Color.White, 1f, bounds);
+            string status = hasSave ? "Saved run available" : "Empty";
+            Color statusColor = hasSave ? Color.LightGreen : Color.LightGray;
+            if (_slotAction == SlotAction.Continue && !hasSave) statusColor = Color.Gray;
+            DrawCenteredLabel(spriteBatch, status, bounds.Y + 58, statusColor, 0.75f, bounds);
+        }
+
+        private void DrawOverwriteConfirmation(SpriteBatch spriteBatch)
+        {
+            DrawOverlayPanel(
+                spriteBatch,
+                "OVERWRITE SLOT?",
+                $"Starting a new game will replace Slot {_pendingOverwriteSlot}. Your old progress is backed up.");
+            DrawConfirmationButtons(spriteBatch, "OVERWRITE", "CANCEL");
+        }
+
+        private void DrawHardResetConfirmation(SpriteBatch spriteBatch)
+        {
+            DrawOverlayPanel(
+                spriteBatch,
+                "RESET ALL PROGRESS?",
+                "This erases both run slots, upgrades, unlocks, and scores. Two rotating backups are kept.");
+            DrawConfirmationButtons(spriteBatch, "RESET EVERYTHING", "CANCEL", true);
+        }
+
+        private void DrawOverlayPanel(SpriteBatch spriteBatch, string title, string description)
+        {
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, new Rectangle(0, 0, 1920, 1080), Color.Black * 0.58f);
+            Rectangle panel = new Rectangle(500, 330, 920, 420);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, panel, new Color(22, 24, 40));
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, new Rectangle(panel.X, panel.Y, panel.Width, 4), Color.MediumPurple);
+            DrawCenteredLabel(spriteBatch, title, 390, Color.White, 1.25f);
+            DrawCenteredLabel(spriteBatch, description, 485, Color.Gainsboro, 0.8f);
+        }
+
+        private void DrawConfirmationButtons(SpriteBatch spriteBatch, string confirmText, string cancelText, bool destructive = false)
+        {
+            Rectangle confirm = new Rectangle(640, 650, 280, 64);
+            Rectangle cancel = new Rectangle(1000, 650, 280, 64);
+            DrawUiButton(
+                spriteBatch,
+                confirm,
+                confirmText,
+                _confirmationSelection == 0 || confirm.Contains(_currentMouse.Position),
+                destructive ? Color.Firebrick : Color.DarkOrange);
+            DrawUiButton(
+                spriteBatch,
+                cancel,
+                cancelText,
+                _confirmationSelection == 1 || cancel.Contains(_currentMouse.Position),
+                Color.SlateBlue);
+        }
+
+        private void DrawUiButton(SpriteBatch spriteBatch, Rectangle bounds, string text, bool selected, Color color)
+        {
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, bounds, selected ? color : color * 0.72f);
+            DrawCenteredInButton(spriteBatch, text, bounds, Color.White);
+        }
+
+        private void DrawCenteredInButton(SpriteBatch spriteBatch, string text, Rectangle bounds, Color color)
+        {
+            Vector2 size = GlobalContentManager.DefaultFont.MeasureString(text);
+            spriteBatch.DrawString(
+                GlobalContentManager.DefaultFont,
+                text,
+                new Vector2(bounds.Center.X - size.X / 2f, bounds.Center.Y - size.Y / 2f),
+                color);
+        }
+
+        private void DrawCenteredLabel(
+            SpriteBatch spriteBatch,
+            string text,
+            int y,
+            Color color,
+            float scale,
+            Rectangle? bounds = null)
+        {
+            Vector2 size = GlobalContentManager.DefaultFont.MeasureString(text) * scale;
+            int centerX = bounds?.Center.X ?? 960;
+            spriteBatch.DrawString(
+                GlobalContentManager.DefaultFont,
+                text,
+                new Vector2(centerX - size.X / 2f, y),
+                color,
+                0f,
+                Vector2.Zero,
+                scale,
+                SpriteEffects.None,
+                0f);
         }
 
         private void DrawUpgradesView(SpriteBatch spriteBatch)
