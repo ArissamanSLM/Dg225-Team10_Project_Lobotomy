@@ -1,4 +1,5 @@
 using DreamSlayerV2.Core;
+using DreamSlayerV2.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -53,7 +54,6 @@ namespace DreamSlayerV2.Scenes
         private KeyboardState _currentKeyboard;
         private KeyboardState _previousKeyboard;
 
-        private float _masterVolume = 1.0f;
         private bool _sfxEnabled = true;
         private string _menuStatusText = string.Empty;
 
@@ -72,9 +72,7 @@ namespace DreamSlayerV2.Scenes
 
             // [3] Map Left, [4] Map Right (Seamless 2500x1080)
 
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = _masterVolume;
-            MediaPlayer.Play(GlobalContentManager.NightmareSong);
+            MusicManager.PlaySong(GlobalContentManager.NightmareSong);
         }
 
         public void Update(GameTime gameTime)
@@ -463,13 +461,11 @@ namespace DreamSlayerV2.Scenes
             {
                 if (volDown.Contains(_currentMouse.Position))
                 {
-                    _masterVolume = MathHelper.Clamp(_masterVolume - 0.1f, 0f, 1f);
-                    MediaPlayer.Volume = _masterVolume;
+                    MusicManager.SetMusicVolume(MusicManager.MusicVolume - 0.1f);
                 }
                 if (volUp.Contains(_currentMouse.Position))
                 {
-                    _masterVolume = MathHelper.Clamp(_masterVolume + 0.1f, 0f, 1f);
-                    MediaPlayer.Volume = _masterVolume;
+                    MusicManager.SetMusicVolume(MusicManager.MusicVolume + 0.1f);
                 }
 
                 if (sfxToggle.Contains(_currentMouse.Position))
@@ -869,17 +865,17 @@ namespace DreamSlayerV2.Scenes
             Rectangle upButton = new Rectangle(1220, 400, 56, 52);
             DrawUiButton(spriteBatch, downButton, "-", downButton.Contains(_currentMouse.Position), Color.SlateBlue);
             spriteBatch.Draw(GlobalContentManager.WhitePixel, volumeTrack, Color.DimGray);
-            if (_masterVolume > 0f)
+            if (MusicManager.MusicVolume > 0f)
             {
                 spriteBatch.Draw(
                     GlobalContentManager.WhitePixel,
-                    new Rectangle(volumeTrack.X, volumeTrack.Y, (int)(volumeTrack.Width * _masterVolume), volumeTrack.Height),
+                    new Rectangle(volumeTrack.X, volumeTrack.Y, (int)(volumeTrack.Width * MusicManager.MusicVolume), volumeTrack.Height),
                     Color.MediumPurple);
             }
             DrawUiButton(spriteBatch, upButton, "+", upButton.Contains(_currentMouse.Position), Color.SlateBlue);
             spriteBatch.DrawString(
                 GlobalContentManager.DefaultFont,
-                $"{(int)(_masterVolume * 100)}%",
+                $"{(int)(MusicManager.MusicVolume * 100)}%",
                 new Vector2(1072, 445),
                 Color.LightGray);
 
@@ -1133,7 +1129,7 @@ namespace DreamSlayerV2.Scenes
 
         public void UnloadContent()
         {
-            MediaPlayer.Stop();
+            MusicManager.StopSong();
         }
     }
     public enum StringNightmareText

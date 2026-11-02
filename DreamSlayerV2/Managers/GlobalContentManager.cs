@@ -16,6 +16,8 @@ namespace DreamSlayerV2.Core
         private static SpriteFont _natureFont;
         private static Song _nightmareSong;
         private static Song _nodeSong;
+        private static Song _bossPhase1Song;
+        private static Song _bossPhase2Song;
         private static Texture2D _menuBackground;
         private static Texture2D _forestBackground;
         private static Texture2D _caveBackground;
@@ -78,6 +80,8 @@ namespace DreamSlayerV2.Core
         public static SpriteFont NatureFont => GetAsset(ref _natureFont, "NatureFonts");
         public static Song NightmareSong => GetAsset(ref _nightmareSong, "leberch-nightmare-611631");
         public static Song NodeSong => GetAsset(ref _nodeSong, "Start_music (1)");
+        public static Song BossPhase1Song => GetAsset(ref _bossPhase1Song, "Boss_music_02");
+        public static Song BossPhase2Song => GetAsset(ref _bossPhase2Song, "Boss_music_01");
         public static Texture2D MenuBackground => GetAsset(ref _menuBackground, "Blankmenu");
         public static Texture2D ForestBackground => GetAsset(ref _forestBackground, "HorrorForestDreamV2");
         public static Texture2D CaveBackground => GetAsset(ref _caveBackground, "TheDarkCave");

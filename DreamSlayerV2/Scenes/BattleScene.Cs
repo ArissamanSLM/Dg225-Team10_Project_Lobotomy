@@ -56,6 +56,8 @@ private float _shieldEffectTimer = 0f;
             targetNode = nodeToComplete;
         }
 
+        public bool IsBossRoom => isBossRoom;
+
         public void Initialize()
         {
             if (_initialized) return;

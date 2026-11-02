@@ -20,21 +20,22 @@ namespace DreamSlayerV2.Scenes
 
         private readonly string[] _bossTexts =
         {
-            "Mage: Phew after 13 Long Nodes, I finally reached the final node. I can feel the power of the book in my hand.",
-            "???: You Dare to Enter my Domain of Dreamland.",
+            "Mage:Phew after many adeveture, I finally reached the place where i can escape this dream. I can feel the power of the book in my hand",
+            "???: {Roar} Human!  You dare to enter My Domain in Dreamland.",
             "???: You shall not pass!",
             "Mage: I will not let you stop me from my goal. I will defeat you! And Escape from this nightmare.",
-            "???: Hahaha, You are just a weak mage. I will destroy you and take your power for myself.",
+            "???: You new born spicies. I will destroy you and take your soul for my Fun Time!",
             "???: Prepare to Die!"
         };
 
         private readonly string[] _phase2Texts =
         {
-            "???: IMPOSSIBLE! How can you defeat me? I am the most powerful being in this world.",
-            "???: Let me show you my Real Power!",
+            "???: IMPOSSIBLE! How can you defeat me? I am one of the most powerful being in this dream world",
+            "???: Let me show you my true Power!",
             "Mage: Bring it on! I do not fear you. I will defeat you and escape from this nightmare.",
-            "Angel: Player, you are here! Take my help and defeat this evil being.",
-            "Cthulhu: Perish!!!"
+            "G???? : Where is Alice?",
+            "AHA!: The Phantasmoon Games extend the deepest gratitude for the big boss's generous sponsorship!"
+
         };
 
         private int currentIndex = 0;
@@ -68,6 +69,8 @@ namespace DreamSlayerV2.Scenes
         {
             LoadCurrentDialogue();
         }
+
+        public bool IsPhase2Dialogue => _isPhase2Dialogue;
 
         private void LoadCurrentDialogue()
         {

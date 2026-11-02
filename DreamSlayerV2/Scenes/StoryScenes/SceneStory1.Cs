@@ -1,4 +1,5 @@
 using DreamSlayerV2.Core;
+using DreamSlayerV2.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,11 +20,7 @@ namespace DreamSlayerV2.Scenes
 
         public void LoadContent()
         {
-            _soundInstance = GlobalContentManager.TitleMusicEffect.CreateInstance();
-            _soundInstance.Volume = 0.4f;
-            _soundInstance.Pitch = 0.10f;
-            _soundInstance.IsLooped = true;
-            _soundInstance.Play();
+            _soundInstance = MusicManager.PlayLoopingStoryMusic(GlobalContentManager.TitleMusicEffect);
         }
 
         public void Update(GameTime gameTime)

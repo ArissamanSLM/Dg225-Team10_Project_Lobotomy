@@ -1,4 +1,5 @@
 using DreamSlayerV2.Core;
+using DreamSlayerV2.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -29,7 +30,7 @@ namespace DreamSlayerV2.Scenes
     }
     public void UnloadContent()
         {
-            SceneStory1._soundInstance.Stop();
+            MusicManager.StopLoopingStoryMusic(SceneStory1._soundInstance);
         }
 }
 }

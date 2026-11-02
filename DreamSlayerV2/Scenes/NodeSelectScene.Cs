@@ -2,7 +2,6 @@ using DreamSlayerV2.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 
@@ -62,12 +61,6 @@ namespace DreamSlayerV2.Scenes
 
         public void LoadContent()
         {
-            if (MediaPlayer.State != MediaState.Playing)
-            {
-                MediaPlayer.Play(GlobalContentManager.NodeSong);
-                MediaPlayer.IsRepeating = true;
-            }
-
             var graphicsDevice = GlobalContentManager.GraphicsDevice;
             _viewportWidth = graphicsDevice.Viewport.Width;
             if (_currentNode != null)
