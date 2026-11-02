@@ -93,7 +93,7 @@ namespace DreamSlayerV2.Core
         public static Texture2D MapLeft => GetAsset(ref _mapLeft, "MapLeft_DreamSlayer");
         public static Texture2D MapRight => GetAsset(ref _mapRight, "MapRight_DreamSlayer");
         public static Texture2D Enemy => GetAsset(ref _enemy, "UnrealWolf");
-        public static Texture2D CardSheet => GetAsset(ref _cardSheet, "All16Card (1)");
+        public static Texture2D CardSheet => GetAsset(ref _cardSheet, "FinalAll16Card");
         public static Texture2D HealthBar => GetAsset(ref _healthBar, "HealthBar");
         public static Texture2D SanityBar => GetAsset(ref _sanityBar, "Sanity_bar");
         public static Texture2D ShieldBar => GetAsset(ref _shieldBar, "Sheid_bar");

@@ -6,15 +6,14 @@ kanban-plugin: board
 
 ## To do (Ohm)
 
-- [ ] BG
-- [ ] Enemy sprite
-- [ ] Card
 - [ ] Improve old map and enemy sprite
-- [ ] ButtonSprite
 
 
 ## Work In Progress (Ohm)
 
+- [ ] BG
+- [ ] Enemy sprite
+- [ ] ButtonSprite
 
 
 ## Done (Ohm)
@@ -23,22 +22,22 @@ kanban-plugin: board
 
 ## To-do (Aris)
 
-- [ ] Tower system/Infinite mode
-- [ ] Relic system
-- [ ] Character info
-- [ ] ScreenMangement
-- [ ] Add a Start/Options/ChooseEventButton
-- [ ] Start Game Timeline
 
 
 ## Work In Progress(Aris)
 
-- [ ] New DreamSlayer Code
+- [ ] Relic system
+- [ ] Character info
 
 
 ## Done (Aris)
 
 - [x] Make a card Description And Useable card
+- [ ] New DreamSlayer Code
+- [ ] Tower system/Infinite mode
+- [ ] Add a Start/Options/ChooseEventButton
+- [ ] ScreenMangement
+- [ ] Start Game Timeline
 
 
 ## To-do (Phurin)
@@ -52,6 +51,7 @@ kanban-plugin: board
 
 ## Done (Phurin)
 
+- [ ] Card
 
 
 ## To-do (Terky)
