@@ -55,7 +55,7 @@ namespace DreamSlayerV2.Scenes
 
         public void LoadContent()
         {
-            MusicManager.PlaySong(GlobalContentManager.NodeSong, restart: true);
+            MusicManager.PlayLoopingMusic(GlobalContentManager.NodeMusic);
         }
 
         public void Update(GameTime gameTime)

@@ -47,8 +47,6 @@ C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Shop_logo.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Soul coin UI.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\START.xnb
-C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Start_music (1).ogg
-C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Start_music (1).xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\TheDarkCave.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\TitleMusic.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\UnrealWolf.xnb
@@ -58,7 +56,6 @@ C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\DreamSlayerV2.deps.json
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\DreamSlayerV2.runtimeconfig.json
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\DreamSlayerV2.dll
-C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\DreamSlayerV2.pdb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\MonoGame.Framework.dll
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\NVorbis.dll
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\openal.dll
@@ -253,10 +250,19 @@ C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\DreamSlayerV2.AssemblyInfoInputs.cache
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\DreamSlayerV2.AssemblyInfo.cs
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\DreamSlayerV2.csproj.CoreCompileInputs.cache
-C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\DreamSlayerV2.sourcelink.json
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\DreamSla.7C004649.Up2Date
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\DreamSlayerV2.dll
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\refint\DreamSlayerV2.dll
-C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\DreamSlayerV2.pdb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\DreamSlayerV2.genruntimeconfig.cache
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\obj\Release\net9.0\win-x64\ref\DreamSlayerV2.dll
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Boss_music_01.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Boss_music_01.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Boss_music_02.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Boss_music_02.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\clock.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Event_shop.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Event_shop.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\jorisvermeer-intense-horror-game-ambience-418842.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\NodeMusic.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\NodeMusic.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Release\net9.0\win-x64\Content\Start_music.xnb

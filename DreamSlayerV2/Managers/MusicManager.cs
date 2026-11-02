@@ -9,6 +9,9 @@ namespace DreamSlayerV2.Managers
     {
         private const float StoryMusicVolumeScale = 0.15f;
         private static Song _currentSong;
+        private static float? _currentSongVolume;
+        private static SoundEffectInstance _musicInstance;
+        private static float? _musicInstanceVolume;
         private static SoundEffectInstance _storyMusicInstance;
 
         public static float MusicVolume { get; private set; } = 1f;
@@ -16,32 +19,41 @@ namespace DreamSlayerV2.Managers
         public static void SetMusicVolume(float volume)
         {
             MusicVolume = MathHelper.Clamp(volume, 0f, 1f);
-            MediaPlayer.Volume = MusicVolume;
+            MediaPlayer.Volume = _currentSongVolume ?? MusicVolume;
 
             if (_storyMusicInstance != null)
             {
                 _storyMusicInstance.Volume = MusicVolume * StoryMusicVolumeScale;
             }
+
+            if (_musicInstance != null)
+            {
+                _musicInstance.Volume = _musicInstanceVolume ?? MusicVolume;
+            }
         }
 
-        public static void PlaySong(Song song, bool restart = false)
+        public static void PlaySong(Song song, bool restart = false, float? volumeOverride = null)
         {
             ArgumentNullException.ThrowIfNull(song);
+            _currentSongVolume = volumeOverride.HasValue
+                ? MathHelper.Clamp(volumeOverride.Value, 0f, 1f)
+                : null;
 
             bool shouldPlay = restart ||
                 MediaPlayer.State != MediaState.Playing ||
                 !ReferenceEquals(_currentSong, song);
             if (shouldPlay)
             {
+                StopLoopingMusic();
                 MediaPlayer.Stop();
                 MediaPlayer.IsRepeating = true;
-                MediaPlayer.Volume = MusicVolume;
+                MediaPlayer.Volume = _currentSongVolume ?? MusicVolume;
                 MediaPlayer.Play(song);
                 _currentSong = song;
             }
             else
             {
-                MediaPlayer.Volume = MusicVolume;
+                MediaPlayer.Volume = _currentSongVolume ?? MusicVolume;
                 MediaPlayer.IsRepeating = true;
             }
         }
@@ -55,6 +67,32 @@ namespace DreamSlayerV2.Managers
         {
             MediaPlayer.Stop();
             _currentSong = null;
+            _currentSongVolume = null;
+            StopLoopingMusic();
+        }
+
+        public static void PlayLoopingMusic(SoundEffect soundEffect, float? volumeOverride = null)
+        {
+            ArgumentNullException.ThrowIfNull(soundEffect);
+            StopLoopingMusic();
+            MediaPlayer.Stop();
+            _currentSong = null;
+            _currentSongVolume = null;
+
+            _musicInstanceVolume = volumeOverride.HasValue
+                ? MathHelper.Clamp(volumeOverride.Value, 0f, 1f)
+                : null;
+            _musicInstance = soundEffect.CreateInstance();
+            _musicInstance.Volume = _musicInstanceVolume ?? MusicVolume;
+            _musicInstance.IsLooped = true;
+            _musicInstance.Play();
+        }
+
+        private static void StopLoopingMusic()
+        {
+            _musicInstance?.Stop();
+            _musicInstance = null;
+            _musicInstanceVolume = null;
         }
 
         public static SoundEffectInstance PlayLoopingStoryMusic(SoundEffect soundEffect)

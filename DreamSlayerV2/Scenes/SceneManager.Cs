@@ -42,6 +42,9 @@ namespace DreamSlayerV2.Core
                 case TitleScene:
                     MusicManager.PlaySong(GlobalContentManager.NightmareSong);
                     break;
+                case NodeSelectScene:
+                    MusicManager.PlayLoopingMusic(GlobalContentManager.NodeSelectMusic, volumeOverride: 1f);
+                    break;
                 case BossScene bossScene:
                     MusicManager.PlaySong(bossScene.IsPhase2Dialogue
                         ? GlobalContentManager.BossPhase2Song

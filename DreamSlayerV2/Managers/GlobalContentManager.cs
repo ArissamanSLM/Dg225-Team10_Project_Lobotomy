@@ -15,7 +15,8 @@ namespace DreamSlayerV2.Core
         private static SpriteFont _battleFont;
         private static SpriteFont _natureFont;
         private static Song _nightmareSong;
-        private static Song _nodeSong;
+        private static SoundEffect _nodeSelectMusic;
+        private static SoundEffect _nodeMusic;
         private static Song _shopSong;
         private static Song _bossPhase1Song;
         private static Song _bossPhase2Song;
@@ -43,6 +44,7 @@ namespace DreamSlayerV2.Core
         private static SoundEffect _badEffectSound;
         private static SoundEffect _healSound;
         private static SoundEffect _titleMusicEffect;
+        private static SoundEffect _clockCardSound;
         private static Texture2D _whitePixel;
         private static Texture2D _nodeCircle;
         private static Texture2D[] _battleBackgrounds;
@@ -80,7 +82,8 @@ namespace DreamSlayerV2.Core
         public static SpriteFont BattleFont => GetAsset(ref _battleFont, "BattleUIFont");
         public static SpriteFont NatureFont => GetAsset(ref _natureFont, "NatureFonts");
         public static Song NightmareSong => GetAsset(ref _nightmareSong, "leberch-nightmare-611631");
-        public static Song NodeSong => GetAsset(ref _nodeSong, "NodeMusic");
+        public static SoundEffect NodeSelectMusic => GetAsset(ref _nodeSelectMusic, "Start_music");
+        public static SoundEffect NodeMusic => GetAsset(ref _nodeMusic, "jorisvermeer-intense-horror-game-ambience-418842");
         public static Song ShopSong => GetAsset(ref _shopSong, "Event_shop");
         public static Song BossPhase1Song => GetAsset(ref _bossPhase1Song, "Boss_music_02");
         public static Song BossPhase2Song => GetAsset(ref _bossPhase2Song, "Boss_music_01");
@@ -110,6 +113,7 @@ namespace DreamSlayerV2.Core
         public static SoundEffect BadEffectSound => GetAsset(ref _badEffectSound, "Bad_Effect_gain");
         public static SoundEffect HealSound => GetAsset(ref _healSound, "heal");
         public static SoundEffect TitleMusicEffect => GetAsset(ref _titleMusicEffect, "TitleMusic");
+        public static SoundEffect ClockCardSound => GetAsset(ref _clockCardSound, "clock");
         public static Texture2D FirstMenu => GetAsset(ref _firstMenu, "BlankUI1");
     public static Texture2D SecondMenu => GetAsset(ref _secondMenu, "BlankUI2");
     public static Texture2D ThirdMenu => GetAsset(ref _startMenu, "START");

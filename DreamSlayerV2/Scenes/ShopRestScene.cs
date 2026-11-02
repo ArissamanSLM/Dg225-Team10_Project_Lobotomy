@@ -46,7 +46,7 @@ namespace DreamSlayerV2.Scenes
         {
             if (_isRest)
             {
-                MusicManager.PlaySong(GlobalContentManager.NodeSong, restart: true);
+                MusicManager.PlayLoopingMusic(GlobalContentManager.NodeMusic);
             }
             var graphicsDevice = GlobalContentManager.GraphicsDevice;
         }

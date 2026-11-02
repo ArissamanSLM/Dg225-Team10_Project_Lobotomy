@@ -1,0 +1,66 @@
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/All16Card (1).xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/attack.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Bad_effect_gain.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/BattleUIFont.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Blankmenu.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/BlankUI1.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/BlankUI2.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Boss_logo.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Boss_music_01.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Boss_music_01.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Boss_music_02.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Boss_music_02.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/buy shop.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/clock.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/CONTINUE.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Dice Rolling.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/DreamSlayer_name.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Elite_Enemies_1.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Enemies_health_bar.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/enemy_logo.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Event_shop.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Event_shop.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/EXIT.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/E_enemy2.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/File.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Handing out cards(One Card).xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Handing out cards.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/HardReset.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/heal.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/HealthBar.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/HealthEffect.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/HorrorForestDreamV2.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/jorisvermeer-intense-horror-game-ambience-418842.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Kraken-BossPhase1.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/leberch-nightmare-611631.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/leberch-nightmare-611631.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/MapLeft_DreamSlayer.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/MapRight_DreamSlayer.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/NatureFonts.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/NextFloorLogo.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/NodeMusic.ogg
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/NodeMusic.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/OPTIONS.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Play Card.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Pluscard.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Portal.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/reward_screen.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/SanityOrb.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Sanity_bar.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Scene_1_20261101212247.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Scene_2_20261101212255.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Scene_3_20261102124929.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/ScreenumberGenerator.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Screen_story_4.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/sectionsound-shield-block-shortsword-143940.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Sheid_bar.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Shop_logo.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Soul coin UI.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/START.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/Start_music.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/TheDarkCave.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/TitleMusic.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/UnrealWolf.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/UpgradeDowngrade.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\Content/UPGRADES.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Playablefile-staging\DreamSlayerV2.exe

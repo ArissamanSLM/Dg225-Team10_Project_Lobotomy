@@ -42,7 +42,7 @@ namespace DreamSlayerV2.Scenes
 
         public void LoadContent()
         {
-            MusicManager.PlaySong(GlobalContentManager.NodeSong, restart: true);
+            MusicManager.PlayLoopingMusic(GlobalContentManager.NodeMusic);
             var graphicsDevice = GlobalContentManager.GraphicsDevice;
         }
 

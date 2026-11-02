@@ -62,7 +62,6 @@ namespace DreamSlayerV2.Scenes
 
         public void LoadContent()
         {
-            MusicManager.StopSong();
             var graphicsDevice = GlobalContentManager.GraphicsDevice;
             _viewportWidth = graphicsDevice.Viewport.Width;
             if (_currentNode != null)

@@ -80,7 +80,7 @@ private float _shieldEffectTimer = 0f;
             if (_contentLoaded) return;
             if (!isBossRoom && targetNode == null)
             {
-                MusicManager.PlaySong(GlobalContentManager.NodeSong, restart: true);
+                MusicManager.PlayLoopingMusic(GlobalContentManager.NodeMusic);
             }
             _debuffSoundInstance = GlobalContentManager.BadEffectSound.CreateInstance();
             _debuffSoundInstance.Volume = 1.0f;

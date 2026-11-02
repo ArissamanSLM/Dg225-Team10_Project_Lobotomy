@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Boss_music_02.mp3</SourceFile>
+  <SourceFile>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/Boss_music_02.mp3</SourceFile>
   <SourceTime>2026-09-07T18:47:38.3286432+07:00</SourceTime>
-  <DestFile>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Boss_music_02.xnb</DestFile>
-  <DestTime>2026-11-02T17:56:38.9335255+07:00</DestTime>
+  <DestFile>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Boss_music_02.xnb</DestFile>
+  <DestTime>2026-11-02T18:56:38.8294422+07:00</DestTime>
   <Importer>Mp3Importer</Importer>
   <ImporterTime>2025-10-20T21:25:32+07:00</ImporterTime>
   <Processor>SongProcessor</Processor>
@@ -15,6 +15,6 @@
   <Dependencies />
   <BuildAsset />
   <BuildOutput>
-    <string>c:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Boss_music_02.ogg</string>
+    <string>C:/Users/ASUS/Downloads/Team_DG225Git/ArissamanSLM/Dg225-Team10_Project_Lobotomy/DreamSlayerV2/Content/bin/DesktopGL/Content/Boss_music_02.ogg</string>
   </BuildOutput>
 </PipelineBuildEvent>

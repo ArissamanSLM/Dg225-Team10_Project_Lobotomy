@@ -96,8 +96,14 @@ namespace DreamSlayerV2
         {
             if (IsValidHandIndex(handIndex))
             {
+                CardManager card = Hand[handIndex];
+                if (card.UniqueFamily == "Clock")
+                {
+                    GlobalContentManager.ClockCardSound.Play();
+                }
+
                 // Send the played card to the Discard Pile
-                DiscardPile.Add(Hand[handIndex]);
+                DiscardPile.Add(card);
                 Hand[handIndex] = null;
             }
         }
