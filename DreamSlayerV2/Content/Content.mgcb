@@ -122,6 +122,18 @@
 /processorParam:TextureFormat=Color
 /build:Dice Rolling.jpg
 
+#begin DreamSlayer_name.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:DreamSlayer_name.png
+
 #begin E_enemy2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -304,7 +316,7 @@
 /processorParam:TextureFormat=Compressed
 /build:NatureFonts.spritefont
 
-#begin Next_Floor_logo.png
+#begin NextFloorLogo.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -314,7 +326,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Next_Floor_logo.png
+/build:NextFloorLogo.png
 
 #begin OPTIONS.png
 /importer:TextureImporter
@@ -417,6 +429,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Scene_2_20261101212255.png
+
+#begin Scene_3_20261102124929.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Scene_3_20261102124929.png
+
+#begin Screen_story_4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Screen_story_4.png
 
 #begin ScreenumberGenerator.png
 /importer:TextureImporter
@@ -543,4 +579,3 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UPGRADES.png
-

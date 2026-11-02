@@ -66,6 +66,9 @@ namespace DreamSlayerV2.Core
     private static Texture2D _nextFloorLogo;
     private static Texture2D _rewardScreen;
     private static Texture2D _soulCoinIcon;
+    private static Texture2D _TitleText;
+    private static Texture2D _SceneStoryBackground4;
+    private static Texture2D _ScreenStoryBackground3;
 
         public static GraphicsDevice GraphicsDevice =>
             _graphicsDevice ?? throw new InvalidOperationException("Global content has not been initialized.");
@@ -111,12 +114,15 @@ namespace DreamSlayerV2.Core
     public static Texture2D EighthMenu => GetAsset(ref _hardResetMenu, "HardReset");
     public static Texture2D SceneStoryBackground1 => GetAsset(ref _SceneStoryBackground1, "Scene_1_20261101212247");
     public static Texture2D SceneStoryBackground2 => GetAsset(ref _SceneStoryBackground2, "Scene_2_20261101212255");
+    public static Texture2D SceneStoryBackground4 => GetAsset(ref _SceneStoryBackground4, "Screen_story_4");
     public static Texture2D EliteEnemy => GetAsset(ref _eliteEnemy, "Elite_Enemies_1");
     public static Texture2D BossEnemy => GetAsset(ref _bossEnemy, "Kraken-BossPhase1");
     public static Texture2D Portal => GetAsset(ref _portal, "Portal");
-    public static Texture2D NextFloorLogo => GetAsset(ref _nextFloorLogo, "Next_Floor_logo");
+    public static Texture2D NextFloorLogo => GetAsset(ref _nextFloorLogo, "NextFloorLogo");
     public static Texture2D RewardScreen => GetAsset(ref _rewardScreen, "reward_screen");
     public static Texture2D SoulCoinIcon => GetAsset(ref _soulCoinIcon, "Soul coin UI");
+    public static Texture2D DreamSlayerText => GetAsset(ref _TitleText, "DreamSlayer_name");
+    public static Texture2D SceneStoryBackground3 => GetAsset(ref _ScreenStoryBackground3, "Scene_3_20261102124929");
 
 
         public static Texture2D[] BattleBackgrounds => _battleBackgrounds ??= new[]
@@ -168,7 +174,8 @@ namespace DreamSlayerV2.Core
         public static Texture2D[] SceneStoryBackgrounds => _SceneStoryBackgroundArray ??= new[]
         {
             SceneStoryBackground1,
-            SceneStoryBackground2
+            SceneStoryBackground2,
+            SceneStoryBackground4,
         };
 
         public static Texture2D WhitePixel

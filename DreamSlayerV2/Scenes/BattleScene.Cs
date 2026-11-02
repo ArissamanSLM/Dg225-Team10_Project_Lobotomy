@@ -838,7 +838,7 @@ private static bool LeavesThirtyFiveSanity(CardManager card)
                     sanityIconRect.Center.Y - (sanityTextSize.Y / 2f)
                 );
                 spriteBatch.DrawString(GlobalContentManager.BattleFont, sanityText, sanityTextPos + Vector2.One, Color.Black);
-                spriteBatch.DrawString(GlobalContentManager.BattleFont, sanityText, sanityTextPos, Color.Cyan);
+                spriteBatch.DrawString(GlobalContentManager.BattleFont, sanityText, sanityTextPos, Color.MintCream);
             }
 
             // สถานะเตือน Sanity ต่ำ

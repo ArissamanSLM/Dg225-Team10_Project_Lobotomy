@@ -57,7 +57,6 @@ C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\File.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\HorrorForestDreamV2.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\NatureFonts.xnb
-C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Next_Floor_logo.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Shop_logo.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Start_music (1).ogg
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Start_music (1).xnb
@@ -195,3 +194,7 @@ c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Portal.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\reward_screen.xnb
 C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Soul coin UI.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\DreamSlayer_name.xnb
+c:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Screen_story_4.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\Scene_3_20261102124929.xnb
+C:\Users\ASUS\Downloads\Team_DG225Git\ArissamanSLM\Dg225-Team10_Project_Lobotomy\DreamSlayerV2\bin\Debug\net9.0\Content\NextFloorLogo.xnb

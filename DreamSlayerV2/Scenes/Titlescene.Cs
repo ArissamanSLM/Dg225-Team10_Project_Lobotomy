@@ -28,7 +28,6 @@ namespace DreamSlayerV2.Scenes
         private float _titleCameraX = 0f;
         private float _cameraDirection = 1f;
 
-        private string titleText = "DREAM SLAYER V2";
 
         private readonly string[] _mainMenuItems = { "New Game", "Continue", "Upgrades", "Options", "Exit", "Nightmare Mode" };
         private int _selectedMenuIndex = 0;
@@ -523,10 +522,7 @@ namespace DreamSlayerV2.Scenes
             }
 
             // --- 3. DRAW TITLE HEADER & BACKGROUND SELECTOR PROMPT ---
-            Vector2 titleSize = GlobalContentManager.DefaultFont.MeasureString(titleText);
-            Vector2 titlePos = new Vector2(960f - (titleSize.X / 2f), 100f);
-            spriteBatch.DrawString(GlobalContentManager.DefaultFont, titleText, titlePos, Color.Crimson);
-
+            spriteBatch.Draw(GlobalContentManager.DreamSlayerText, new Vector2(960 - GlobalContentManager.DreamSlayerText.Width / 2f, 50), Color.White);
             // แสดงคำแนะนำปุ่มกดเปลี่ยน Background ที่มุมซ้ายล่าง
             spriteBatch.DrawString(GlobalContentManager.DefaultFont, $"Theme: [{_selectedBgIndex + 1}] (Press 1-4 to change)", new Vector2(30, 1020), Color.Gold * 0.8f);
 

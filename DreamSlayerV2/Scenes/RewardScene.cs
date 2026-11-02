@@ -102,6 +102,8 @@ namespace DreamSlayerV2.Scenes
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            GraphicsDevice device = spriteBatch.GraphicsDevice;
+            device.Clear(Color.Purple*0.9f);
             spriteBatch.Begin();
             spriteBatch.Draw(GlobalContentManager.RewardScreen, new Rectangle(0, 0, 1920, 1080), Color.White);
             SceneUi.DrawPanel(spriteBatch, new Rectangle(310, 120, 1300, 740), Color.MediumPurple);

@@ -59,12 +59,12 @@ namespace DreamSlayerV2.Scenes
             return clicked;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Texture2D background)
+        public void Draw(SpriteBatch spriteBatch, Texture2D background, float opacity = 1f)
         {
             spriteBatch.Begin();
             if (background != null)
             {
-                spriteBatch.Draw(background, new Rectangle(0, 0, 1920, 1080), Color.White);
+                spriteBatch.Draw(background, new Rectangle(0, 0, 1920, 1080), Color.White * opacity);
             }
 
             SpriteFont font = GlobalContentManager.DefaultFont;
@@ -75,8 +75,8 @@ namespace DreamSlayerV2.Scenes
                 Math.Min((int)textSize.X + 40, 1780),
                 (int)textSize.Y + 40);
 
-            spriteBatch.Draw(GlobalContentManager.WhitePixel, dialogueBounds, Color.Black * 0.7f);
-            spriteBatch.DrawString(font, DisplayedText, DialoguePosition, Color.SkyBlue);
+            spriteBatch.Draw(GlobalContentManager.WhitePixel, dialogueBounds, Color.Black * (0.7f * opacity));
+            spriteBatch.DrawString(font, DisplayedText, DialoguePosition, Color.SkyBlue * opacity);
 
             if (IsTypingFinished)
             {
@@ -89,6 +89,7 @@ namespace DreamSlayerV2.Scenes
                     (int)promptSize.X,
                     (int)promptSize.Y);
                 Color promptColor = promptBounds.Contains(mouseState.Position) ? Color.LightYellow : Color.Yellow;
+                promptColor *= opacity;
                 spriteBatch.DrawString(font, prompt, PromptPosition, promptColor);
             }
 
